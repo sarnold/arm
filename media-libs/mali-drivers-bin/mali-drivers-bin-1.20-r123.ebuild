@@ -42,6 +42,9 @@ src_install() {
 	doins -r usr/lib/*
 
 	touch "${ED}"/usr/$(get_libdir)/${opengl_dir}/.gles-only
+
+	insinto /etc/udev/rules.d
+	doins "${FILESDIR}"/50-mali.rules
 }
 
 pkg_postinst() {
