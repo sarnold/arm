@@ -3,12 +3,14 @@
 
 EAPI="5"
 
-EGIT_REPO_URI="https://git.chromium.org/git/chromiumos/third_party/${PN}.git"
+EGIT_REPO_URI="https://chromium.googlesource.com/chromiumos/third_party/${PN}.git"
+#EGIT_REPO_URI="git://git.linaro.org/arm/xorg/driver/xf86-video-armsoc.git"
 
 XORG_DRI="always"
 XORG_EAUTORECONF="yes"
+#XORG_CONFIGURE_OPTIONS="--with-drmmode=exynos"
 
-inherit xorg-2 git-2 eutils
+inherit xorg-2 git-r3 eutils
 
 DESCRIPTION="X.Org driver for ARM devices"
 
