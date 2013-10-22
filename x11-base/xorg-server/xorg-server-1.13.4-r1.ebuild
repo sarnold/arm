@@ -5,7 +5,9 @@
 EAPI=5
 
 XORG_DOC=doc
+
 inherit xorg-2 multilib versionator flag-o-matic
+
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
 DESCRIPTION="X.Org X servers"
@@ -115,6 +117,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.13-ia64-asm.patch
 	"${FILESDIR}"/1.11.99.902-allow-root-none.patch
 	"${FILESDIR}"/1.11.99.902-xserver-bg-none-root.patch
+	"${FILESDIR}"/${PN}-1.13-arm32.patch
 )
 
 pkg_pretend() {
@@ -124,6 +127,8 @@ pkg_pretend() {
 }
 
 src_configure() {
+	append_cppflags = -D__arm32__
+
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
