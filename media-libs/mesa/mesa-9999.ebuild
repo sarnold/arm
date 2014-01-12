@@ -174,14 +174,17 @@ src_prepare() {
 	fi
 
 	# relax the requirement that r300 must have llvm, bug 380303
-	epatch "${FILESDIR}"/${P}-dont-require-llvm-for-r300.patch
+	#epatch "${FILESDIR}"/${P}-dont-require-llvm-for-r300.patch
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
 	# Fixes for LLVM 3.3 with these sources
-	epatch "${FILESDIR}"/01-Partial-llvm-3.3-fix.patch
-	epatch "${FILESDIR}"/02-Part-deux-llvm-3.3-fix.patch
+	#epatch "${FILESDIR}"/01-Partial-llvm-3.3-fix.patch
+	#epatch "${FILESDIR}"/02-Part-deux-llvm-3.3-fix.patch
+
+	# add upstream patch for xdamage
+	epatch "${FILESDIR}"/0001-st-xorg-handle-updates-to-DamageUnregister-API.patch
 
 	# Solaris needs some recent POSIX stuff in our case
 	if [[ ${CHOST} == *-solaris* ]] ; then
@@ -197,6 +200,8 @@ src_prepare() {
 }
 
 src_configure() {
+	use arm && append-cppflags -D__arm32__
+
 	local myconf
 
 	if use classic; then
