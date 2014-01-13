@@ -11,3 +11,9 @@ SRC_URI="http://people.freedesktop.org/~tagr/xf86-video-opentegra-0.6.0.tar.xz"
 
 KEYWORDS="-* ~arm"
 IUSE=""
+
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-DamageUnregister-fix.patch
+
+	
+}
