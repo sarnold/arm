@@ -14,6 +14,4 @@ IUSE=""
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-DamageUnregister-fix.patch
-
-	
 }
