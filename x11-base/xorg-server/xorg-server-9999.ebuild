@@ -9,6 +9,9 @@ XORG_DOC=doc
 inherit xorg-2 multilib versionator flag-o-matic
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
+#  commit: Bump release to 1.15.99.900
+EGIT_COMMIT="a92c6406e7f6c0b74fb1cb9361ad904facc0f722"
+
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
