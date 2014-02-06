@@ -1,11 +1,13 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-proto/fontsproto/fontsproto-2.1.2.ebuild,v 1.10 2013/02/21 18:44:37 zmedico Exp $
+# $
 
 EAPI=4
 
+EGIT_REPO_URI="http://anongit.freedesktop.org/git/xorg/proto/${PN}.git"
+
 XORG_DOC=doc
-inherit xorg-2
+inherit xorg-2 git-2
 
 DESCRIPTION="X.Org Fonts protocol headers"
 
@@ -14,9 +16,6 @@ IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
-
-# xorg-server-9999 build fails against latest
-#EGIT_COMMIT="81e4d4ec53f1f3848ff269fe476c3a1d35d93aef"
 
 pkg_setup() {
 	xorg-2_pkg_setup
