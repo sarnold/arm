@@ -1,0 +1,48 @@
+From 991bf1608473c07ff4ba84d5b2bb128134c2e11b Mon Sep 17 00:00:00 2001
+From: Aaron Watry <awatry@gmail.com>
+Date: Thu, 9 Jan 2014 08:17:33 -0600
+Subject: [PATCH] llvm-config: Print system-libs on the same line as libs
+
+Before r197664, system libraries were produced on the same line as the
+libraries.  This goes back to that behavior.
+
+If the user requests only system-libs, then print it on a single line.
+
+If the user requests libnames/libfiles, then split it into separate
+lines because the two have different semantic meanings.
+
+Signed-off-by: Aaron Watry <awatry@gmail.com>
+---
+ tools/llvm-config/llvm-config.cpp | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/tools/llvm-config/llvm-config.cpp b/tools/llvm-config/llvm-config.cpp
+index 53368ff..c654faf 100644
+--- a/tools/llvm-config/llvm-config.cpp
++++ b/tools/llvm-config/llvm-config.cpp
+@@ -365,12 +365,21 @@ int main(int argc, char **argv) {
+         OS << ActiveLibDir << '/' << Lib;
+       }
+     }
+-    OS << '\n';
+ 
+     // Print SYSTEM_LIBS after --libs.
+     // FIXME: Each LLVM component may have its dependent system libs.
++
++    //If we are printing libraries for linking and not lib names/paths, then
++    //join system libs with a space, otherwise newline
++    if (PrintLibs && !PrintLibNames && !PrintLibFiles)
++      OS << ' ';
++    else
++      if (PrintLibs || PrintLibNames || PrintLibFiles)
++        OS << '\n';
++
+     if (PrintSystemLibs)
+-      OS << LLVM_SYSTEM_LIBS << '\n';
++      OS << LLVM_SYSTEM_LIBS;
++    OS << '\n';
+   } else if (!Components.empty()) {
+     errs() << "llvm-config: error: components given, but unused\n\n";
+     usage();
+-- 
+1.8.3.2
