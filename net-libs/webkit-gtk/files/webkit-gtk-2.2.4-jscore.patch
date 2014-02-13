@@ -1,0 +1,43 @@
+--- Source/JavaScriptCore/dfg/DFGCSEPhase.cpp.orig	2014-02-11 19:21:31.000000000 -0800
++++ Source/JavaScriptCore/dfg/DFGCSEPhase.cpp	2014-02-11 19:23:02.000000000 -0800
+@@ -31,6 +31,7 @@
+ #include "DFGEdgeUsesStructure.h"
+ #include "DFGGraph.h"
+ #include "DFGPhase.h"
++#include "JSCJSValueInlines.h"
+ #include "JSCellInlines.h"
+ #include <wtf/FastBitVector.h>
+ 
+--- Source/JavaScriptCore/dfg/DFGNode.h.orig	2014-02-11 19:21:41.000000000 -0800
++++ Source/JavaScriptCore/dfg/DFGNode.h	2014-02-11 19:23:41.000000000 -0800
+@@ -40,7 +40,7 @@
+ #include "DFGNodeFlags.h"
+ #include "DFGNodeType.h"
+ #include "DFGVariableAccessData.h"
+-#include "JSCJSValue.h"
++#include "JSCJSValueInlines.h"
+ #include "Operands.h"
+ #include "SpeculatedType.h"
+ #include "StructureSet.h"
+--- Source/JavaScriptCore/heap/CopyVisitor.cpp.orig	2014-02-11 19:21:45.000000000 -0800
++++ Source/JavaScriptCore/heap/CopyVisitor.cpp	2014-02-11 19:24:16.000000000 -0800
+@@ -30,7 +30,7 @@
+ #include "CopyVisitorInlines.h"
+ #include "CopyWorkList.h"
+ #include "GCThreadSharedData.h"
+-#include "JSCell.h"
++#include "JSCellInlines.h"
+ #include "JSObject.h"
+ #include "Operations.h"
+ #include <wtf/Threading.h>
+--- Source/JavaScriptCore/runtime/SymbolTable.h.orig	2014-02-11 19:21:56.000000000 -0800
++++ Source/JavaScriptCore/runtime/SymbolTable.h	2014-02-11 19:24:45.000000000 -0800
+@@ -29,6 +29,8 @@
+ #ifndef SymbolTable_h
+ #define SymbolTable_h
+ 
++#include "JSCellInlines.h"
++#include "JSDestructibleObject.h"
+ #include "ConcurrentJITLock.h"
+ #include "JSObject.h"
+ #include "Watchpoint.h"
