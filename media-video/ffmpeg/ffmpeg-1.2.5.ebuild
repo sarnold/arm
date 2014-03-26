@@ -142,8 +142,8 @@ src_prepare() {
 		fi
 	fi
 
-	# correct arm neon build error with cherry-pick from upstream
-	use neon && epatch "${FILESDIR}"/arm-neon-asm.patch
+	# correct arm asm build error with cherry-pick from upstream
+	use arm && epatch "${FILESDIR}"/arm-neon-asm.patch
 
 	epatch_user
 }
