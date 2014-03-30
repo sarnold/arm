@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,8 +9,9 @@ XORG_DOC=doc
 inherit xorg-2 multilib versionator flag-o-matic
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
-#  commit: Bump release to 1.15.99.900
-EGIT_COMMIT="a92c6406e7f6c0b74fb1cb9361ad904facc0f722"
+#  commit: Bump release to 1.15.99.901
+#EGIT_COMMIT="300458fb8ad0a7957e941cd65f47d204c7886e22"
+EGIT_BRANCH="server-1.15-branch"
 
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
