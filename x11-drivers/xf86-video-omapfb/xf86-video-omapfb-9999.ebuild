@@ -1,11 +1,11 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 XORG_DRI=always
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/xorg/driver/${PN}"
+EGIT_REPO_URI="https://github.com/sarnold/${PN}.git"
 
 inherit autotools-utils xorg-2 git-2
 
