@@ -16,7 +16,7 @@ K_SECURITY_UNSUPPORTED=1
 inherit kernel-2 eutils
 detect_version
 
-DESCRIPTION="Kernel for Beaglebone (am33x)"
+DESCRIPTION="Kernel for Beaglebone (am33x) using RCN patches, etc"
 HOMEPAGE="https://github.com/RobertCNelson/linux-dev"
 PATCHSET_NAME="${PN/-*}-patches-${PV}.tar.gz"
 PATCHSET_URI="https://api.github.com/repos/RobertCNelson/linux-dev/tarball/${GITREV} -> $PATCHSET_NAME"
@@ -61,20 +61,15 @@ src_prepare() {
                                 EPATCH_SUFFIX="patch" EPATCH_FORCE="yes" \
                                 EPATCH_EXCLUDE=$exclude epatch
         done
+
         cp "$patchesdir/patches/defconfig" "${S}/.config"
         cp "${DISTDIR}/${FIRMWARE_NAME};hb=${FIRMWARE_GITREV}" "${S}/firmware/${FIRMWARE_NAME}"
+	elog "A copy of the latest RCN defconfig has been installed as .config"
+	elog "in the kernel source dir."
 
-        # fixup patch
+        # replicate fixup patch from Calculus
         epatch "${FILESDIR}"/fix-db.txt-whitespace.patch
 
-	# apply lkml patch for ncurses link issue
+	# apply lkml patch for ncurses link issue (from jlec)
 	epatch "${FILESDIR}"/dso-link-change.patch
-
-	# fix ncurses linking issue
-#	if use unicode ; then
-#		infolib="tinfow"
-#	else
-#		infolib="tinfo"
-#	fi
-#	sed -i -e "s|lncurses|lncurses -l${infolib}|" "${S}"scripts/kconfig/Makefile
 }
