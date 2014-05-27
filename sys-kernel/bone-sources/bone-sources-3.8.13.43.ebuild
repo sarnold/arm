@@ -19,7 +19,7 @@ detect_version
 DESCRIPTION="Kernel for Beaglebone (am33x) using RCN patches, etc"
 HOMEPAGE="https://github.com/RobertCNelson/linux-dev"
 PATCHSET_NAME="${PN/-*}-patches-${PV}.tar.gz"
-PATCHSET_URI="https://api.github.com/repos/RobertCNelson/linux-dev/tarball/${GITREV} -> $PATCHSET_NAME"
+PATCHSET_URI="https://github.com/RobertCNelson/linux-dev/archive/3.8.13-bone43.tar.gz -> $PATCHSET_NAME"
 FIRMWARE_NAME="am335x-pm-firmware.bin"
 FIRMWARE_GITREV="750362868d914702086187096ec2c67b68eac101"
 FIRMWARE_URI="http://arago-project.org/git/projects/?p=am33x-cm3.git;a=blob_plain;f=bin/am335x-pm-firmware.bin;hb=${FIRMWARE_GITREV}"
