@@ -1,0 +1,12 @@
+diff --git a/src/libhost1x/host1x-framebuffer.c b/src/libhost1x/host1x-framebuffer.c
+index 9258eb4..77c3d42 100644
+--- a/src/libhost1x/host1x-framebuffer.c
++++ b/src/libhost1x/host1x-framebuffer.c
+@@ -23,6 +23,7 @@
+ 
+ #include <errno.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ #include <png.h>
+ 
