@@ -185,6 +185,10 @@ src_prepare() {
 	# bug #493654, upstream bug #125074
 	epatch "${FILESDIR}/${PN}-2.2.2-freetype-2.5.1.patch"
 
+	# add back-ported patches for gles2 texmap and stuff
+	##epatch "${FILESDIR}"/${P}-gles2-texmap.patch
+	epatch "${FILESDIR}"/${P}-3dopengles.patch
+
 	# Prevent maintainer mode from being triggered during make
 	AT_M4DIR=Source/autotools eautoreconf
 }
