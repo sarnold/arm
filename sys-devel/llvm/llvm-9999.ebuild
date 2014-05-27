@@ -164,7 +164,7 @@ src_prepare() {
 	use clang && epatch "${FILESDIR}"/clang-3.5-gentoo-install.patch
 
 	# patch for freedesktop.org bug
-	epatch "${FILESDIR}"/${PN}-3.5-gentoo-llvm-config.patch
+#	epatch "${FILESDIR}"/${PN}-3.5-gentoo-llvm-config.patch
 
 	local sub_files=(
 		Makefile.config.in
