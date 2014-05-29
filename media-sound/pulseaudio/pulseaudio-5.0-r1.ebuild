@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/media-sound/pulseaudio/pulseaudio-5.0-r1.ebuild,v 1.10 2014/05/17 15:31:46 ago Exp $
 
 EAPI="5"
 inherit autotools eutils flag-o-matic linux-info readme.gentoo systemd user versionator udev multilib-minimal
@@ -16,7 +16,7 @@ SRC_URI="http://freedesktop.org/software/pulseaudio/releases/${P}.tar.xz"
 LICENSE="!gdbm? ( LGPL-2.1 ) gdbm? ( GPL-2 )"
 
 SLOT="0"
-KEYWORDS="~alpha amd64 ~arm hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~amd64-linux ~x86-linux"
+KEYWORDS="alpha amd64 ~arm hppa ia64 ppc ppc64 ~sh sparc x86 ~amd64-linux ~x86-linux"
 
 IUSE="+alsa +asyncns avahi bluetooth +caps dbus doc equalizer +gdbm +glib gnome
 gtk ipv6 jack libsamplerate lirc neon +orc oss qt4 realtime ssl systemd
@@ -52,7 +52,7 @@ RDEPEND="
 	gtk? ( x11-libs/gtk+:3 )
 	gnome? ( >=gnome-base/gconf-2.4.0 )
 	bluetooth? (
-		>=net-wireless/bluez-5
+		net-wireless/bluez:=
 		>=sys-apps/dbus-1.0.0
 		media-libs/sbc
 	)
@@ -66,7 +66,7 @@ RDEPEND="
 	gdbm? ( sys-libs/gdbm )
 	webrtc-aec? ( media-libs/webrtc-audio-processing )
 	xen? ( app-emulation/xen-tools )
-	systemd? ( sys-apps/systemd[${MULTILIB_USEDEP}] )
+	systemd? ( sys-apps/systemd:0=[${MULTILIB_USEDEP}] )
 	dev-libs/json-c[${MULTILIB_USEDEP}]
 	abi_x86_32? ( !<=app-emulation/emul-linux-x86-soundlibs-20131008-r1
 		!app-emulation/emul-linux-x86-soundlibs[-abi_x86_32(-)] )
@@ -96,10 +96,9 @@ PDEPEND="alsa? ( >=media-plugins/alsa-plugins-1.0.27-r1[pulseaudio] )"
 # PyQt4 dep is for the qpaeq script
 RDEPEND="${RDEPEND}
 	equalizer? ( qt4? ( dev-python/PyQt4[dbus] ) )
-	X? ( gnome-extra/gnome-audio )
 	system-wide? (
 		alsa? ( media-sound/alsa-utils )
-		bluetooth? ( >=net-wireless/bluez-5 )
+		bluetooth? ( net-wireless/bluez:= )
 	)
 "
 
@@ -130,9 +129,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-        # failure on arm with neon
-        use neon && append-cflags -mfpu=neon
-
 	# Skip test that cannot work with sandbox, bug #501846
 	sed -i -e '/lock-autospawn-test/d' src/Makefile.am || die
 
@@ -151,6 +147,16 @@ multilib_src_configure() {
 		myconf+=( --with-database=simple )
 	fi
 
+	if use bluetooth; then
+		if has_version '<net-wireless/bluez-5'; then
+			myconf+=( --disable-bluez5 --enable-bluez4 )
+		else
+			 myconf+=( --enable-bluez5 --disable-bluez4 )
+		fi
+	else
+		myconf+=( --disable-bluez5 --disable-bluez4 )
+	fi
+
 	myconf+=(
 		--enable-largefile
 		$(use_enable glib glib2)
@@ -167,7 +173,6 @@ multilib_src_configure() {
 		$(use_enable gnome gconf)
 		$(use_enable gtk gtk3)
 		$(use_enable libsamplerate samplerate)
-		$(use_enable bluetooth bluez5)
 		$(use_enable orc)
 		$(use_enable X x11)
 		$(use_enable test default-build-tests)
@@ -181,13 +186,12 @@ multilib_src_configure() {
 		$(use_with caps)
 		$(use_with equalizer fftw)
 		--disable-adrian-aec
-		--disable-bluez4
 		--disable-esound
 		--localstatedir="${EPREFIX}"/var
 		--with-udev-rules-dir="${EPREFIX}/$(udev_get_udevdir)"/rules.d
 	)
 
-	if ! multilib_build_binaries; then
+	if ! multilib_is_native_abi; then
 		# disable all the modules and stuff
 		myconf+=(
 			--disable-oss-output
@@ -225,7 +229,7 @@ multilib_src_configure() {
 }
 
 multilib_src_compile() {
-	if multilib_build_binaries; then
+	if multilib_is_native_abi; then
 		emake
 	else
 		emake -C src libpulse{,-simple,-mainloop-glib}.la
@@ -246,13 +250,13 @@ multilib_src_test() {
 	# We avoid running the toplevel check target because that will run
 	# po/'s tests too, and they are broken. Officially, it should work
 	# with intltool 0.41, but that doesn't look like a stable release.
-	if multilib_build_binaries; then
+	if multilib_is_native_abi; then
 		emake -C src check
 	fi
 }
 
 multilib_src_install() {
-	if multilib_build_binaries; then
+	if multilib_is_native_abi; then
 		emake -j1 DESTDIR="${D}" install
 	else
 		emake DESTDIR="${D}" install-pkgconfigDATA
@@ -290,7 +294,7 @@ multilib_src_install_all() {
 
 	use avahi && sed -i -e '/module-zeroconf-publish/s:^#::' "${ED}/etc/pulse/default.pa"
 
-	dodoc README todo
+	dodoc NEWS README todo
 
 	if use doc; then
 		pushd doxygen/html
