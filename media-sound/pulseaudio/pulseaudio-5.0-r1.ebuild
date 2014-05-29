@@ -129,6 +129,11 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# failure on arm with neon
+	if [[ ${CHOST} == armv* ]] ; then
+		use neon && append-cflags -mfpu=neon
+	fi
+
 	# Skip test that cannot work with sandbox, bug #501846
 	sed -i -e '/lock-autospawn-test/d' src/Makefile.am || die
 
