@@ -18,7 +18,7 @@ SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev"
+IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev unwind wayland"
 
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
@@ -62,6 +62,11 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
+	unwind? ( sys-libs/libunwind )
+	wayland? (
+		dev-libs/wayland
+		media-libs/libepoxy
+	)
 	>=x11-apps/xinit-1.3
 	selinux? ( sec-policy/selinux-xserver )"
 
@@ -146,6 +151,8 @@ src_configure() {
 		$(use_enable kdrive kdrive-evdev)
 		$(use_enable suid install-setuid)
 		$(use_enable tslib)
+		$(use_enable unwind libunwind)
+		$(use_enable wayland xwayland)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
 		$(use_enable !minimal install-libxf86config)
