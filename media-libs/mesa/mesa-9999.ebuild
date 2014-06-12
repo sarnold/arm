@@ -4,7 +4,7 @@
 
 EAPI=5
 
-EGIT_REPO_URI="git://github.com/grate-driver/mesa"
+EGIT_REPO_URI="http://anongit.freedesktop.org/git/mesa/mesa.git"
 
 if [[ ${PV} = 9999* ]]; then
 	GIT_ECLASS="git-2"
@@ -28,7 +28,8 @@ HOMEPAGE="http://mesa3d.sourceforge.net/"
 
 #SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-01.tar.bz2"
 if [[ $PV = 9999* ]]; then
-	SRC_URI="${SRC_PATCHES}"
+	SRC_URI="http://www.gentoogeek.org/files/big-master-tegra.diff.gz
+		${SRC_PATCHES}"
 	KEYWORDS=""
 else
 	SRC_URI="ftp://ftp.freedesktop.org/pub/mesa/${FOLDER}/${MY_SRC_P}.tar.bz2
@@ -174,18 +175,13 @@ src_prepare() {
 	fi
 
 	# fix recent llvm changes that breaks mesa
-	epatch "${FILESDIR}"/${P}-gallium-llvm-DisablePrettyStackTrace.patch
 	epatch "${FILESDIR}"/${P}-llvm-configure.patch
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
-	# Fixes for LLVM 3.3 with these sources
-	#epatch "${FILESDIR}"/01-Partial-llvm-3.3-fix.patch
-	#epatch "${FILESDIR}"/02-Part-deux-llvm-3.3-fix.patch
-
-	# add upstream patch for xdamage
-	epatch "${FILESDIR}"/0001-st-xorg-handle-updates-to-DamageUnregister-API.patch
+	# add tegra patch from meas-grate repo (8 June, 2014)
+	use arm && epatch ${WORKDIR}/big-master-tegra.diff
 
 	# Solaris needs some recent POSIX stuff in our case
 	if [[ ${CHOST} == *-solaris* ]] ; then
