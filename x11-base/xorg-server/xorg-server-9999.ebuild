@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,15 +9,16 @@ XORG_DOC=doc
 inherit xorg-2 multilib versionator flag-o-matic
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
 
-#  commit: Bump release to 1.15.99.900
-EGIT_COMMIT="a92c6406e7f6c0b74fb1cb9361ad904facc0f722"
+#  commit: Bump release to 1.15.99.901
+#EGIT_COMMIT="300458fb8ad0a7957e941cd65f47d204c7886e22"
+EGIT_BRANCH="server-1.15-branch"
 
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_SERVERS="dmx kdrive xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev"
+IUSE="${IUSE_SERVERS} ipv6 minimal nptl selinux +suid tslib +udev unwind wayland"
 
 RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	dev-libs/openssl
@@ -61,6 +62,11 @@ RDEPEND=">=app-admin/eselect-opengl-1.0.8
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
+	unwind? ( sys-libs/libunwind )
+	wayland? (
+		dev-libs/wayland
+		media-libs/libepoxy
+	)
 	>=x11-apps/xinit-1.3
 	selinux? ( sec-policy/selinux-xserver )"
 
@@ -145,6 +151,8 @@ src_configure() {
 		$(use_enable kdrive kdrive-evdev)
 		$(use_enable suid install-setuid)
 		$(use_enable tslib)
+		$(use_enable unwind libunwind)
+		$(use_enable wayland xwayland)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
 		$(use_enable !minimal install-libxf86config)

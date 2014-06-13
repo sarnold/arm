@@ -1,0 +1,74 @@
+Subversion Revision: 114502
+diff --git a/Source/WebCore/ChangeLog b/Source/WebCore/ChangeLog
+index 6d8ccc501cc12dc73e9b15ddbfc17aaf6fc818f6..1dba94ad456eb4df2caf255b7f1616117b814b24 100644
+--- a/Source/WebCore/ChangeLog
++++ b/Source/WebCore/ChangeLog
+@@ -1,3 +1,19 @@
++2012-04-19  No'am Rosenthal  <noam.rosenthal@nokia.com>
++
++        [Qt][Texmap] Error of cross-compiling webkit with Qt 4.8.1
++        https://bugs.webkit.org/show_bug.cgi?id=84321
++
++        Speculative build-fix for Qt 4.8.
++        Use QGLContext for Qt 4.x instead of the platform-specific context.
++
++        Reviewed by NOBODY (OOPS!).
++
++        No new tests, build fix.
++
++        * platform/graphics/texmap/TextureMapperGL.cpp:
++        (SharedGLData):
++        (WebCore::TextureMapperGLData::SharedGLData::getCurrentGLContext):
++
+ 2012-04-18  No'am Rosenthal  <noam.rosenthal@nokia.com>
+ 
+         [Qt] Fix Qt-Mac build after libxml patch
+diff --git a/Source/WebCore/platform/graphics/texmap/TextureMapperGL.cpp b/Source/WebCore/platform/graphics/texmap/TextureMapperGL.cpp
+index 894ebbf5649eb257598dfd76cefaeeeb78d0e70e..191c4984f585c5422bb79d3fcf2aad66d01714c7 100644
+--- a/Source/WebCore/platform/graphics/texmap/TextureMapperGL.cpp
++++ b/Source/WebCore/platform/graphics/texmap/TextureMapperGL.cpp
+@@ -30,12 +30,14 @@
+ #include <wtf/PassRefPtr.h>
+ #include <wtf/RefCounted.h>
+ 
+-#if PLATFORM(QT) && QT_VERSION >= 0x050000
++#if PLATFORM(QT)
++#if QT_VERSION >= 0x050000
+ #include <QOpenGLContext>
+ #include <QPlatformPixmap>
+-#endif
+-
+-#if OS(WINDOWS)
++#else
++#include <QGLContext>
++#endif // QT_VERSION
++#elif OS(WINDOWS)
+ #include <windows.h>
+ #elif OS(MAC_OS_X)
+ #include <AGL/agl.h>
+@@ -51,16 +53,23 @@
+ #endif
+ 
+ #define GL_CMD(...) do { __VA_ARGS__; ASSERT_ARG(__VA_ARGS__, !glGetError()); } while (0)
+-
+ namespace WebCore {
+ struct TextureMapperGLData {
+     struct SharedGLData : public RefCounted<SharedGLData> {
+-#if PLATFORM(QT) && QT_VERSION >= 0x050000
++#if PLATFORM(QT)
++#if QT_VERSION >= 0x050000
+         typedef QOpenGLContext* GLContext;
+         static GLContext getCurrentGLContext()
+         {
+             return QOpenGLContext::currentContext();
+         }
++#else
++        typedef const QGLContext* GLContext;
++        static GLContext getCurrentGLContext()
++        {
++            return QGLContext::currentContext();
++        }
++#endif
+ #elif OS(WINDOWS)
+         typedef HGLRC GLContext;
+         static GLContext getCurrentGLContext()

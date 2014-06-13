@@ -1,11 +1,14 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="4"
 
-EGIT_REPO_URI="git://gitorious.org/thierryreding/${PN}.git
-	http://git.gitorious.org/thierryreding/${PN}.git"
+#EGIT_REPO_URI="git://gitorious.org/thierryreding/${PN}.git
+#	http://git.gitorious.org/thierryreding/${PN}.git"
+#EGIT_REPO_URI="git://people.freedesktop.org/~tagr/${PN}"
+
+EGIT_REPO_URI="https://github.com/grate-driver/xf86-video-opentegra.git"
 
 inherit autotools-utils xorg-2 git-2
 
@@ -21,7 +24,7 @@ AUTOTOOLS_IN_SOURCE_BUILD="yes"
 AUTOTOOLS_AUTORECONF="yes"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-0.6.0-DamageUnregister-fix.patch
+	#epatch "${FILESDIR}"/${PN}-0.6.0-DamageUnregister-fix.patch
 
 	test -d "${S}"/m4 || mkdir "${S}"/m4
 	autotools-utils_src_prepare
