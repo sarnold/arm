@@ -175,6 +175,12 @@ src_prepare() {
 	# https://bugs.webkit.org/show_bug.cgi?id=129542
 	epatch "${FILESDIR}"/${PN}-2.4.1-ia64-malloc.patch
 
+	# take stab at fixing arm linker fail
+	epatch "${FILESDIR}"/${PN}-undefined-symbols-test.patch
+	# remove the 2.2 only part
+#	sed -i '/JSCInlines/d' \
+#		"${S}"/Source/WebCore/Modules/webaudio/AudioBuffer.cpp
+
 	AT_M4DIR=Source/autotools eautoreconf
 
 	gnome2_src_prepare
@@ -242,6 +248,7 @@ src_configure() {
 		--with-gtk=3.0 \
 		--enable-dependency-tracking \
 		--disable-gtk-doc \
+		--enable-maintainer-mode \
 		${myconf}
 }
 

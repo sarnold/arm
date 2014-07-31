@@ -179,8 +179,8 @@ src_prepare() {
 	# https://bugs.webkit.org/show_bug.cgi?id=86835
 	epatch "${FILESDIR}"/${PN}-2.2.5-sparc64-build.patch
 
-	# take stab at fixing arm linker/opengl crap
-	#epatch "${FILESDIR}"/${PN}-2.2.6-fix-linking-issue.patch
+	# take stab at fixing arm linker fail
+	epatch "${FILESDIR}"/${PN}-undefined-symbols.patch
 
 	AT_M4DIR=Source/autotools eautoreconf
 
