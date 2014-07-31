@@ -1,17 +1,29 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=2
 
-inherit xorg-2
+inherit autotools eutils x-modular
 
-DESCRIPTION="Unaccelerated generic driver for kernel modesetting"
-SRC_URI="http://people.freedesktop.org/~tagr/xf86-video-opentegra-0.6.0.tar.xz"
+DESCRIPTION="Xorg/Freedesktop driver for NVIDIA Tegra GPUs"
+SRC_URI="http://cgit.freedesktop.org/xorg/driver/xf86-video-opentegra/snapshot/${P}.tar.gz"
 
-KEYWORDS="-* ~arm"
+LICENSE="MIT"
+SLOT="0"
+KEYWORDS="~arm"
 IUSE=""
 
+RDEPEND=">=x11-base/xorg-server-1.10"
+
+DEPEND="${RDEPEND}
+	x11-proto/fontsproto
+	x11-proto/randrproto
+	x11-proto/renderproto
+	x11-proto/videoproto
+	x11-proto/xproto"
+
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-DamageUnregister-fix.patch
+	eautoreconf
 }
+
