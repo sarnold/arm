@@ -199,7 +199,7 @@ multilib_src_configure() {
 		--disable-adrian-aec
 		--disable-esound
 		--localstatedir="${EPREFIX}"/var
-		--with-udev-rules-dir="${EPREFIX}/$(udev_get_udevdir)"/rules.d
+		--with-udev-rules-dir="${EPREFIX}/$(get_udevdir)"/rules.d
 	)
 
 	if ! multilib_is_native_abi; then
