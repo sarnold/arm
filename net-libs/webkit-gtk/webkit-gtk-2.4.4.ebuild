@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-2.4.4.ebuild,v 1.6 2014/07/28 13:48:56 ago Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -184,6 +184,8 @@ src_prepare() {
 	# Fix building on ppc (from OpenBSD, only needed on slot 3)
 	# https://bugs.webkit.org/show_bug.cgi?id=130837
 	epatch "${FILESDIR}"/${PN}-2.4.4-atomic-ppc.patch
+
+	epatch "${FILESDIR}"/${P}-jpeg-9a.patch #481688
 
 	AT_M4DIR=Source/autotools eautoreconf
 
