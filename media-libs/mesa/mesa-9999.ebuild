@@ -180,7 +180,7 @@ src_prepare() {
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
 
 	# add tegra patch from meas-grate repo (8 June, 2014)
-	use arm && epatch ${WORKDIR}/big-master-tegra.diff
+	#use arm && epatch ${WORKDIR}/big-master-tegra.diff
 
 	# Solaris needs some recent POSIX stuff in our case
 	if [[ ${CHOST} == *-solaris* ]] ; then
