@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/raspberrypi-sources/raspberrypi-sources-3.14.9999.ebuild,v 1.1 2014/08/29 21:24:28 xmw Exp $
+# $Header: $
 
 EAPI=5
 
@@ -14,9 +14,9 @@ detect_arch
 
 inherit git-2 versionator
 EGIT_REPO_URI=https://github.com/adafruit/adafruit-raspberrypi-linux.git
+EGIT_HAS_SUBMODULES="1"
 EGIT_PROJECT="adafruit-raspberrypi-linux.git"
 EGIT_BRANCH="rpi-$(get_version_component_range 1-2).y"
-EGIT_HAS_SUBMODULES="1"
 
 DESCRIPTION="Raspberry PI kernel sources with Adafruit patches"
 HOMEPAGE="https://github.com/adafruit"
@@ -26,4 +26,18 @@ KEYWORDS=""
 src_unpack() {
 	git-2_src_unpack
 	unpack_set_extraversion
+}
+
+src_prepare() {
+	if [[ -e "{$}"/drivers/video/fbtft/Kconfig ]] ; then
+		continue
+	else
+		git submodule init
+		git submodule sync
+		git submodule update
+	fi
+
+	git config user.email "portage@gentoo.org"
+	git config user.name "Portage git-2"
+	git commit -a -n -m"removing -dirty flag"
 }
