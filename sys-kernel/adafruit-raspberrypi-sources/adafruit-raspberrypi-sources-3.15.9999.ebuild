@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-kernel/raspberrypi-sources/raspberrypi-sources-3.14.9999.ebuild,v 1.1 2014/08/29 21:24:28 xmw Exp $
+# $Header: $
 
 EAPI=5
 
@@ -37,9 +37,7 @@ src_prepare() {
 		git submodule update
 	fi
 
-	mv .git .git-bak
-
-#	git config user.email "portage@gentoo.org"
-#	git config user.name "Portage git-2"
-#	git commit -a -n -m"removing -dirty flag"
+	git config user.email "portage@gentoo.org"
+	git config user.name "Portage git-2"
+	git commit -a -n -m"removing -dirty flag"
 }
