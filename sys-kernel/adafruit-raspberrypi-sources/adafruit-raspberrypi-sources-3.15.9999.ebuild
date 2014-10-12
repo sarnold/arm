@@ -5,7 +5,7 @@
 EAPI=5
 
 ETYPE=sources
-K_DEFCONFIG="bcmrpi_defconfig"
+K_DEFCONFIG="adafruit_defconfig"
 K_SECURITY_UNSUPPORTED=1
 EXTRAVERSION="-${PN}/-*"
 inherit kernel-2
@@ -22,6 +22,8 @@ DESCRIPTION="Raspberry PI kernel sources with Adafruit patches"
 HOMEPAGE="https://github.com/adafruit"
 
 KEYWORDS=""
+
+K_EXTRAEINFO="For Adafruit hardware, start your kernel with adafruit_defconfig."
 
 src_unpack() {
 	git-2_src_unpack
@@ -40,4 +42,14 @@ src_prepare() {
 	git config user.email "portage@gentoo.org"
 	git config user.name "Portage git-2"
 	git commit -a -n -m"removing -dirty flag"
+}
+
+src_install() {
+	kernel-2_src_install
+
+	# minimum needed to fire up fbtft correctly
+	#   - remove when upstream updates their defconfig
+	sed -i -e "s|CONFIG_DMA_BCM2708=m|CONFIG_DMA_BCM2708=y|" \
+	sed -i -e "s|CONFIG_DMA_VIRTUAL_CHANNELS=m|CONFIG_DMA_VIRTUAL_CHANNELS=y|" \
+		"${D}"/usr/src/linux-3.15.9999-adafruit/arch/arm/configs/${K_DEFCONFIG}
 }
