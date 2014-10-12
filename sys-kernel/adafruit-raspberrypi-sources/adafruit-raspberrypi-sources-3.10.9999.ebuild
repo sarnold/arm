@@ -5,7 +5,7 @@
 EAPI=5
 
 ETYPE=sources
-K_DEFCONFIG="bcmrpi_defconfig"
+K_DEFCONFIG="adafruit_defconfig"
 K_SECURITY_UNSUPPORTED=1
 EXTRAVERSION="-${PN}/-*"
 inherit kernel-2
@@ -22,6 +22,8 @@ DESCRIPTION="Raspberry PI kernel sources with Adafruit patches"
 HOMEPAGE="https://github.com/adafruit"
 
 KEYWORDS=""
+
+K_EXTRAEINFO="For Adafruit hardware, start your kernel with adafruit_defconfig."
 
 src_unpack() {
 	git-2_src_unpack
