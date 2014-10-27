@@ -8,7 +8,7 @@ inherit xorg-2
 DESCRIPTION="X.Org libdrm library"
 HOMEPAGE="http://dri.freedesktop.org/"
 if [[ ${PV} = 9999* ]]; then
-	EGIT_REPO_URI="git://github.com/grate-driver/libdrm"
+	EGIT_REPO_URI="git://people.freedesktop.org/~tagr/drm"
 	KEYWORDS=""
 else
 	SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.bz2"
