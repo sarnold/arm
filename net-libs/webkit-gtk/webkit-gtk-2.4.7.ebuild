@@ -11,12 +11,12 @@ inherit autotools check-reqs eutils flag-o-matic gnome2 pax-utils python-any-r1 
 MY_P="webkitgtk-${PV}"
 DESCRIPTION="Open source web browser engine"
 HOMEPAGE="http://www.webkitgtk.org/"
-SRC_URI="http://www.webkitgtk.org/releases/${MY_P}a.tar.xz"
+SRC_URI="http://www.webkitgtk.org/releases/${MY_P}.tar.xz"
 
 LICENSE="LGPL-2+ BSD"
 SLOT="3/25" # soname version of libwebkit2gtk-3.0
-KEYWORDS="alpha amd64 ~arm ~ia64 ppc ppc64 ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
-IUSE="aqua coverage debug +egl +geoloc gles2 +gstreamer +introspection +jit libsecret +opengl spell wayland +webgl +webkit1 +X"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
+IUSE="aqua coverage debug +egl +geoloc gles2 +gstreamer +introspection +jit libsecret +opengl spell wayland +webgl +X"
 # bugs 372493, 416331
 REQUIRED_USE="
 	geoloc? ( introspection )
@@ -60,8 +60,8 @@ RDEPEND="
 	opengl? ( virtual/opengl )
 	spell? ( >=app-text/enchant-0.22:= )
 	wayland? ( >=x11-libs/gtk+-3.10:3[wayland] )
-	webgl? (
-		x11-libs/cairo[opengl]
+	webgl? ( || ( x11-libs/cairo[gles2]
+		x11-libs/cairo[opengl] )
 		x11-libs/libXcomposite
 		x11-libs/libXdamage )
 "
@@ -186,7 +186,15 @@ src_prepare() {
 	# https://bugs.webkit.org/show_bug.cgi?id=130837
 	epatch "${FILESDIR}"/${PN}-2.4.4-atomic-ppc.patch
 
-	epatch "${FILESDIR}"/${P}-jpeg-9a.patch #481688
+	epatch "${FILESDIR}"/${PN}-2.4.4-jpeg-9a.patch #481688
+
+	# Fix building with --disable-webgl, bug #500966
+	# https://bugs.webkit.org/show_bug.cgi?id=131267
+	epatch "${FILESDIR}"/${PN}-2.4.7-disable-webgl.patch
+
+	# Fix building with --disable-accelerated-compositing, bug #525072
+	# https://bugs.webkit.org/show_bug.cgi?id=137640
+	epatch "${FILESDIR}"/${PN}-2.4.7-disable-accelerated-compositing.patch
 
 	AT_M4DIR=Source/autotools eautoreconf
 
@@ -247,7 +255,6 @@ src_configure() {
 		$(use_enable libsecret credential_storage) \
 		$(use_enable opengl glx) \
 		$(use_enable spell spellcheck) \
-		$(use_enable webkit1) \
 		$(use_enable webgl) \
 		$(use_enable webgl accelerated-compositing) \
 		$(use_enable wayland wayland-target) \
@@ -286,8 +293,9 @@ src_install() {
 	newdoc Source/JavaScriptCore/ChangeLog ChangeLog.JavaScriptCore
 	newdoc Source/WebCore/ChangeLog ChangeLog.WebCore
 
-	# Prevents crashes on PaX systems
-	use jit && pax-mark m "${ED}usr/bin/jsc-3"
+	# Prevents crashes on PaX systems, bug #522808
+	use jit && pax-mark m "${ED}usr/bin/jsc-3" "${ED}usr/libexec/WebKitWebProcess"
+	pax-mark m "${ED}usr/libexec/WebKitPluginProcess"
 }
 
 nvidia_check() {
