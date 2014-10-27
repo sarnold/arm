@@ -9,7 +9,6 @@ inherit check-reqs eutils flag-o-matic autotools multilib-minimal
 if [[ ${PV} == *9999* ]]; then
 	inherit git-2
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
-	# EGIT_COMMIT="f337342c88092a251dc00476c4a9880d1cb90822"
 	SRC_URI=""
 else
 	SRC_URI="http://cairographics.org/releases/${P}.tar.xz"
@@ -20,7 +19,7 @@ DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-IUSE="X aqua debug directfb drm gallium gles2 +glib glx legacy-drivers lto opengl openvg qt4 static-libs +svg valgrind xcb xlib-xcb"
+IUSE="X aqua cogl debug directfb drm gallium gles2 +glib glx legacy-drivers lto opengl openvg qt4 static-libs +svg valgrind xcb xlib-xcb"
 # gtk-doc regeneration doesn't seem to work with out-of-source builds
 #[[ ${PV} == *9999* ]] && IUSE="${IUSE} doc" # API docs are provided in tarball, no need to regenerate
 
@@ -67,7 +66,7 @@ DEPEND="${RDEPEND}
 	)"
 #[[ ${PV} == *9999* ]] && DEPEND="${DEPEND}
 #	doc? (
- #		>=dev-util/gtk-doc-1.6
+#		>=dev-util/gtk-doc-1.6
 #		~app-text/docbook-xml-dtd-4.2
 #	)"
 
@@ -76,7 +75,8 @@ DEPEND="${RDEPEND}
 REQUIRED_USE="
 	drm? ( X )
 	gallium? ( drm )
-	gles2? ( !opengl !glx )
+	gles2? ( !opengl )
+	glx? ( opengl )
 	openvg? ( || ( gles2 opengl ) )
 	xlib-xcb? ( xcb )
 "
@@ -85,8 +85,6 @@ MULTILIB_WRAPPED_HEADERS=(
 	/usr/include/cairo/cairo-features.h
 	/usr/include/cairo/cairo-directfb.h
 )
-
-MULTILIB_ABI_FLAG=""
 
 CHECKREQS_MEMORY="768M"
 
@@ -156,6 +154,7 @@ multilib_src_configure() {
 		$(use_enable X xlib-xrender) \
 		$(use_enable aqua quartz) \
 		$(use_enable aqua quartz-image) \
+		$(use_enable cogl) \
 		$(use_enable debug test-surfaces) \
 		$(use_enable drm) \
 		$(use_enable directfb) \
