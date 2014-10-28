@@ -19,7 +19,23 @@ flags as needed, and mask packages as needed.  The general config is:
 
  * Needs package.foo for complete install (depends on usage)
 
- * Kernels: rpi-sources and adafruit-rpi-sources (the latter for PiTFT displays)
+ * Kernels: rpi-sources and adafruit-rpi-sources ebuilds (the latter for PiTFT displays)
+
+   - Trimslice: gentoo-sources (3.15.7-gentoo)
+
+   - RaspberryPi: see above; with fbtft drivers (3.15.8-adafruit+) and without (3.12.21-raspberrypi)
+
+   - Wandboard-quad and Udoo-quad: `RCN LinuxOnArm`_ patches on mainline (wand: 3.16.3-armv7-x4-00237-gd472049, udoo: 3.15.0-rc8-armv7-x1.2)
+
+   - BeagleboneBlack: RCN bb_kernel patches on mainline (3.15.0-bone1)
+
+   - Chromebook: stock Google ChromeOS 3.4.0 (custom config, installed as KERN3, USB3 rootfs)
+
+   - Efikamx: "Latest" upstream kernel, custom config (2.6.31.14.27-efikamx) external ASIX module, SDCard rootfs
+
+   - MK802-II 1 GB: "Latest" upstream kernel with correct device tree (3.4.75.sun4i+), custom config, SDCard rootfs
+
+.. _RCN LinuxOnArm: http://eewiki.net/display/linuxonarm/Home
 
 Steev's test setup:
 
@@ -37,3 +53,4 @@ Steev's test setup:
 
  * Configs: See the config directory for test configs
 
+Config differences are minimal, mainly graphics and neon. Webkit-gtk builds with everything but jit, the cairo gles backend is enabled instead of opengl, and Trimslice uses opentegra-specific repos and mesa-9999.
