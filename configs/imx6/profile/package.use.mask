@@ -1,0 +1,2 @@
+x11-libs/cairo -gles2
+dev-libs/weston -gles2 -rpi

@@ -1,0 +1,5 @@
+dev-libs/weston -gles2 -rpi opengl
+x11-libs/cairo -gles2 opengl
+
+media-video/mplayer -x264
+media-video/ffmpeg -x264
