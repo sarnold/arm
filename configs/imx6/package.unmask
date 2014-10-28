@@ -1,0 +1,9 @@
+#>=net-libs/webkit-gtk-2.4.1
+#>=net-libs/webkit-gtk-2.4.1-r200
+
+>=sys-power/upower-0.99
+>=app-misc/geoclue-2.1.8
+
+>=x11-libs/cairo-9999
+>=net-wireless/blueman-9999
+

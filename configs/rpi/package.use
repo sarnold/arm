@@ -1,0 +1,22 @@
+net-libs/libproxy -webkit
+net-libs/webkit-gtk -opengl
+=x11-libs/cairo-9999 -drm
+dev-libs/weston colord editor examples fbdev rdp -resize-optimization suid view wayland-compositor xwayland
+sys-apps/kmod lzma
+
+sys-libs/ncurses tinfo
+net-dns/avahi mdnsresponder-compat
+dev-libs/boost icu
+media-libs/harfbuzz icu
+
+app-misc/mc -slang sftp
+dev-libs/DirectFB fbcon imlib2 jpeg2k
+media-libs/libsdl alsa fbcon -joystick -pulseaudio sound tslib video -X -aalib
+
+media-video/mplayer2 -dvd -dvdnav yuv4mpeg
+media-video/mplayer live lzo rtc -dvd -dvdnav -encode libmpeg2 -opengl -osdmenu -xscreensaver -xv -X
+
+media-video/ffmpeg armv6 armvfp -encode -opengl -X
+media-video/libav armv6 armvfp encode -opengl X tools
+media-sound/lame  sndfile
+media-plugins/alsa-plugins ffmpeg

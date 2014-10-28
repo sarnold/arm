@@ -1,0 +1,15 @@
+=dev-libs/openssl-1.0.2_beta1-r2 **
+
+=x11-libs/cairo-9999 **
+
+>=media-libs/raspberrypi-userland-9999 **
+>=sys-kernel/raspberrypi-sources-3.11.9999-r1 **
+>=sys-kernel/adafruit-raspberrypi-sources-3.10.9999 **
+
+>=sys-block/zram-init-3.0 **
+
+>=dev-python/pyalsa-1.0.26-r1 **
+>=media-sound/alsa-tools-1.0.28 **
+>=media-sound/pavucontrol-2.0 **
+>=media-sound/paprefs-0.9.10 **
+

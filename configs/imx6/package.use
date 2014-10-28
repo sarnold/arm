@@ -1,0 +1,94 @@
+app-misc/mc samba sftp
+
+dev-libs/libxml2 icu
+x11-libs/libxcb xkb
+mail-client/claws-mail gdata smime -webkit
+net-libs/libproxy -webkit
+net-libs/webkit-gtk -opengl geoloc gles2 gstreamer introspection -jit webgl webkit1
+media-libs/cogl -opengl gles2
+x11-libs/cairo -drm -lto -gles2 opengl xcb xlib-xcb
+
+dev-libs/weston colord editor examples fbdev rdp -resize-optimization view wayland-compositor xwayland -opengl
+www-client/midori granite -jit webkit2 -deprecated -introspection
+media-sound/pulseaudio gnome
+
+sys-libs/glibc -nscd
+sys-apps/kmod lzma
+
+# for midori crashing bug on arm
+=net-libs/webkit-gtk-1* -jit
+
+net-libs/glib-networking  -libproxy
+
+media-libs/libcanberra sound
+sys-fs/lvm2 lvm1
+gnome-base/gvfs archive avahi bluetooth cdda fuse gdu gnome-keyring gphoto2 http ios mtp samba udisks
+dev-libs/boost icu
+sys-devel/make guile
+sys-libs/ncurses tinfo
+sys-auth/pambase gnome-keyring mktemp pam_ssh
+app-text/ghostscript-gpl cups
+sys-apps/util-linux tty-helpers
+
+media-sound/exaile -gnome ffmpeg
+sys-auth/polkit wheel
+media-libs/gd fontconfig
+media-video/vlc faad gnutls opengl
+media-gfx/imagemagick  corefonts djvu fftw fontconfig graphviz jbig jpeg2k lzma
+x11-libs/vte glade
+x11-terms/xterm Xaw3d toolbar
+>=dev-python/markupsafe-0.18 python_targets_python3_3
+>=dev-python/mako-0.7.3-r2 python_targets_python3_3
+=dev-python/setuptools-1.1.6 python_targets_python3_3
+
+net-irc/hexchat -gtkspell libcanberra perl plugin-checksum plugin-doat plugin-fishlim plugin-sysinfo sexy
+media-sound/rhythmbox python_single_target_python3_3 python_targets_python3_3
+
+>=dev-python/pycairo-1.10.0-r4 python_targets_python3_3
+>=dev-python/pygobject-3.8.3 python_targets_python3_3
+>=virtual/python-unittest2-1-r2 python_targets_python3_3
+
+net-fs/samba -winbind
+net-fs/cifs-utils -acl -ads creds
+media-libs/gst-plugins-base theora
+
+media-video/vlc cddb egl fontconfig -opengl live matroska neon omxil alsa rtsp taglib theora wma-fixed
+
+x11-themes/gentoo-artwork -grub offensive
+x11-misc/tint2 battery tint2conf
+x11-base/xorg-server -minimal xvfb kdrive
+x11-apps/xinit -minimal
+
+x11-libs/libdrm libkms
+#=media-libs/mesa-10* -xa
+#>=media-libs/mesa-9999 -xorg
+media-libs/mesa classic egl gallium gles1 gles2 llvm nptl pic xa xvmc -bindist
+x11-apps/mesa-progs egl gles1 gles2
+
+# for firefox to use system libs
+dev-db/sqlite secure-delete
+dev-lang/python sqlite
+media-plugins/gst-plugins-meta ffmpeg
+dev-libs/glib utils
+
+virtual/udev hwdb
+net-misc/networkmanager modemmanager
+
+net-misc/tightvnc server
+net-dns/avahi mdnsresponder-compat autoipd gtk3
+media-libs/harfbuzz icu
+
+media-video/ffmpeg -bindist fontconfig jack libv4l flite openssl theora threads
+app-office/abiword calendar collab -eds grammar latex math openxml ots thesaurus wmf
+
+app-misc/ddccontrol -gnome
+app-laptop/tlp X -thinkpad ethtool -laptop-mode-tools smartmontools
+
+app-mobilephone/obex-data-server imagemagick
+net-wireless/blueman network sendto
+net-dns/dnsmasq dhcp-tools script
+
+>=media-libs/chromaprint-0.7 tools
+>=dev-lang/python-2.7.5-r2:2.7 berkdb
+>=sys-libs/zlib-1.2.8-r1 minizip
+
