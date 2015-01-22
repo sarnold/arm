@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-sound/pulseaudio/pulseaudio-4.0-r1.ebuild,v 1.2 2013/11/30 22:05:37 mgorny Exp $
+# $Header: $
 
 EAPI="5"
 
@@ -83,7 +83,7 @@ PDEPEND="alsa? ( >=media-plugins/alsa-plugins-1.0.27-r1[pulseaudio] )"
 # PyQt4 dep is for the qpaeq script
 RDEPEND="${RDEPEND}
 	equalizer? ( qt4? ( dev-python/PyQt4[dbus] ) )
-	X? ( gnome-extra/gnome-audio )
+	gnome? ( gnome-extra/gnome-audio )
 	system-wide? (
 		sys-apps/openrc
 		alsa? ( media-sound/alsa-utils )
