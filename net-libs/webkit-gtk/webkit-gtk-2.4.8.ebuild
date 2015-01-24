@@ -192,6 +192,10 @@ src_prepare() {
 	# https://bugs.webkit.org/show_bug.cgi?id=137640
 	epatch "${FILESDIR}"/${PN}-2.4.7-disable-accelerated-compositing.patch
 
+	# Fix building with x11+wayland, bug #536898
+	# https://bugs.webkit.org/show_bug.cgi?id=140241
+	epatch "${FILESDIR}"/${PN}-2.4.8-wayland-webkit2.patch
+
 	AT_M4DIR=Source/autotools eautoreconf
 
 	gnome2_src_prepare
