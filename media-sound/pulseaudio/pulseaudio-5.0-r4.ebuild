@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,7 +16,7 @@ SRC_URI="http://freedesktop.org/software/pulseaudio/releases/${P}.tar.xz"
 LICENSE="!gdbm? ( LGPL-2.1 ) gdbm? ( GPL-2 )"
 
 SLOT="0"
-KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~amd64-linux ~x86-linux"
+KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 ~sh sparc x86 ~amd64-linux ~x86-linux"
 
 IUSE="+alsa +asyncns avahi bluetooth +caps dbus doc equalizer +gdbm +glib gnome
 gtk ipv6 jack libsamplerate lirc neon +orc oss qt4 realtime ssl systemd
@@ -70,9 +70,12 @@ RDEPEND="
 	dev-libs/json-c[${MULTILIB_USEDEP}]
 	abi_x86_32? ( !<=app-emulation/emul-linux-x86-soundlibs-20131008-r1
 		!app-emulation/emul-linux-x86-soundlibs[-abi_x86_32(-)] )
-	>=sys-devel/libtool-2.4.2
+	|| (
+		dev-libs/libltdl:0
+		( >=sys-devel/libtool-2.4.2 <sys-devel/libtool-2.4.3-r2 )
+	)
 "
-# it's a valid RDEPEND, libltdl.so is used
+# it's a valid RDEPEND, libltdl.so is used for native abi
 
 DEPEND="${RDEPEND}
 	sys-devel/m4
@@ -243,7 +246,9 @@ multilib_src_compile() {
 	if multilib_is_native_abi; then
 		emake
 	else
-		emake -C src libpulse{,-simple,-mainloop-glib}.la
+		local targets=( libpulse.la libpulse-simple.la )
+		use glib && targets+=( libpulse-mainloop-glib.la )
+		emake -C src ${targets[@]}
 	fi
 }
 
@@ -270,10 +275,12 @@ multilib_src_install() {
 	if multilib_is_native_abi; then
 		emake -j1 DESTDIR="${D}" bashcompletiondir="$(get_bashcompdir)" install
 	else
+		local targets=( libpulse.la libpulse-simple.la )
+		use glib && targets+=( libpulse-mainloop-glib.la )
 		emake DESTDIR="${D}" install-pkgconfigDATA
 		emake DESTDIR="${D}" -C src \
 			install-libLTLIBRARIES \
-			lib_LTLIBRARIES="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la" \
+			lib_LTLIBRARIES="${targets[*]}" \
 			install-pulseincludeHEADERS
 	fi
 }

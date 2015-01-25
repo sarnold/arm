@@ -1,9 +1,9 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-sound/pulseaudio/pulseaudio-5.0-r6.ebuild,v 1.5 2014/12/06 12:01:58 pacho Exp $
+# $Header: $
 
 EAPI="5"
-inherit autotools bash-completion-r1 eutils flag-o-matic linux-info readme.gentoo systemd user versionator udev multilib-minimal
+inherit autotools bash-completion-r1 eutils flag-o-matic gnome2-utils linux-info readme.gentoo systemd user versionator udev multilib-minimal
 
 DESCRIPTION="A networked sound server with an advanced plugin system"
 HOMEPAGE="http://www.pulseaudio.org/"
@@ -16,7 +16,7 @@ SRC_URI="http://freedesktop.org/software/pulseaudio/releases/${P}.tar.xz"
 LICENSE="!gdbm? ( LGPL-2.1 ) gdbm? ( GPL-2 )"
 
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~alpha ~amd64 ~arm hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-linux ~x86-linux"
 
 # +alsa-plugin as discussed in bug #519530
 IUSE="+alsa +alsa-plugin +asyncns bluetooth +caps dbus doc equalizer +gdbm +glib
@@ -120,6 +120,7 @@ pkg_pretend() {
 }
 
 pkg_setup() {
+	gnome2_environment_reset
 	linux-info_pkg_setup
 
 	enewgroup audio 18 # Just make sure it exists
@@ -143,6 +144,12 @@ src_prepare() {
 
 	# Fix module-zeroconf-publish crashes, bug #504612 (from 'master')
 	epatch "${FILESDIR}"/${P}-zeroconf-crash-{1,2,3}.patch
+
+	# svolume.orc: avoid parameter loading undefined behaviour
+	# orc-0.4.23 triggers a bug on certain volume changes with PA, leading to distorted sounds
+	# http://lists.freedesktop.org/archives/pulseaudio-discuss/2015-January/022905.html
+	# Gentoo bug 534144
+	epatch "${FILESDIR}"/svolume-fix_param_loading_undefined_beh.patch
 
 	epatch_user
 	eautoreconf
