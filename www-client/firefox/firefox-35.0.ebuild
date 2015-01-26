@@ -44,7 +44,7 @@ HOMEPAGE="http://www.mozilla.com/firefox"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist hardened +minimal pgo selinux +gmp-autoupdate test"
+IUSE="bindist hardened +minimal neon pgo selinux +gmp-autoupdate test"
 
 # More URIs appended below...
 SRC_URI="${SRC_URI}
@@ -221,7 +221,14 @@ src_configure() {
 
 	# Make sure armv7 cpu is enabled for webrtc
 	if [[ ${CHOST} == armv7* ]] ; then
-		append-cppflags "-DWEBRTC_ARCH_ARM_V7"
+		append-cppflags -DWEBRTC_ARCH_ARM_V7
+		filter-flags -DDISABLE_FLOAT_API -DCROSS_COMPILE='1'
+		if use neon ; then
+			append-cppflags -DHAVE_ARM_SIMD='1' -DHAVE_ARM_NEON='1' -DBUILD_ARM_NEON='1'
+			filter-flags -D__ARM_PCS_VFP
+		else
+			append-cppflags -D__ARM_PCS_VFP -DHAVE_ARM_SIMD='0' -DHAVE_ARM_NEON='0' -DBUILD_ARM_NEON='0'
+		fi
 	fi
 
 	# Setup api key for location services
@@ -254,6 +261,7 @@ src_configure() {
 }
 
 src_compile() {
+	use arm && mkdir -p "${BUILD_OBJ_DIR}"
 	use arm && cp "${FILESDIR}"/autoconf.mk.gentoo \
 		"${BUILD_OBJ_DIR}"/config/autoconf.mk
 	sed -i -e '/#define CROSS_COMPILE 1/d' \
