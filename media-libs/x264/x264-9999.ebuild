@@ -15,15 +15,15 @@ else
 	inherit versionator
 	MY_P="x264-snapshot-$(get_version_component_range 3)-2245"
 	SRC_URI="http://download.videolan.org/pub/videolan/x264/snapshots/${MY_P}.tar.bz2"
-	KEYWORDS="alpha amd64 ~arm hppa ~ia64 ~mips ppc ppc64 sparc x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
+	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos"
 	S="${WORKDIR}/${MY_P}"
 fi
 
-SONAME="142"
+SONAME="144"
 SLOT="0/${SONAME}"
 
 LICENSE="GPL-2"
-IUSE="10bit +interlaced neon opencl static-libs sse +threads"
+IUSE="10bit +interlaced neon opencl static-libs cpu_flags_x86_sse +threads"
 
 ASM_DEP=">=dev-lang/yasm-1.2.0"
 DEPEND="abi_x86_32? ( ${ASM_DEP} )
@@ -35,30 +35,25 @@ RDEPEND="opencl? ( >=virtual/opencl-0-r3[${MULTILIB_USEDEP}] )
 
 DOCS="AUTHORS doc/*.txt"
 
-src_prepare() {
-	# Initial support for x32 ABI, bug #420241
-	# Avoid messing too much with CFLAGS.
-	epatch "${FILESDIR}"/${PN}-cflags.patch
-}
-
 multilib_src_configure() {
 	tc-export CC
 	local asm_conf=""
 
-	if [[ ${ABI} == x86* ]] && use pic || [[ ${ABI} == "x32" ]]; then
+	if [[ ${ABI} == x86* ]] || [[ ${ABI} == "x32" ]]; then
 		asm_conf=" --disable-asm"
 	fi
 
 	if [[ ${ABI} == arm* ]] ; then
-		append-cppflags "-DPREFIX"
+#		append-cppflags "-DPREFIX"
 		if use neon ; then
-			append-cppflags "-DHAVE_NEON"
+			append-cppflags "-DHAVE_NEON -fpic"
 			append-flags "-mfpu=neon"
+			append-ldflags "-fpic"
 		fi
 	fi
 
 	# Upstream uses this, see the cflags patch
-	use sse && append-flags "-msse" "-mfpmath=sse"
+	use cpu_flags_x86_sse && append-flags "-msse" "-mfpmath=sse"
 
 	"${S}/configure" \
 		--prefix="${EPREFIX}"/usr \
