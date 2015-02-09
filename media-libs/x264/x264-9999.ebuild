@@ -43,11 +43,11 @@ multilib_src_configure() {
 		asm_conf=" --disable-asm"
 	fi
 
-	if [[ ${ABI} == arm* ]] ; then
+	if [[ ${ABI} == armv7* ]] ; then
 #		append-cppflags "-DPREFIX"
 		if use neon ; then
-			append-cppflags "-DHAVE_NEON -fpic"
-			append-flags "-mfpu=neon"
+			append-cppflags "-DHAVE_NEON"
+			append-flags "-mfpu=neon -mthumb -fpic"
 			append-ldflags "-fpic"
 		fi
 	fi
