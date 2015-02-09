@@ -147,6 +147,7 @@ done
 
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
+	dev-python/mako
 	llvm? (
 		r600-llvm-compiler? ( sys-devel/llvm[video_cards_radeon] )
 		video_cards_radeonsi? ( sys-devel/llvm[video_cards_radeon] )
