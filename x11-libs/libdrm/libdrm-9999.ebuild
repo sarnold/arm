@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,7 @@ else
 	SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.bz2"
 fi
 
-KEYWORDS="~alpha amd64 ~arm hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~arm-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~x86-freebsd ~amd64-linux ~arm-linux ~x86-linux ~sparc-solaris ~x64-solaris ~x86-solaris"
 VIDEO_CARDS="exynos freedreno intel nouveau omap radeon tegra vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
@@ -30,7 +30,6 @@ RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
 DEPEND="${RDEPEND}"
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-2.4.58-solaris.patch
 	"${FILESDIR}"/${PN}-arm-update.patch
 )
 
@@ -44,9 +43,11 @@ src_prepare() {
 
 src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
-		--enable-udev
+		# Udev is only used by tests now.
+		--disable-udev
+		--disable-cairo-tests
 		$(use_enable video_cards_exynos exynos-experimental-api)
-		$(use_enable video_cards_freedreno freedreno-experimental-api)
+		$(use_enable video_cards_freedreno freedreno)
 		$(use_enable video_cards_intel intel)
 		$(use_enable video_cards_nouveau nouveau)
 		$(use_enable video_cards_omap omap-experimental-api)

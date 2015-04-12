@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-drivers/xorg-drivers-1.17.ebuild,v 1.2 2015/03/03 10:56:50 dlan Exp $
 
 EAPI=5
 
@@ -10,7 +10,7 @@ SRC_URI=""
 
 LICENSE="metapackage"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_INPUT_DEVICES="
 	input_devices_acecad
@@ -21,6 +21,7 @@ IUSE_INPUT_DEVICES="
 	input_devices_hyperpen
 	input_devices_joystick
 	input_devices_keyboard
+	input_devices_libinput
 	input_devices_mouse
 	input_devices_mutouch
 	input_devices_penmount
@@ -39,6 +40,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_dummy
 	video_cards_epson
 	video_cards_fbdev
+	video_cards_freedreno
 	video_cards_geode
 	video_cards_glint
 	video_cards_i128
@@ -47,6 +49,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_mach64
 	video_cards_mga
 	video_cards_modesetting
+	video_cards_neomagic
 	video_cards_nouveau
 	video_cards_nv
 	video_cards_omap
@@ -54,7 +57,9 @@ IUSE_VIDEO_CARDS="
 	video_cards_qxl
 	video_cards_r128
 	video_cards_radeon
+	video_cards_radeonsi
 	video_cards_rendition
+	video_cards_s3
 	video_cards_s3virge
 	video_cards_savage
 	video_cards_siliconmotion
@@ -71,7 +76,6 @@ IUSE_VIDEO_CARDS="
 	video_cards_tga
 	video_cards_trident
 	video_cards_tseng
-	video_cards_v4l
 	video_cards_vesa
 	video_cards_via
 	video_cards_virtualbox
@@ -92,6 +96,7 @@ PDEPEND="
 	input_devices_hyperpen?    ( x11-drivers/xf86-input-hyperpen )
 	input_devices_joystick?    ( x11-drivers/xf86-input-joystick )
 	input_devices_keyboard?    ( x11-drivers/xf86-input-keyboard )
+	input_devices_libinput?    ( x11-drivers/xf86-input-libinput )
 	input_devices_mouse?       ( x11-drivers/xf86-input-mouse )
 	input_devices_mutouch?     ( x11-drivers/xf86-input-mutouch )
 	input_devices_penmount?    ( x11-drivers/xf86-input-penmount )
@@ -108,6 +113,7 @@ PDEPEND="
 	video_cards_cirrus?        ( x11-drivers/xf86-video-cirrus )
 	video_cards_dummy?         ( x11-drivers/xf86-video-dummy )
 	video_cards_fbdev?         ( x11-drivers/xf86-video-fbdev )
+	video_cards_freedreno?     ( x11-drivers/xf86-video-freedreno )
 	video_cards_geode?         ( x11-drivers/xf86-video-geode )
 	video_cards_glint?         ( x11-drivers/xf86-video-glint )
 	video_cards_i128?          ( x11-drivers/xf86-video-i128 )
@@ -116,6 +122,7 @@ PDEPEND="
 	video_cards_mach64?        ( x11-drivers/xf86-video-mach64 )
 	video_cards_mga?           ( x11-drivers/xf86-video-mga )
 	video_cards_modesetting?   ( x11-drivers/xf86-video-modesetting )
+	video_cards_neomagic?      ( x11-drivers/xf86-video-neomagic )
 	video_cards_nouveau?       ( x11-drivers/xf86-video-nouveau )
 	video_cards_nv?            ( x11-drivers/xf86-video-nv )
 	video_cards_omap?          ( x11-drivers/xf86-video-omap )
@@ -125,7 +132,9 @@ PDEPEND="
 	video_cards_fglrx?         ( x11-drivers/ati-drivers )
 	video_cards_r128?          ( x11-drivers/xf86-video-r128 )
 	video_cards_radeon?        ( x11-drivers/xf86-video-ati )
+	video_cards_radeonsi?      ( x11-drivers/xf86-video-ati[glamor] )
 	video_cards_rendition?     ( x11-drivers/xf86-video-rendition )
+	video_cards_s3?            ( x11-drivers/xf86-video-s3 )
 	video_cards_s3virge?       ( x11-drivers/xf86-video-s3virge )
 	video_cards_savage?        ( x11-drivers/xf86-video-savage )
 	video_cards_siliconmotion? ( x11-drivers/xf86-video-siliconmotion )
@@ -141,7 +150,6 @@ PDEPEND="
 	video_cards_tga?           ( x11-drivers/xf86-video-tga )
 	video_cards_trident?       ( x11-drivers/xf86-video-trident )
 	video_cards_tseng?         ( x11-drivers/xf86-video-tseng )
-	video_cards_v4l?           ( x11-drivers/xf86-video-v4l )
 	video_cards_vesa?          ( x11-drivers/xf86-video-vesa )
 	video_cards_via?           ( x11-drivers/xf86-video-openchrome )
 	video_cards_virtualbox?    ( x11-drivers/xf86-video-virtualbox )
@@ -154,8 +162,7 @@ PDEPEND="
 	!x11-drivers/xf86-video-nsc
 	!x11-drivers/xf86-video-sunbw2
 	!<=x11-drivers/xf86-video-ark-0.7.5
-	!<=x11-drivers/xf86-video-neomagic-1.2.7
 	!<=x11-drivers/xf86-video-newport-0.2.4
-	!<=x11-drivers/xf86-video-s3-0.6.5
 	!<=x11-drivers/xf86-video-sis-0.10.7
+	!<=x11-drivers/xf86-video-v4l-0.2.0
 "
