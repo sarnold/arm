@@ -9,6 +9,8 @@ inherit toolchain-funcs
 DESCRIPTION="Simple program to read/write from/to any location in memory."
 HOMEPAGE="http://www.lartmaker.nl/lartware/port/"
 
+SRC_URI="https://github.com/sarnold/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
 KEYWORDS="~arm"
 
 SLOT="0"
@@ -16,12 +18,6 @@ LICENSE="GPL-2"
 IUSE=""
 
 DEPEND=""
-
-S="${WORKDIR}"
-
-src_unpack() {
-	cp "${FILESDIR}"/Makefile "${FILESDIR}"/devmem2.c "${S}"/
-}
 
 src_compile() {
 	emake CC=$(tc-getCC) || die "make failed..."
