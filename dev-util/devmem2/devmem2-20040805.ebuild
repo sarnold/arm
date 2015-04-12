@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=4
+
 inherit toolchain-funcs
 
 DESCRIPTION="Simple program to read/write from/to any location in memory."
@@ -23,9 +25,5 @@ src_unpack() {
 
 src_compile() {
 	emake CC=$(tc-getCC) || die "make failed..."
-}
-
-src_install() {
-	dobin "${WORKDIR}/devmem2" || die "install failed..."
 }
 
