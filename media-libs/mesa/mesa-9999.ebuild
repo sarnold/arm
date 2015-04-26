@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -251,13 +251,12 @@ multilib_src_configure() {
 			driver_enable video_cards_radeon radeon r200
 		fi
 
-		# experimental tegra driver
-		# from DEPENDS video_cards_tegra?  ( classic )
-		#gallium_enable video_cards_tegra tegra
+		driver_enable video_cards_tegra tegra
+
 	fi
 
 	if use egl; then
-		myconf+="--with-egl-platforms=x11$(use wayland && echo ",wayland")$(use gbm && echo ",drm") "
+		myconf+="--with-egl-platforms=$(use wayland && echo "wayland,")$(use gbm && echo "drm,")x11 "
 	fi
 
 	if use gallium; then
@@ -290,6 +289,10 @@ multilib_src_configure() {
 		fi
 
 		gallium_enable video_cards_freedreno freedreno
+
+		# experimental tegra driver
+		#gallium_enable video_cards_tegra tegra
+
 		# opencl stuff
 		if use opencl; then
 			myconf+="
