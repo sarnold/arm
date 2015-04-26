@@ -27,36 +27,39 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-35.0-patches-0.1"
+PATCH="${PN}-36.0-patches-01"
 # Upstream ftp release URI that's used by mozlinguas.eclass
 # We don't use the http mirror because it deletes old tarballs.
-MOZ_FTP_URI="ftp://ftp.mozilla.org/pub/${PN}/releases/"
-MOZ_HTTP_URI="http://ftp.mozilla.org/pub/${PN}/releases/"
+MOZ_FTP_URI="ftp://ftp.mozilla.org/pub/${PN}/releases"
+MOZ_HTTP_URI="http://ftp.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_WIFI=1
 MOZCONFIG_OPTIONAL_JIT="enabled"
+MOZCONFIG_OPTIONAL_WIFI=1
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v5.34 multilib pax-utils fdo-mime autotools virtualx mozlinguas
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v5.36 multilib pax-utils fdo-mime autotools virtualx mozlinguas
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
+
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist hardened +minimal neon pgo selinux +gmp-autoupdate test"
+IUSE="bindist egl gtk3 hardened +minimal neon pgo selinux +gmp-autoupdate test"
+RESTRICT="!bindist? ( bindist )"
 
 # More URIs appended below...
 SRC_URI="${SRC_URI}
 	http://dev.gentoo.org/~anarchy/mozilla/patchsets/${PATCH}.tar.xz
-	http://dev.gentoo.org/~axs/distfiles/${PATCH}.tar.xz"
+	http://dev.gentoo.org/~axs/distfiles/${PATCH}.tar.xz
+	http://dev.gentoo.org/~polynomial-c/mozilla/patchsets/${PATCH}.tar.xz"
 
 ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 # Mesa 7.10 needed for WebGL + bugfixes
 RDEPEND="
-	>=dev-libs/nss-3.17.3
-	>=dev-libs/nspr-4.10.7
+	>=dev-libs/nss-3.17.4
+	>=dev-libs/nspr-4.10.8
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
@@ -128,13 +131,6 @@ pkg_pretend() {
 		CHECKREQS_DISK_BUILD="4G"
 	fi
 	check-reqs_pkg_setup
-
-	if use jit && [[ -n ${PROFILE_IS_HARDENED} ]]; then
-		ewarn "You are emerging this package on a hardened profile with USE=jit enabled."
-		ewarn "This is horribly insecure as it disables all PAGEEXEC restrictions."
-		ewarn "Please ensure you know what you are doing.  If you don't, please consider"
-		ewarn "emerging the package with USE=-jit"
-	fi
 }
 
 src_unpack() {
@@ -146,14 +142,13 @@ src_unpack() {
 
 src_prepare() {
 	# Apply our patches
+	EPATCH_EXCLUDE="8002_jemalloc_configure_unbashify.patch" \
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
 	epatch "${WORKDIR}/firefox"
 
 	epatch "${FILESDIR}"/${PN}-35.0-gmp-clearkey-sprintf.patch
-	# add arm-specific fixes as needed
-#	webrtc patch has been upstreamed
-#	epatch "${FILESDIR}"/${PN}-webrtc-armcpufeatures.patch
+	epatch "${FILESDIR}"/${PN}-37.0-jemalloc_configure_unbashify.patch
 
 	# Allow user to apply any additional patches without modifing ebuild
 	epatch_user
@@ -219,16 +214,21 @@ src_configure() {
 	# Add full relro support for hardened
 	use hardened && append-ldflags "-Wl,-z,relro,-z,now"
 
-	# Make sure armv7 cpu is enabled for webrtc
-	if [[ ${CHOST} == armv7* ]] ; then
-		append-cppflags -DWEBRTC_ARCH_ARM_V7
-		filter-flags -DDISABLE_FLOAT_API -DCROSS_COMPILE='1'
-		if use neon ; then
-			append-cppflags -D__ARM_PCS_VFP -DHAVE_ARM_SIMD='1' -DHAVE_ARM_NEON='1' -DBUILD_ARM_NEON='1'
-		else
-			append-cppflags -DHAVE_ARM_SIMD='0' -DHAVE_ARM_NEON='0' -DBUILD_ARM_NEON='0'
+	if use neon ; then
+		mozconfig_annotate '' --with-fpu=neon
+		mozconfig_annotate '' --with-thumb=yes
+		mozconfig_annotate '' --with-thumb-interwork=no
+		mozconfig_annotate '' --with-float-abi=hard
+
+		if ! use system-libvpx ; then
+			sed -i -e "s|softfp|hard|" \
+				"${S}"/media/libvpx/moz.build
 		fi
 	fi
+
+	use gtk3 && mozconfig_annotate 'Enable Cairo Gtk+3 support' --enable-default-toolkit=cairo-gtk3
+
+	use egl && mozconfig_annotate 'Enable EGL as GL provider' --with-gl-provider=EGL
 
 	# Setup api key for location services
 	echo -n "${_google_api_key}" > "${S}"/google-api-key
@@ -239,6 +239,11 @@ src_configure() {
 
 	# Other ff-specific settings
 	mozconfig_annotate '' --with-default-mozilla-five-home=${MOZILLA_FIVE_HOME}
+
+	# force jit  - switched to config option instead
+	#mozconfig_annotate '' --enable-ion
+	# workaround for arm config missing graphics
+	mozconfig_annotate '' --enable-skia
 
 	# Allow for a proper pgo build
 	if use pgo; then
@@ -257,22 +262,12 @@ src_configure() {
 			append-flags -mno-avx
 		fi
 	fi
+
+	# workaround for funky/broken upstream configure...
+	emake -f client.mk configure
 }
 
 src_compile() {
-	use arm && mkdir -p "${BUILD_OBJ_DIR}"
-	use arm && cp "${FILESDIR}"/autoconf.mk.gentoo \
-		"${BUILD_OBJ_DIR}"/config/autoconf.mk
-	sed -i -e '/#define CROSS_COMPILE 1/d' \
-		-e "s|GL_PROVIDER_GLX|GL_PROVIDER_EGL|" \
-		"${BUILD_OBJ_DIR}"/mozilla-config.h
-	sed -i '/VA_COPY va_copy/ a\
-#define U_STATIC_IMPLEMENTATION 1\
-#define U_USING_ICU_NAMESPACE 0\
-#define VPX_ARM_ASM 1\
-' \
-		"${BUILD_OBJ_DIR}"/mozilla-config.h
-
 	if use pgo; then
 		addpredict /root
 		addpredict /etc/gconf
@@ -300,7 +295,7 @@ src_compile() {
 	else
 		CC="$(tc-getCC)" CXX="$(tc-getCXX)" LD="$(tc-getLD)" \
 		MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL}" \
-		emake -f client.mk
+		emake -f client.mk realbuild
 	fi
 
 }
@@ -379,11 +374,7 @@ src_install() {
 	fi
 
 	# Required in order to use plugins and even run firefox on hardened.
-	if use jit; then
-		pax-mark m "${ED}"${MOZILLA_FIVE_HOME}/{firefox,firefox-bin,plugin-container}
-	else
-		pax-mark m "${ED}"${MOZILLA_FIVE_HOME}/plugin-container
-	fi
+	pax-mark m "${ED}"${MOZILLA_FIVE_HOME}/{firefox,firefox-bin,plugin-container}
 
 	if use minimal; then
 		rm -r "${ED}"/usr/include "${ED}${MOZILLA_FIVE_HOME}"/{idl,include,lib,sdk} \
