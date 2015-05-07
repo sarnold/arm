@@ -1,5 +1,10 @@
-dev-libs/weston -gles2 -rpi opengl
-x11-libs/cairo -gles2 opengl
+x11-libs/cairo -gles2
+dev-libs/weston -gles2 -rpi
 
-media-video/mplayer -x264
-media-video/ffmpeg -x264
+media-video/libav -vdpau -vpx -x264
+media-video/ffmpeg -vdpau -vpx -x264
+virtual/ffmpeg -vdpau -vpx -x264
+
+lxqt-base/lxqt-meta -lximage
+
+media-video/mplayer -vdpau -vpx -x264
