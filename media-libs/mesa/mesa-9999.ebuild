@@ -43,7 +43,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86
 
 INTEL_CARDS="i915 i965 ilo intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon radeonsi"
-VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} freedreno nouveau tegra vmware"
+VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} freedreno nouveau tegra vmware vc4"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
@@ -71,6 +71,7 @@ REQUIRED_USE="
 	xa?  ( gallium )
 	video_cards_freedreno?  ( gallium )
 	video_cards_tegra?  ( classic )
+	video_cards_vc4?  ( gallium )
 	video_cards_intel?  ( || ( classic gallium ) )
 	video_cards_i915?   ( || ( classic gallium ) )
 	video_cards_i965?   ( classic )
@@ -133,6 +134,7 @@ RDEPEND="
 	xvmc? ( >=x11-libs/libXvMC-1.0.8:=[${MULTILIB_USEDEP}] )
 	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_nouveau?,video_cards_tegra?,video_cards_vmware?,${MULTILIB_USEDEP}]
 "
+
 for card in ${INTEL_CARDS}; do
 	RDEPEND="${RDEPEND}
 		video_cards_${card}? ( ${LIBDRM_DEPSTRING}[video_cards_intel] )
@@ -251,6 +253,7 @@ multilib_src_configure() {
 			driver_enable video_cards_radeon radeon r200
 		fi
 
+		# (still) experimental tegra patches
 		driver_enable video_cards_tegra tegra
 
 	fi
@@ -263,7 +266,7 @@ multilib_src_configure() {
 		myconf+="
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
-			$(use_enable openvg gallium-egl)
+			$(use_enable egl gallium-egl)
 			$(use_enable openmax omx)
 			$(use_enable r600-llvm-compiler)
 			$(use_enable vdpau)
@@ -290,8 +293,8 @@ multilib_src_configure() {
 
 		gallium_enable video_cards_freedreno freedreno
 
-		# experimental tegra driver
-		#gallium_enable video_cards_tegra tegra
+		# experimental RPi VideoCore4 driver (needs RPi drm kernel patches)
+		gallium_enable video_cards_vc4 vc4
 
 		# opencl stuff
 		if use opencl; then
@@ -350,6 +353,13 @@ multilib_src_install() {
 		for x in "${ED}"/usr/$(get_libdir)/lib{EGL,GL*,OpenVG}.{la,a,so*}; do
 			if [ -f ${x} -o -L ${x} ]; then
 				mv -f "${x}" "${ED}${gl_dir}"/lib \
+					|| die "Failed to move ${x}"
+			fi
+		done
+		for x in "${ED}"/usr/$(get_libdir)/lib/pkgconfig/{egl.pc,glesv2.pc}; do
+			use wayland && x+="${ED}/usr/$(get_libdir)/lib/pkgconfig/wayland-egl.pc"
+			if [ -f ${x} ]; then
+				mv -f "${x}" "${ED}${gl_dir}"/lib/pkgconfig \
 					|| die "Failed to move ${x}"
 			fi
 		done

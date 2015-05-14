@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-base/xorg-drivers/xorg-drivers-1.17.ebuild,v 1.2 2015/03/03 10:56:50 dlan Exp $
+# $Header: $
 
 EAPI=5
 
@@ -76,6 +76,7 @@ IUSE_VIDEO_CARDS="
 	video_cards_tga
 	video_cards_trident
 	video_cards_tseng
+	video_cards_vc4
 	video_cards_vesa
 	video_cards_via
 	video_cards_virtualbox
@@ -152,6 +153,7 @@ PDEPEND="
 	video_cards_tseng?         ( x11-drivers/xf86-video-tseng )
 	video_cards_vesa?          ( x11-drivers/xf86-video-vesa )
 	video_cards_via?           ( x11-drivers/xf86-video-openchrome )
+	video_cards_vc4?           ( x11-drivers/xf86-video-modesetting )
 	video_cards_virtualbox?    ( x11-drivers/xf86-video-virtualbox )
 	video_cards_vmware?        ( x11-drivers/xf86-video-vmware )
 	video_cards_voodoo?        ( x11-drivers/xf86-video-voodoo )
