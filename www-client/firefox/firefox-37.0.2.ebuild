@@ -218,12 +218,13 @@ src_configure() {
 		mozconfig_annotate '' --with-fpu=neon
 		mozconfig_annotate '' --with-thumb=yes
 		mozconfig_annotate '' --with-thumb-interwork=no
-		mozconfig_annotate '' --with-float-abi=hard
+	fi
 
-		if ! use system-libvpx ; then
-			sed -i -e "s|softfp|hard|" \
-				"${S}"/media/libvpx/moz.build
-		fi
+	mozconfig_annotate '' --with-float-abi=hard
+
+	if ! use system-libvpx ; then
+		sed -i -e "s|softfp|hard|" \
+			"${S}"/media/libvpx/moz.build
 	fi
 
 	use gtk3 && mozconfig_annotate 'Enable Cairo Gtk+3 support' --enable-default-toolkit=cairo-gtk3
