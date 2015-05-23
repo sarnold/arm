@@ -54,3 +54,9 @@ Steev's test setup:
  * Configs: See the config directory for test configs
 
 Config differences are minimal, mainly graphics and neon. Webkit-gtk builds with everything but jit, the cairo gles backend is enabled instead of opengl, and Trimslice uses opentegra-specific repos and mesa-9999.
+
+You can (optionally) add this overlay with layman::
+
+  $ wget "https://raw.github.com/steev/arm/master/configs/layman.xml" -O /etc/layman/overlays/arm_support.xml
+  $ layman -f -a arm_support
+
