@@ -28,8 +28,8 @@ RDEPEND="
 	>=dev-libs/glib-2.37.3:2
 	>=dev-libs/atk-2.5.3[introspection?]
 	>=dev-libs/json-glib-0.12[introspection?]
-	>=media-libs/cogl-1.18.0[introspection?,pango,wayland?]
-	>=x11-libs/cairo-1.12:=[aqua?,glib]
+	>=media-libs/cogl-1.20.0[introspection?,pango,wayland?]
+	>=x11-libs/cairo-1.14:=[aqua?,glib]
 	>=x11-libs/pango-1.30[introspection?]
 
 	virtual/opengl
