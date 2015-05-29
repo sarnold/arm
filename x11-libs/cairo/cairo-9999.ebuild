@@ -7,9 +7,8 @@ EAPI=5
 inherit check-reqs eutils flag-o-matic autotools multilib-minimal
 
 if [[ ${PV} == *9999* ]]; then
-	inherit git-2
+	inherit git-r3
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
-	# EGIT_COMMIT="f337342c88092a251dc00476c4a9880d1cb90822"
 	SRC_URI=""
 else
 	SRC_URI="http://cairographics.org/releases/${P}.tar.xz"
@@ -20,7 +19,7 @@ DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-IUSE="X aqua debug directfb drm gallium gles2 +glib glx legacy-drivers lto opengl openvg qt4 static-libs +svg valgrind xcb -xlib-xcb"
+IUSE="X aqua debug directfb drm gallium gles2 +glib glx lto opengl qt4 static-libs +svg valgrind xcb -xlib-xcb"
 # gtk-doc regeneration doesn't seem to work with out-of-source builds
 #[[ ${PV} == *9999* ]] && IUSE="${IUSE} doc" # API docs are provided in tarball, no need to regenerate
 
@@ -37,7 +36,6 @@ RDEPEND=">=dev-libs/lzo-2.06-r1[${MULTILIB_USEDEP}]
 	gles2? ( >=media-libs/mesa-9.1.6[gles2,${MULTILIB_USEDEP}] )
 	glib? ( >=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}] )
 	opengl? ( || ( >=media-libs/mesa-9.1.6[egl,${MULTILIB_USEDEP}] media-libs/opengl-apple ) )
-	openvg? ( >=media-libs/mesa-9.1.6[openvg,${MULTILIB_USEDEP}] )
 	qt4? ( >=dev-qt/qtgui-4.8:4[${MULTILIB_USEDEP}] )
 	X? (
 		>=x11-libs/libXrender-0.9.8[${MULTILIB_USEDEP}]
@@ -67,17 +65,14 @@ DEPEND="${RDEPEND}
 	)"
 #[[ ${PV} == *9999* ]] && DEPEND="${DEPEND}
 #	doc? (
- #		>=dev-util/gtk-doc-1.6
+#		>=dev-util/gtk-doc-1.6
 #		~app-text/docbook-xml-dtd-4.2
 #	)"
 
-# drm module requires X
-# for gallium we need to enable drm
 REQUIRED_USE="
 	drm? ( X )
 	gallium? ( drm )
-	gles2? ( !opengl !glx )
-	openvg? ( || ( gles2 opengl ) )
+	gles2? ( !opengl )
 	xlib-xcb? ( xcb )
 "
 
@@ -85,8 +80,6 @@ MULTILIB_WRAPPED_HEADERS=(
 	/usr/include/cairo/cairo-features.h
 	/usr/include/cairo/cairo-directfb.h
 )
-
-MULTILIB_ABI_FLAG=""
 
 CHECKREQS_MEMORY="768M"
 
@@ -104,8 +97,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch
-	use legacy-drivers && epatch "${FILESDIR}"/${PN}-1.10.0-buggy_gradients.patch
+	epatch "${FILESDIR}"/${PN}-1.12.18-disable-test-suite.patch
 	epatch "${FILESDIR}"/${PN}-respect-fontconfig.patch
 
 	# tests and perf tools require X, bug #483574
@@ -122,8 +114,6 @@ src_prepare() {
 		touch ChangeLog
 	fi
 
-	# We need to run elibtoolize to ensure correct so versioning on FreeBSD
-	# upgraded to an eautoreconf for the above interix patch.
 	eautoreconf
 }
 
@@ -164,12 +154,11 @@ multilib_src_configure() {
 		$(use_enable glib gobject) \
 		$(use_enable glx) \
 		$(use_enable lto) \
-		$(use_enable openvg vg) \
 		$(use_enable opengl gl) \
-		$(use_enable qt4 qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
 		$(use_enable valgrind) \
+		$(use_enable qt4 qt) \
 		$(use_enable xcb) \
 		$(use_enable xcb xcb-shm) \
 		$(use_enable xlib-xcb) \
@@ -177,12 +166,8 @@ multilib_src_configure() {
 		--enable-pdf \
 		--enable-png \
 		--enable-ps \
+		--disable-vg \
 		${myopts}
-}
-
-multilib_src_install() {
-	# parallel make install fails
-	emake -j1 DESTDIR="${D}" install
 }
 
 multilib_src_install_all() {
