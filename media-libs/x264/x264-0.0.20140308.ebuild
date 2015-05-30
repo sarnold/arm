@@ -23,7 +23,7 @@ SONAME="142"
 SLOT="0/${SONAME}"
 
 LICENSE="GPL-2"
-IUSE="10bit +interlaced neon opencl static-libs sse +threads"
+IUSE="10bit +interlaced neon opencl pic static-libs cpu_flags_x86_sse +threads"
 
 ASM_DEP=">=dev-lang/yasm-1.2.0"
 DEPEND="abi_x86_32? ( ${ASM_DEP} )
@@ -33,12 +33,14 @@ RDEPEND="opencl? ( >=virtual/opencl-0-r3[${MULTILIB_USEDEP}] )
 	abi_x86_32? ( !<=app-emulation/emul-linux-x86-medialibs-20130224-r7
 		!app-emulation/emul-linux-x86-medialibs[-abi_x86_32(-)] )"
 
+EPATCH_OPTS="-F 3"
+
 DOCS="AUTHORS doc/*.txt"
 
 src_prepare() {
 	# Initial support for x32 ABI, bug #420241
 	# Avoid messing too much with CFLAGS.
-	epatch "${FILESDIR}"/${PN}-cflags.patch
+	epatch "${FILESDIR}"/x264-0.0.20130912-cflags.patch
 }
 
 multilib_src_configure() {
@@ -58,7 +60,7 @@ multilib_src_configure() {
 	fi
 
 	# Upstream uses this, see the cflags patch
-	use sse && append-flags "-msse" "-mfpmath=sse"
+	use cpu_flags_x86_sse && append-flags "-msse" "-mfpmath=sse"
 
 	"${S}/configure" \
 		--prefix="${EPREFIX}"/usr \
