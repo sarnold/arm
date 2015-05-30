@@ -14,13 +14,14 @@ HOMEPAGE="http://www.cogl3d.org/"
 LICENSE="MIT BSD"
 SLOT="1.0/20" # subslot = .so version
 # doc and profile disable for now due bugs #484750 and #483332
-IUSE="examples gles2 gstreamer +introspection +kms +opengl +pango test wayland" # doc profile
+IUSE="examples gles2 gstreamer +introspection +kms +opengl +pango test wayland"
+# doc profile
 REQUIRED_USE="wayland? ( gles2 )"
 KEYWORDS="~alpha amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sparc x86"
 
 COMMON_DEPEND="
 	>=dev-libs/glib-2.32:2
-	x11-libs/cairo:=
+	x11-libs/cairo:0=
 	>=x11-libs/gdk-pixbuf-2:2
 	x11-libs/libX11
 	>=x11-libs/libXcomposite-0.4
@@ -45,11 +46,12 @@ COMMON_DEPEND="
 "
 # before clutter-1.7, cogl was part of clutter
 RDEPEND="${COMMON_DEPEND}
-	!<media-libs/clutter-1.7"
+	!<media-libs/clutter-1.7
+"
 DEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-doc-am-1.13
 	sys-devel/gettext
-	virtual/pkgconfig
+	>=virtual/pkgconfig-0-r1
 	test? (
 		app-eselect/eselect-opengl
 		media-libs/mesa[classic] )
@@ -59,8 +61,9 @@ DEPEND="${COMMON_DEPEND}
 # For some reason GL3 conformance test all fails again...
 RESTRICT="test"
 
-# gst-cogl plugin relink fails with parallel make
-use gstreamer && MAKEOPTS+=" -j1"
+pkg_setup() {
+	use gstreamer && addpredict /dev/video0
+}
 
 src_prepare() {
 	# Do not build examples
@@ -89,6 +92,7 @@ src_configure() {
 	# Prefer gl over gles2 if both are selected
 	# Profiling needs uprof, which is not available in portage yet, bug #484750
 	# FIXME: Doesn't provide prebuilt docs, but they can neither be rebuilt, bug #483332
+#	ECONF_SOURCE=${S} \
 	gnome2_src_configure \
 		--disable-examples-install \
 		--disable-maintainer-flags \
@@ -129,7 +133,7 @@ src_install() {
 	DOCS="NEWS README"
 	EXAMPLES="examples/{*.c,*.jpg}"
 
-	clutter_src_install
+	MAKEOPTS="${MAKEOPTS} -j1" clutter_src_install
 
 	# Remove silly examples-data directory
 	rm -rvf "${ED}/usr/share/cogl/examples-data/" || die
