@@ -19,7 +19,7 @@ DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-IUSE="X aqua cogl debug directfb gles2 +glib glx lto opengl qt4 static-libs +svg valgrind xcb -xlib-xcb"
+IUSE="X aqua debug directfb gles2 +glib glx lto opengl static-libs +svg valgrind xcb -xlib-xcb"
 # gtk-doc regeneration doesn't seem to work with out-of-source builds
 #[[ ${PV} == *9999* ]] && IUSE="${IUSE} doc" # API docs are provided in tarball, no need to regenerate
 
@@ -32,12 +32,10 @@ RDEPEND=">=dev-libs/lzo-2.06-r1[${MULTILIB_USEDEP}]
 	>=media-libs/libpng-1.6.10:0=[${MULTILIB_USEDEP}]
 	>=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}]
 	>=x11-libs/pixman-0.32.4[${MULTILIB_USEDEP}]
-	cogl? ( >=media-libs/cogl-1.18.2[${MULTILIB_USEDEP}] )
 	directfb? ( dev-libs/DirectFB )
 	gles2? ( >=media-libs/mesa-9.1.6[gles2,${MULTILIB_USEDEP}] )
 	glib? ( >=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}] )
 	opengl? ( || ( >=media-libs/mesa-9.1.6[egl,${MULTILIB_USEDEP}] media-libs/opengl-apple ) )
-	qt4? ( >=dev-qt/qtgui-4.8:4[${MULTILIB_USEDEP}] )
 	X? (
 		>=x11-libs/libXrender-0.9.8[${MULTILIB_USEDEP}]
 		>=x11-libs/libXext-1.3.2[${MULTILIB_USEDEP}]
@@ -138,7 +136,6 @@ multilib_src_configure() {
 		$(use_enable X xlib-xrender) \
 		$(use_enable aqua quartz) \
 		$(use_enable aqua quartz-image) \
-		$(use_enable cogl) \
 		$(use_enable debug test-surfaces) \
 		$(use_enable directfb) \
 		$(use_enable gles2 glesv2) \
@@ -146,7 +143,6 @@ multilib_src_configure() {
 		$(use_enable glx) \
 		$(use_enable lto) \
 		$(use_enable opengl gl) \
-		$(use_enable qt4 qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
 		$(use_enable valgrind) \
@@ -157,6 +153,7 @@ multilib_src_configure() {
 		--enable-pdf \
 		--enable-png \
 		--enable-ps \
+		--disable-cogl \
 		--disable-drm \
 		--disable-gallium \
 		--disable-qt \
