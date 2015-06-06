@@ -72,7 +72,8 @@ DEPEND="${RDEPEND}
 REQUIRED_USE="
 	drm? ( X )
 	gallium? ( drm )
-	gles2? ( !opengl )
+	gles2? ( !glx !opengl !drm )
+	glx? ( !gles2 opengl )
 	xlib-xcb? ( xcb )
 "
 
