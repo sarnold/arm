@@ -1,13 +1,13 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $
 
-EAPI=4
+EAPI=5
 
 EGIT_REPO_URI="http://anongit.freedesktop.org/git/xorg/proto/${PN}.git"
 
 XORG_DOC=doc
-inherit xorg-2 git-2
+inherit xorg-2 git-r3
 
 DESCRIPTION="X.Org Fonts protocol headers"
 
@@ -17,12 +17,11 @@ IUSE=""
 RDEPEND=""
 DEPEND="${RDEPEND}"
 
-pkg_setup() {
-	xorg-2_pkg_setup
-
+src_configure() {
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable doc specs)
 		$(use_with doc xmlto)
 		--without-fop
 	)
+	xorg-2_src_configure
 }
