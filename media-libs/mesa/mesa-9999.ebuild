@@ -217,9 +217,6 @@ multilib_src_configure() {
 			driver_enable video_cards_radeon radeon r200
 		fi
 
-		# (still) experimental tegra patches
-		driver_enable video_cards_tegra tegra
-
 	fi
 
 	if use egl; then
@@ -255,6 +252,10 @@ multilib_src_configure() {
 		fi
 
 		gallium_enable video_cards_freedreno freedreno
+
+		# (still) experimental tegra patches
+		# WTF??  pinged tagr via gmail about status
+		#gallium_enable video_cards_tegra tegra
 
 		# experimental RPi VideoCore4 driver (needs RPi drm kernel patches)
 		gallium_enable video_cards_vc4 vc4
