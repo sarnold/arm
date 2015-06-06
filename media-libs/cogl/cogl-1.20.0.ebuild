@@ -62,7 +62,10 @@ DEPEND="${COMMON_DEPEND}
 RESTRICT="test"
 
 pkg_setup() {
-	use gstreamer && addpredict /dev/video0
+	if use gstreamer ; then
+		addpredict /dev/video0
+		addpredict /dev/vbi0
+	fi
 }
 
 src_prepare() {
