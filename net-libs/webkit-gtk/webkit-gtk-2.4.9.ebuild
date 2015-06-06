@@ -21,8 +21,8 @@ IUSE="aqua coverage debug +egl +geoloc gles2 +gstreamer +introspection +jit libs
 # bugs 372493, 416331
 REQUIRED_USE="
 	geoloc? ( introspection )
-	introspection? ( gstreamer )
 	gles2? ( egl )
+	introspection? ( gstreamer )
 	webgl? ( ^^ ( gles2 opengl ) )
 	!webgl? ( ?? ( gles2 opengl ) )
 	|| ( aqua wayland X )
@@ -33,21 +33,22 @@ REQUIRED_USE="
 # gtk2 is needed for plugin process support
 # gtk3-3.10 required for wayland
 RDEPEND="
-	dev-libs/libxml2:2
-	dev-libs/libxslt
-	media-libs/harfbuzz:=[icu(+)]
-	media-libs/libwebp:=
-	virtual/jpeg:0=
-	>=media-libs/libpng-1.4:0=
-	>=x11-libs/cairo-1.10:=[X]
-	>=dev-libs/glib-2.36.0:2
-	>=x11-libs/gtk+-3.6.0:3[aqua=,introspection?]
-	>=dev-libs/icu-3.8.1-r1:=
-	>=net-libs/libsoup-2.42.0:2.4[introspection?]
 	dev-db/sqlite:3=
-	>=x11-libs/pango-1.30.0.0
-	x11-libs/libXrender
-	x11-libs/libXt
+	>=dev-libs/glib-2.36:2
+	>=dev-libs/icu-3.8.1-r1:=
+	>=dev-libs/libxml2-2.6:2
+	>=dev-libs/libxslt-1.1.7
+	>=media-libs/fontconfig-2.5:1.0
+	>=media-libs/freetype-2.4.2:2
+	>=media-libs/harfbuzz-0.9.7:=[icu(+)]
+	>=media-libs/libpng-1.4:0=
+	media-libs/libwebp:=
+	>=net-libs/libsoup-2.42:2.4[introspection?]
+	virtual/jpeg:0=
+	>=x11-libs/cairo-1.10:=[X?]
+	>=x11-libs/gtk+-3.6.0:3[X?,aqua?,introspection?]
+	>=x11-libs/pango-1.30.0
+
 	>=x11-libs/gtk+-2.24.10:2
 
 	egl? ( media-libs/mesa[egl] )
@@ -61,29 +62,35 @@ RDEPEND="
 	opengl? ( virtual/opengl )
 	spell? ( >=app-text/enchant-0.22:= )
 	wayland? ( >=x11-libs/gtk+-3.10:3[wayland] )
-	webgl? ( ||
-		( x11-libs/cairo[gles2]
-		x11-libs/cairo[opengl] )
+	webgl? (
+		|| ( x11-libs/cairo[opengl]
+		x11-libs/cairo[gles2]
+		)
 		x11-libs/libXcomposite
 		x11-libs/libXdamage )
+	X? (
+		x11-libs/libX11
+		x11-libs/libXrender
+		x11-libs/libXt )
 "
 
 # paxctl needed for bug #407085
 # Need real bison, not yacc
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
-	dev-lang/perl
+	>=dev-lang/perl-5.10
 	|| (
 		virtual/rubygems[ruby_targets_ruby20]
 		virtual/rubygems[ruby_targets_ruby21]
+		virtual/rubygems[ruby_targets_ruby22]
 		virtual/rubygems[ruby_targets_ruby19]
 	)
 	>=app-accessibility/at-spi2-core-2.5.3
 	>=dev-libs/atk-2.8.0
 	>=dev-util/gtk-doc-am-1.10
-	dev-util/gperf
+	>=dev-util/gperf-3.0.1
 	>=sys-devel/bison-2.4.3
-	>=sys-devel/flex-2.5.33
+	>=sys-devel/flex-2.5.34
 	|| ( >=sys-devel/gcc-4.7 >=sys-devel/clang-3.3 )
 	sys-devel/gettext
 	>=sys-devel/make-3.82-r4
@@ -103,8 +110,6 @@ S="${WORKDIR}/${MY_P}"
 CHECKREQS_DISK_BUILD="18G" # and even this might not be enough, bug #417307
 
 pkg_pretend() {
-	#nvidia_check || die #463960
-
 	if [[ ${MERGE_TYPE} != "binary" ]] && is-flagq "-g*" && ! is-flagq "-g*0" ; then
 		einfo "Checking for sufficient disk space to build ${PN} with debugging CFLAGS"
 		check-reqs_pkg_pretend
@@ -116,8 +121,6 @@ pkg_pretend() {
 }
 
 pkg_setup() {
-	#nvidia_check || die #463960
-
 	# Check whether any of the debugging flags is enabled
 	if [[ ${MERGE_TYPE} != "binary" ]] && is-flagq "-g*" && ! is-flagq "-g*0" ; then
 		if is-flagq "-ggdb" && [[ ${WEBKIT_GTK_GGDB} != "yes" ]]; then
@@ -157,22 +160,15 @@ src_prepare() {
 	# * mimehandling test sometimes fails under Xvfb (works fine manually), bug #???
 	# * webdatasource test needs a network connection and intermittently fails with icedtea-web
 	# * webplugindatabase intermittently fails with icedtea-web, bug #????
-	sed -e '/Programs\/TestWebKitAPI\/WebKitGtk\/testwebinspector/ d' \
-		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testkeyevents/ d' \
-		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testmimehandling/ d' \
-		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testwebdatasource/ d' \
-		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testwebplugindatabase/ d' \
-		-i Tools/TestWebKitAPI/GNUmakefile.am || die
+#	sed -e '/Programs\/TestWebKitAPI\/WebKitGtk\/testwebinspector/ d' \
+#		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testkeyevents/ d' \
+#		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testmimehandling/ d' \
+#		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testwebdatasource/ d' \
+#		-e '/Programs\/TestWebKitAPI\/WebKitGtk\/testwebplugindatabase/ d' \
+#		-i Tools/TestWebKitAPI/GNUmakefile.am || die
 
 	# bug #459978, upstream bug #113397
-	epatch "${FILESDIR}/${PN}-1.11.90-gtk-docize-fix.patch"
-
-	# Deadlock causing infinite compilations with nvidia-drivers:
-	# https://bugs.gentoo.org/show_bug.cgi?id=463960
-	# http://osdyson.org/issues/161
-	# https://bugs.webkit.org/show_bug.cgi?id=125651
-#	FIXME: it doesn't really work for us
-#	epatch "${FILESDIR}"/${PN}-2.2.5-gir-nvidia-hangs.patch
+	epatch "${FILESDIR}"/${PN}-1.11.90-gtk-docize-fix.patch
 
 	# Debian patches to fix support for some arches
 	# https://bugs.webkit.org/show_bug.cgi?id=129540
@@ -184,19 +180,13 @@ src_prepare() {
 	# https://bugs.webkit.org/show_bug.cgi?id=130837
 	epatch "${FILESDIR}"/${PN}-2.4.4-atomic-ppc.patch
 
-	epatch "${FILESDIR}"/${PN}-2.4.4-jpeg-9a.patch #481688
+	# Fix build with recent libjpeg, bug #481688
+	# https://bugs.webkit.org/show_bug.cgi?id=122412
+	epatch "${FILESDIR}"/${PN}-2.4.4-jpeg-9a.patch
 
 	# Fix building with --disable-webgl, bug #500966
 	# https://bugs.webkit.org/show_bug.cgi?id=131267
 	epatch "${FILESDIR}"/${PN}-2.4.7-disable-webgl.patch
-
-	# Fix building with --disable-accelerated-compositing, bug #525072
-	# https://bugs.webkit.org/show_bug.cgi?id=137640
-	epatch "${FILESDIR}"/${PN}-2.4.7-disable-accelerated-compositing.patch
-
-	# Fix building with x11+wayland, bug #536898
-	# https://bugs.webkit.org/show_bug.cgi?id=140241
-	epatch "${FILESDIR}"/${PN}-2.4.8-wayland-webkit2.patch
 
 	AT_M4DIR=Source/autotools eautoreconf
 
@@ -210,7 +200,8 @@ src_configure() {
 	# Arches without JIT support also need this to really disable it in all places
 	use jit || append-cppflags -DENABLE_JIT=0 -DENABLE_YARR_JIT=0 -DENABLE_ASSEMBLER=0
 
-	# It doesn't compile on alpha without this in LDFLAGS, bug #???
+	# It does not compile on alpha without this in LDFLAGS
+	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=648761
 	use alpha && append-ldflags "-Wl,--no-relax"
 
 	# Sigbuses on SPARC with mcpu and co., bug #???
@@ -228,14 +219,16 @@ src_configure() {
 		append-ldflags "-Wl,--reduce-memory-overheads"
 	fi
 
-	local myconf=""
+	local ruby_interpreter=""
 
-	if has_version "virtual/rubygems[ruby_targets_ruby21]"; then
-		myconf="${myconf} RUBY=$(type -P ruby21)"
+	if has_version "virtual/rubygems[ruby_targets_ruby22]"; then
+		ruby_interpreter="RUBY=$(type -P ruby22)"
+	elif has_version "virtual/rubygems[ruby_targets_ruby21]"; then
+		ruby_interpreter="RUBY=$(type -P ruby21)"
 	elif has_version "virtual/rubygems[ruby_targets_ruby20]"; then
-		myconf="${myconf} RUBY=$(type -P ruby20)"
+		ruby_interpreter="RUBY=$(type -P ruby20)"
 	else
-		myconf="${myconf} RUBY=$(type -P ruby19)"
+		ruby_interpreter="RUBY=$(type -P ruby19)"
 	fi
 
 	# TODO: Check Web Audio support
@@ -264,7 +257,7 @@ src_configure() {
 		--with-gtk=3.0 \
 		--enable-dependency-tracking \
 		--disable-gtk-doc \
-		${myconf}
+		${ruby_interpreter}
 }
 
 src_compile() {
@@ -300,20 +293,3 @@ src_install() {
 	use jit && pax-mark m "${ED}usr/bin/jsc-3" "${ED}usr/libexec/WebKitWebProcess"
 	pax-mark m "${ED}usr/libexec/WebKitPluginProcess"
 }
-
-#nvidia_check() {
-#	if [[ ${MERGE_TYPE} != "binary" ]] &&
-#	   use introspection &&
-#	   has_version 'x11-drivers/nvidia-drivers' &&
-#	   [[ $(eselect opengl show 2> /dev/null) = "nvidia" ]]
-#	then
-#		eerror "${PN} freezes while compiling if x11-drivers/nvidia-drivers is"
-#		eerror "used as the system OpenGL library. We are very sorry about that."
-#		eerror "You should temporarily select Mesa as the system OpenGL library:"
-#		eerror " # eselect opengl set xorg-x11"
-#		eerror " and then run emerge again."
-#		eerror "See https://bugs.gentoo.org/463960 for more details."
-#		eerror
-#		return 1
-#	fi
-#}
