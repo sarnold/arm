@@ -34,6 +34,8 @@ IUSE="examples static-libs neon"
 AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
 
 src_configure() {
+	filter-flags -floop-interchange -floop-strip-mine -floop-block
+
 	use neon && append-flags "-mfpu=neon"
 
 	local myeconfargs=(
