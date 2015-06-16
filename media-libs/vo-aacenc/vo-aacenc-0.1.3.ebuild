@@ -1,8 +1,10 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $
 
 EAPI=5
+
+AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
 
 if [[ ${PV} == *9999 ]] ; then
 	SCM="git-2"
@@ -11,7 +13,7 @@ if [[ ${PV} == *9999 ]] ; then
 	AUTOTOOLS_AUTORECONF=yes
 fi
 
-inherit autotools-multilib ${SCM} flag-o-matic
+inherit autotools-multilib flag-o-matic ${SCM}
 
 DESCRIPTION="VisualOn AAC encoder library"
 HOMEPAGE="http://sourceforge.net/projects/opencore-amr/"
@@ -31,16 +33,23 @@ SLOT="0"
 KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 sparc x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux ~x64-macos"
 IUSE="examples static-libs neon"
 
-AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
-
 src_configure() {
-	filter-flags -floop-interchange -floop-strip-mine -floop-block
+	if [[ ${CHOST} == x86* ]] ; then
+		filter-flags -floop-interchange -floop-strip-mine -floop-block
+	fi
 
-	use neon && append-flags "-mfpu=neon"
+	if [[ ${CHOST} == armv* ]] ; then
+		my_conf="--enable-armv5e"
+		if use neon ; then
+			replace-flags -mfpu=vfp* -mfpu=neon
+			my_conf="--enable-armv7neon"
+		fi
+	fi
 
 	local myeconfargs=(
-		"$(use_enable examples example)"
-		"$(use_enable neon armv7neon)"
+		${my_conf}
+		$(use_enable examples example)
 	)
+
 	autotools-multilib_src_configure
 }

@@ -31,15 +31,25 @@ SLOT="0"
 
 [[ ${PV} == *9999 ]] || \
 KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 sparc x86 ~amd64-fbsd ~x86-fbsd ~x64-macos"
-IUSE="examples static-libs"
+IUSE="examples neon static-libs"
 
 src_configure() {
-	filter-flags -floop-interchange -floop-strip-mine -floop-block
+	if [[ ${CHOST} == x86* ]] ; then
+		filter-flags -floop-interchange -floop-strip-mine -floop-block
+	fi
 
-	use neon && append-flags "-mfpu=neon"
+	if [[ ${CHOST} == armv* ]] ; then
+		my_conf="--enable-armv5e"
+		if use neon ; then
+			replace-flags -mfpu=vfp* -mfpu=neon
+			my_conf="--enable-armv7neon"
+		fi
+	fi
 
 	local myeconfargs=(
-		$(use_enable examples example) \
+		${my_conf}
+		$(use_enable examples example)
 	)
+
 	autotools-multilib_src_configure
 }
