@@ -41,10 +41,13 @@ src_configure() {
 	if [[ ${CHOST} == armv* ]] ; then
 		my_conf="--enable-armv5e"
 		if use neon ; then
-			replace-flags -mfpu=vfp* -mfpu=neon
+			is-flagq "-mfpu*neon*" || append-cflags -mfpu=neon
 			my_conf="--enable-armv7neon"
 		fi
 	fi
+
+	# fix QA warning
+	append-ldflags -Wl,-z,noexecstack
 
 	local myeconfargs=(
 		${my_conf}
