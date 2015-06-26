@@ -1,6 +1,7 @@
 >=kde-frameworks/kguiaddons-5.8.0 **
 >=kde-frameworks/kwindowsystem-5.8.0 **
->=dev-libs/extra-cmake-modules-1.8.0 **
+# move dev-libs/extra-cmake-modules kde-frameworks/extra-cmake-modules
+>=kde-frameworks/extra-cmake-modules-1.8.0 **
 >=kde-frameworks/kf-env-3 **
 
 >=www-client/otter-9999 **
@@ -46,6 +47,8 @@ lxqt-base/lxqt-qtplugin **
 lxqt-base/lxqt-runner **
 lxqt-base/lxqt-session **
 
+>=media-libs/libtxc_dxtn-1.0.1-r1 **
+
 >=x11-themes/human-icon-theme-0.36 **
 >=x11-themes/gtk-theme-switch-2.1.0 **
 >=x11-themes/tango-icon-theme-extras-0.1.0-r1 **
@@ -71,8 +74,8 @@ lxqt-base/lxqt-session **
 >=x11-themes/gentoo10-backgrounds-20110309 **
 >=x11-misc/arandr-0.1.7.1 **
 
->=x11-libs/libdrm-9999 **
->=media-libs/mesa-9999 **
+#>=x11-libs/libdrm-9999 **
+#>=media-libs/mesa-9999 **
 #>=x11-base/xorg-server-9999 **
 #>=x11-base/xorg-drivers-9999 **
 
