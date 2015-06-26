@@ -177,7 +177,7 @@ echo
 echo '- Storage Drivers:'
 {
 	echo '- "'$(wrap_color 'devicemapper' blue)'":'
-	check_flags BLK_DEV_DM DM_THIN_PROVISIONING EXT4_FS EXT4_FS_POSIX_ACL EXT4_FS_SECURITY CONFIG_EXT4_USE_FOR_EXT23 BTRFS_FS BTRFS_FS_POSIX_ACL | sed 's/^/  /'
+	check_flags BLK_DEV_DM DM_THIN_PROVISIONING EXT4_FS EXT4_FS_POSIX_ACL EXT4_FS_SECURITY EXT4_USE_FOR_EXT23 BTRFS_FS BTRFS_FS_POSIX_ACL | sed 's/^/  /'
 
 } | sed 's/^/  /'
 echo
