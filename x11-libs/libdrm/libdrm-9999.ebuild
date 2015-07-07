@@ -22,12 +22,13 @@ for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
-IUSE="${IUSE_VIDEO_CARDS} libkms"
+IUSE="${IUSE_VIDEO_CARDS} libkms valgrind"
 RESTRICT="test" # see bug #236845
 
 RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
 	video_cards_intel? ( >=x11-libs/libpciaccess-0.13.1-r1:=[${MULTILIB_USEDEP}] )
-	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )"
+	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )
+	valgrind? ( dev-util/valgrind )"
 DEPEND="${RDEPEND}"
 
 PATCHES=(
@@ -56,6 +57,7 @@ src_configure() {
 		$(use_enable video_cards_tegra tegra-experimental-api)
 		$(use_enable video_cards_vmware vmwgfx)
 		$(use_enable libkms)
+		$(use_enable valgrind)
 	)
 	xorg-2_src_configure
 }
