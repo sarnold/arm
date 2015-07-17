@@ -1,10 +1,11 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-2.8.3.ebuild,v 1.1 2015/06/09 14:34:30 eva Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="no"
 PYTHON_COMPAT=( python2_7 )
+CMAKE_WARN_UNUSED_CLI=yes
 
 inherit check-reqs cmake-utils eutils flag-o-matic gnome2 pax-utils python-any-r1 toolchain-funcs versionator virtualx
 
@@ -17,10 +18,10 @@ LICENSE="LGPL-2+ BSD"
 SLOT="4/37" # soname version of libwebkit2gtk-4.0
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
 
-IUSE="coverage doc +egl +geoloc gles2 +gstreamer +introspection +jit libsecret +opengl spell wayland +webgl X"
+IUSE="coverage doc +egl +geoloc gles2 +glx +gstreamer +introspection +jit libsecret neon +opengl spell wayland +webgl X"
 REQUIRED_USE="
 	geoloc? ( introspection )
-	gles2? ( egl )
+	gles2? ( egl !glx )
 	introspection? ( gstreamer )
 	webgl? ( ^^ ( gles2 opengl ) )
 	!webgl? ( ?? ( gles2 opengl ) )
@@ -109,6 +110,8 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/${MY_P}"
 
+EPATCH_OPTS="-F 3"
+
 CHECKREQS_DISK_BUILD="18G" # and even this might not be enough, bug #417307
 
 pkg_pretend() {
@@ -136,6 +139,9 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2.6.0-{hppa,ia64}-platform.patch
 	# https://bugs.webkit.org/show_bug.cgi?id=129542
 	epatch "${FILESDIR}"/${PN}-2.8.1-ia64-malloc.patch
+	# plus a couple more
+	epatch "${FILESDIR}"/${P}-fix-opengl-off.patch
+	epatch "${FILESDIR}"/${P}-gles2-config.patch
 
 	gnome2_src_prepare
 }
@@ -156,6 +162,9 @@ src_configure() {
 
 	# https://bugs.webkit.org/show_bug.cgi?id=42070 , #301634
 	use ppc64 && append-flags "-mminimal-toc"
+
+	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61207
+	use arm && replace-flags "-O3" "-O2"
 
 	# Try to use less memory, bug #469942 (see Fedora .spec for reference)
 	# --no-keep-memory doesn't work on ia64, bug #502492
@@ -205,12 +214,26 @@ src_configure() {
 		$(cmake-utils_use_enable webgl WEBGL)
 		$(cmake-utils_use_find_package egl EGL)
 		$(cmake-utils_use_find_package opengl OpenGL)
+		$(cmake-utils_use_use glx GLX)
 		$(cmake-utils_use_enable X X11_TARGET)
 		-DCMAKE_BUILD_TYPE=Release
 		-DPORT=GTK
 		-DENABLE_PLUGIN_PROCESS_GTK2=ON
 		${ruby_interpreter}
 	)
+
+	# yes, this is stupid, but webkit is stupider...
+	if use arm ; then
+		append-cppflags "-D_ARM_"
+		append-cppflags "-D__ARM_PCS_VFP"
+		if [[ ${CHOST} == armv7* ]] ; then
+			append-cppflags "-D__ARM_ARCH_7A__"
+		fi
+		if use neon ; then
+			append-cppflags "-D__ARM_NEON__"
+		fi
+	fi
+
 	if $(tc-getLD) --version | grep -q "GNU gold"; then
 		mycmakeargs+=( -DUSE_LD_GOLD=ON )
 	else
