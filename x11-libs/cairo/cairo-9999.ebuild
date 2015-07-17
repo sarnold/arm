@@ -72,7 +72,7 @@ DEPEND="${RDEPEND}
 REQUIRED_USE="
 	drm? ( X )
 	gallium? ( drm )
-	gles2? ( !glx !opengl !drm )
+	gles2? ( !glx !drm )
 	glx? ( !gles2 opengl )
 	xlib-xcb? ( xcb )
 "
@@ -168,6 +168,7 @@ multilib_src_configure() {
 		--enable-png \
 		--enable-ps \
 		--disable-vg \
+		--disable-wgl \
 		${myopts}
 }
 
