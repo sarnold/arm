@@ -1,19 +1,69 @@
->=perl-core/ExtUtils-Install-1.540.0-r1 **
->=perl-core/IO-1.25-r1 **
+>=sys-auth/polkit-pkla-compat-0.1 **
+>=kde-frameworks/extra-cmake-modules-5.9.0 **
+>=kde-frameworks/kguiaddons-5.8.0 **
+>=kde-frameworks/kwindowsystem-5.8.0 **
+>=kde-frameworks/kf-env-3 **
 
+>=www-client/otter-9999 **
+>=www-client/qtweb-3.8.5_p108 **
+>=media-sound/qmpdclient-1.2.2-r1 **
+>=media-sound/cantata-1.5.1 **
+>=media-libs/taglib-extras-1.0.1 **
+>=media-sound/coquillo-1.12 **
+>=media-libs/liblastfm-1.0.9 **
+>=dev-cpp/sparsehash-2.0.2 **
+>=net-libs/jreen-1.2.0 **
+>=net-im/qutim-0.3.2 **
+>=media-libs/chromaprint-1.2 **
+>=media-libs/libmygpo-qt-9999 **
+>=media-libs/libechonest-2.3.1 **
+>=dev-python/markups-0.2.4-r1 **
+>=media-sound/clementine-9999 **
+>=dev-python/pyenchant-1.6.6 **
+>=app-editors/retext-9999 **
+>=app-editors/tea-36.0.2 **
+>=media-sound/qtmpc-0.6.1 **
+>=dev-vcs/qct-1.7-r1 **
+
+>=dev-libs/libqtxdg-1.1.0 **
+>=x11-misc/pcmanfm-qt-0.9.0 **
+media-gfx/lximage-qt **
+lxqt-base/liblxqt **
+lxqt-base/liblxqt-mount **
+lxqt-base/libsysstat **
+lxqt-base/lxqt-about **
+lxqt-base/lxqt-admin **
+lxqt-base/lxqt-common **
+lxqt-base/lxqt-config **
+lxqt-base/lxqt-config-randr **
+lxqt-base/lxqt-globalkeys **
+lxqt-base/lxqt-meta **
+lxqt-base/lxqt-notificationd **
+lxqt-base/lxqt-openssh-askpass **
+lxqt-base/lxqt-panel **
+lxqt-base/lxqt-policykit **
+lxqt-base/lxqt-powermanagement **
+lxqt-base/lxqt-qtplugin **
+lxqt-base/lxqt-runner **
+lxqt-base/lxqt-session **
+
+>=x11-themes/human-icon-theme-0.36 **
+>=x11-themes/gtk-theme-switch-2.1.0 **
+>=x11-themes/tango-icon-theme-extras-0.1.0-r1 **
+
+>=x11-misc/sddm-9999 **
+
+>=media-libs/x264-9999 **
 >=x11-libs/libvdpau-0.8 **
 >=x11-plugins/hexchat-javascript-0.3.1 **
 >=net-misc/ssh-askpass-fullscreen-1.0-r1 **
 
->=media-libs/chromaprint-1.2 **
->=sys-block/zram-init-2.7 **
-
->=app-admin/gnome-system-tools-3.0.0 **
 >=x11-themes/gnome-colors-common-5.5.1 **
 >=x11-themes/gnome-colors-themes-5.5.1 **
 >=x11-themes/light-themes-0.1.93-r3 **
 
 =sys-devel/llvm-9999 **
+>=sys-block/zram-init-2.7 **
 
 >=dev-python/thunarx-python-0.3.0 **
 >=x11-themes/gentoo-artwork-0.4.2-r1 **
