@@ -13,23 +13,37 @@ flags as needed, and mask packages as needed.  The general config is:
 
  * Basic config: udev, polkit, consolekit, xattr, caps, pam (no systemd or logind)
 
- * X support: xwayland, opentegra, fbturbo, armsoc
+ * X support: xwayland, opentegra, fbturbo, armsoc, rpi (still in testing)
 
- * wayland/weston: egl/gles1/gles2 (no opengl except a few cases)
+ * wayland/weston: egl/gles1/gles2, -opengl -glx (except a few odd packages with opengl flag)
 
- * Needs package.foo for complete install (depends on usage)
+ * Needs package.foo configs for complete install (depends on usage)
 
- * Kernels: rpi-sources and adafruit-rpi-sources ebuilds (the latter for PiTFT displays)
+ * Kernels sources:
 
-   - Trimslice: gentoo-sources (3.15.7-gentoo)
+   - Trimslice: gentoo-sources latest
 
-   - RaspberryPi: see above; with fbtft drivers (3.15.8-adafruit+) and without (3.12.21-raspberrypi)
+   - RaspberryPi: fbtft drivers now in Adafruit staging
 
-   - Wandboard-quad and Udoo-quad: `RCN LinuxOnArm`_ patches on mainline (wand: 3.16.3-armv7-x4-00237-gd472049, udoo: 3.15.0-rc8-armv7-x1.2)
+      + raspberrypi-sources
+      + adafruit-raspberrypi-sources
+      + drm-raspberrypi-sources (provisional vc4 drm support)
 
-   - BeagleboneBlack: RCN bb_kernel patches on mainline (3.15.0-bone1)
+   - Wandboard-quad and Udoo-quad: `RCN LinuxOnArm`_ patches on mainline
 
-   - Chromebook: stock Google ChromeOS 3.4.0 (custom config, installed as KERN3, USB3 rootfs)
+      + latest 4.1.y mainline branch
+
+   - BeagleboneBlack: RCN bb_kernel patches on mainline
+
+      + bone-sources updated to 4.1.0-bone9
+      + see `RCN LinuxOnArm`_ for latest updates
+
+   - Chromebook: next dev branch beyond stock Google ChromeOS (custom config, installed as KERN3, USB3 rootfs or SDCard)
+
+      + Samsung Snow - 3.8.11 chromeos-sources
+      + Tegra K1 - 3.10.18 chromeos-sources
+
+   - Jetson K1 - 3.19.0-rc6 linux-jetson
 
    - Efikamx: "Latest" upstream kernel, custom config (2.6.31.14.27-efikamx) external ASIX module, SDCard rootfs
 
@@ -41,9 +55,11 @@ Steev's test setup:
 
 (other) Steve's test setup:
 
- * Hardware: Trimslice, Wandboard quad, Chromebook, Raspberry Pi, Udoo quad, BeagleboneBlack, Efikamx Smartbook, MK802-II (A10)
+ * Hardware: Jetson, Trimslice, Wandboard quad, Chromebooks (snow and K1), Raspberry Pi B/B+/B2, Udoo quad, Cubox quad, BeagleboneBlack
 
-  - Full X is only built for the first 4 (so far) with wayland/weston testing in progress).
+  - Full X is only built for all of them (so far) with wayland/weston testing in progress)
+
+    + gles/egl, no opengl/glx, cairo/clutter/cogl, +qt5/-qt4, +gtk3/-gtk
 
  * Overlays:
 
@@ -51,7 +67,18 @@ Steev's test setup:
 
   - https://github.com/sarnold/arm (pushes to steev/arm)
 
- * Configs: See the config directory for test configs
+ * Recommended CPU flags
+
+  - armv7 defaults: -march=armv7-a -mfpu=vfpv3-d16 -mfloat-abi=hard
+
+   + add neon to USE flags if processor supports it, ebuilds that use neon should take care of flags
+
+  - alternately you can set fpu to one of the neon-vfp flags
+
+   + Example flags for Tegra K1:
+   + -march=armv7-a -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfp16-format=ieee
+
+ * Configs: See the config directory in arm overlay for test configs
 
 Config differences are minimal, mainly graphics and neon. Webkit-gtk builds with everything but jit, the cairo gles backend is enabled instead of opengl, and Trimslice uses opentegra-specific repos and mesa-9999.
 
