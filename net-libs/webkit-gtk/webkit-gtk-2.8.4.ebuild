@@ -7,6 +7,10 @@ GCONF_DEBUG="no"
 PYTHON_COMPAT=( python2_7 )
 CMAKE_WARN_UNUSED_CLI=yes
 
+if ! [[ ${CHOST} == ia64* || ${CHOST} == ppc* ]] ; then
+	CMAKE_MAKEFILE_GENERATOR="ninja"
+fi
+
 inherit check-reqs cmake-utils eutils flag-o-matic gnome2 pax-utils python-any-r1 toolchain-funcs versionator virtualx
 
 MY_P="webkitgtk-${PV}"
