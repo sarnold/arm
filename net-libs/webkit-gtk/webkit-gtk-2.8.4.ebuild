@@ -25,7 +25,7 @@ REQUIRED_USE="
 	introspection? ( gstreamer )
 	webgl? ( ^^ ( gles2 opengl ) )
 	!webgl? ( ?? ( gles2 opengl ) )
-	|| ( wayland X )
+	^^ ( wayland X )
 "
 
 # use sqlite, svg by default
@@ -140,7 +140,9 @@ src_prepare() {
 	# https://bugs.webkit.org/show_bug.cgi?id=129542
 	epatch "${FILESDIR}"/${PN}-2.8.1-ia64-malloc.patch
 	# plus a couple more
+	epatch "${FILESDIR}"/${P}-config-options.patch
 	epatch "${FILESDIR}"/${P}-fix-opengl-off.patch
+	epatch "${FILESDIR}"/${P}-fix-FindCairoGL.patch
 	epatch "${FILESDIR}"/${P}-gles2-config.patch
 
 	gnome2_src_prepare
@@ -213,14 +215,23 @@ src_configure() {
 		$(cmake-utils_use_enable wayland WAYLAND_TARGET)
 		$(cmake-utils_use_enable webgl WEBGL)
 		$(cmake-utils_use_find_package egl EGL)
-		$(cmake-utils_use_find_package opengl OpenGL)
-		$(cmake-utils_use_use glx GLX)
 		$(cmake-utils_use_enable X X11_TARGET)
 		-DCMAKE_BUILD_TYPE=Release
 		-DPORT=GTK
 		-DENABLE_PLUGIN_PROCESS_GTK2=ON
 		${ruby_interpreter}
 	)
+
+	# workaround for busted argument handling
+	if use opengl ; then
+		mycmakeargs+=( -WTF_USE_OPENGL=1 )
+		if use glx ; then
+			mycmakeargs+=( -WTF_USE_GLX=1 )
+		fi
+	else
+		mycmakeargs+=( -WTF_USE_OPENGL=0 )
+		mycmakeargs+=( -WTF_USE_GLX=0 )
+	fi
 
 	# yes, this is stupid, but webkit is stupider...
 	if use arm ; then
