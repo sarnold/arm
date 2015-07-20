@@ -3,37 +3,35 @@
 # $Header: $
 
 EAPI=5
-
 PYTHON_COMPAT=( python2_7 )
-
 inherit python-any-r1 qt5-build
 
 DESCRIPTION="WebKit rendering library for the Qt5 framework"
 
-if [[ ${QT5_BUILD_TYPE} == live ]]; then
-	KEYWORDS="~ppc64"
-else
+if [[ ${QT5_BUILD_TYPE} == release ]]; then
 	KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86"
 fi
 
 # TODO: qttestlib, geolocation, orientation/sensors
 
-IUSE="gstreamer gstreamer010 multimedia opengl printsupport qml udev webp"
+IUSE="gles2 gstreamer gstreamer010 gtkstyle multimedia opengl
+	printsupport qml udev webp"
 REQUIRED_USE="?? ( gstreamer gstreamer010 multimedia )"
 
 RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/icu:=
+	>=dev-libs/leveldb-1.18-r1
 	dev-libs/libxml2:2
 	dev-libs/libxslt
-	>=dev-qt/qtcore-${PV}:5[debug=,icu]
-	>=dev-qt/qtgui-${PV}:5[debug=]
-	>=dev-qt/qtnetwork-${PV}:5[debug=]
-	>=dev-qt/qtsql-${PV}:5[debug=]
-	>=dev-qt/qtwidgets-${PV}:5[debug=]
+	>=dev-qt/qtcore-${PV}:5[icu]
+	>=dev-qt/qtgui-${PV}:5
+	>=dev-qt/qtnetwork-${PV}:5
+	>=dev-qt/qtsql-${PV}:5
+	>=dev-qt/qtwidgets-${PV}:5
 	media-libs/fontconfig:1.0
 	media-libs/libpng:0=
-	sys-libs/zlib
+	>=sys-libs/zlib-1.2.5
 	virtual/jpeg:0
 	virtual/opengl
 	x11-libs/libX11
@@ -49,10 +47,10 @@ RDEPEND="
 		media-libs/gstreamer:0.10
 		media-libs/gst-plugins-base:0.10
 	)
-	multimedia? ( >=dev-qt/qtmultimedia-${PV}:5[debug=,widgets] )
-	opengl? ( >=dev-qt/qtopengl-${PV}:5[debug=] )
-	printsupport? ( >=dev-qt/qtprintsupport-${PV}:5[debug=] )
-	qml? ( >=dev-qt/qtdeclarative-${PV}:5[debug=] )
+	multimedia? ( >=dev-qt/qtmultimedia-${PV}:5[widgets] )
+	opengl? ( >=dev-qt/qtopengl-${PV}:5 )
+	printsupport? ( >=dev-qt/qtprintsupport-${PV}:5 )
+	qml? ( >=dev-qt/qtdeclarative-${PV}:5 )
 	udev? ( virtual/udev )
 	webp? ( media-libs/libwebp:0= )
 "
@@ -65,9 +63,19 @@ DEPEND="${RDEPEND}
 	virtual/rubygems
 "
 
+PATCHES=(
+	"${FILESDIR}/${PN}-5.4.2-system-leveldb.patch"
+)
+
 src_prepare() {
-	# glib build error (bug #549840)
-	epatch "${FILESDIR}"/${P}-Fix-building-with-glib-2.43.patch
+	# ensure bundled library cannot be used
+	rm -r Source/ThirdParty/leveldb || die
+
+	# bug 466216
+	sed -i -e '/CONFIG +=/s/rpath//' \
+		Source/WebKit/qt/declarative/{experimental/experimental,public}.pri \
+		Tools/qmake/mkspecs/features/{force_static_libs_as_shared,unix/default_post}.prf \
+		|| die
 
 	if use gstreamer010; then
 		epatch "${FILESDIR}/${PN}-5.3.2-use-gstreamer010.patch"
@@ -91,4 +99,13 @@ src_prepare() {
 	sed -i -e '/SUBDIRS += examples/d' Source/QtWebKit.pro || die
 
 	qt5-build_src_prepare
+}
+
+src_configure() {
+	local myconf=(
+		$(qt_use gtkstyle)
+		$(qt_use gles2 opengles2)
+	)
+
+	qt5-build_src_configure
 }
