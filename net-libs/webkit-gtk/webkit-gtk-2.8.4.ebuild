@@ -25,7 +25,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd
 IUSE="coverage doc +egl +geoloc gles2 +glx +gstreamer +introspection +jit libsecret neon +opengl spell wayland +webgl X"
 REQUIRED_USE="
 	geoloc? ( introspection )
-	gles2? ( egl !glx )
+	gles2? ( egl !glx !opengl )
 	introspection? ( gstreamer )
 	webgl? ( ^^ ( gles2 opengl ) )
 	!webgl? ( ?? ( gles2 opengl ) )
