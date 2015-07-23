@@ -4,13 +4,13 @@
   <repo quality="experimental" status="unofficial">
     <name><![CDATA[arm_support]]></name>
     <description lang="en"><![CDATA[ARM Support Gentoo Overlay]]></description>
-    <homepage>https://github.com/steev/arm</homepage>
+    <homepage>https://github.com/gentoo/arm</homepage>
     <owner type="person">
       <name><![CDATA[steev]]></name>
       <email>steev@gentoo.org</email>
     </owner>
-    <source type="git">git://github.com/steev/arm.git</source>
-    <source type="git">https://github.com/steev/arm.git</source>
-    <feed>https://github.com/steev/arm/commits/maint.atom</feed>
+    <source type="git">git://github.com/gentoo/arm.git</source>
+    <source type="git">https://github.com/gentoo/arm.git</source>
+    <feed>https://github.com/gentoo/arm/commits/maint.atom</feed>
   </repo>
 </repositories>
