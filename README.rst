@@ -65,7 +65,7 @@ Steev's test setup:
 
   - https://github.com/sarnold/portage-overlay  (general)
 
-  - https://github.com/sarnold/arm (pushes to steev/arm)
+  - https://github.com/sarnold/arm (pushes to gentoo/arm)
 
  * Recommended CPU flags
 
@@ -84,6 +84,6 @@ Config differences are minimal, mainly graphics and neon. Webkit-gtk builds with
 
 You can (optionally) add this overlay with layman::
 
-  $ wget "https://raw.github.com/steev/arm/master/configs/layman.xml" -O /etc/layman/overlays/arm_support.xml
+  $ wget "https://raw.github.com/gentoo/arm/master/configs/layman.xml" -O /etc/layman/overlays/arm_support.xml
   $ layman -f -a arm_support
 
