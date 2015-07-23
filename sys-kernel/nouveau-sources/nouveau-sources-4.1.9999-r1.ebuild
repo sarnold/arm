@@ -33,10 +33,10 @@ SRC_URI="${NV_URI}"
 KEYWORDS="~arm"
 IUSE="deblob"
 
-K_EXTRALOG="This kernel is not supported by Gentoo due to its unstable and
+K_EXTRAELOG="This kernel is not supported by Gentoo due to its unstable and
 experimental nature, and although it's very recent, may still have security
 vulnerabilities. See gentoo-embedded on IRC if you have questions, or feel
-free to ile an issue on github: https://github.com/steev/arm/issues.
+free to file an issue on github: https://github.com/gentoo/arm/issues.
 A copy of the latest steev config has been installed as ${K_DEFCONFIG}.
 If you are reading this, you know what to do..."
 
