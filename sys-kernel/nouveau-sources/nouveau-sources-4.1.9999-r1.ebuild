@@ -21,10 +21,9 @@ detect_version
 detect_arch
 
 inherit git-2 versionator
-NV_PATCHES="tegra-patches.tar.gz"
+NV_PV="20150723-r1"
+NV_PATCHES="tegra-patches-${NV_PV}.tar.gz"
 NV_URI="mirror://gentoo/${NV_PATCHES}"
-# this is taken care of in src_prep
-#UNIPATCH_LIST="${DISTDIR}/${NV_PATCHES} ${UNIPATCH_LIST}"
 
 DESCRIPTION="The latest staging version of the Tegra-nouveau Linux kernel"
 HOMEPAGE="https://github.com/NVIDIA/tegra-nouveau-rootfs"
@@ -34,13 +33,12 @@ SRC_URI="${NV_URI}"
 KEYWORDS="~arm"
 IUSE="deblob"
 
-K_EXTRAELOG="A copy of the latest steev config has been installed as
-${K_DEFCONFIG}. If you are reading this, you know what to do..."
-
-K_EXTRAWARN="This kernel is not supported by Gentoo due to its unstable and
+K_EXTRALOG="This kernel is not supported by Gentoo due to its unstable and
 experimental nature, and although it's very recent, may still have security
 vulnerabilities. See gentoo-embedded on IRC if you have questions, or feel
-free to ile an issue on github: https://github.com/steev/arm/issues."
+free to ile an issue on github: https://github.com/steev/arm/issues.
+A copy of the latest steev config has been installed as ${K_DEFCONFIG}.
+If you are reading this, you know what to do..."
 
 RDEPEND=""
 DEPEND="${RDEPEND}
