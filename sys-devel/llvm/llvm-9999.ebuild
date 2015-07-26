@@ -67,6 +67,9 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}
 # so why did it call itself ninja in the first place?
 CMAKE_MAKEFILE_GENERATOR=emake
 
+## nodoctargz patch needs some fuzz...
+EPATCH_OPTS="-F 3"
+
 pkg_pretend() {
 	# in megs
 	# !clang !debug !multitarget -O2       400
@@ -143,7 +146,7 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-3.2-nodoctargz.patch
+	epatch "${FILESDIR}"/${P}-nodoctargz.patch
 	epatch "${FILESDIR}"/${PN}-3.5-gcc-4.9.patch
 	epatch "${FILESDIR}"/${PN}-3.6-gentoo-install.patch
 
@@ -151,7 +154,7 @@ src_prepare() {
 		# Automatically select active system GCC's libraries, bugs #406163 and #417913
 		epatch "${FILESDIR}"/clang-3.5-gentoo-runtime-gcc-detection-v3.patch
 
-		epatch "${FILESDIR}"/clang-3.5-gentoo-install.patch
+		epatch "${FILESDIR}"/clang-9999-gentoo-install.patch
 	fi
 
 	if use prefix && use clang; then
