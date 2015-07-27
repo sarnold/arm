@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,10 @@ DESCRIPTION="FBTurbo ARM video driver (based on sunxifb)"
 KEYWORDS="~arm"
 
 RDEPEND=">=x11-base/xorg-server-1.3
-	gles2? ( >=x11-libs/libdrm-2.4.36[video_cards_exynos] )"
+	gles2? (
+		( >=x11-libs/libdrm-2.4.36[video_cards_exynos] )
+		( x11-libs/libump )
+		)"
 
 DEPEND="${RDEPEND}"
 
