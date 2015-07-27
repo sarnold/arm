@@ -157,6 +157,8 @@ src_configure() {
 	# might still be needed
 	#use arm && append-cppflags -D__arm32__
 
+	use kdrive && replace-flags "-O3" "-O2"
+
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
