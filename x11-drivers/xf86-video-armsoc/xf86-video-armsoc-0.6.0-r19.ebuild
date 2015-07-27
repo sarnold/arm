@@ -6,9 +6,9 @@ EAPI=5
 
 XORG_DRI="always"
 XORG_EAUTORECONF="yes"
-XORG_CONFIGURE_OPTIONS="--with-drmmode=exynos --disable-selective-werror"
+XORG_CONFIGURE_OPTIONS="--with-drmmode=exynos"
 
-inherit autotools xorg-2 flag-o-matic
+inherit autotools xorg-2 versionator
 
 MY_PR="1endless9"
 MY_PV="v${PV}-${MY_PR}"
@@ -42,12 +42,3 @@ DEPEND="${RDEPEND}
 AUTOTOOLS_IN_SOURCE_BUILD="yes"
 AUTOTOOLS_AUTORECONF="yes"
 
-src_prepare() {
-	sed -i -e "s|ERROR_CFLAGS = -Werror|ERROR_CFLAGS = |" \
-		 "${S}"/Makefile.am "${S}"/src/Makefile.am \
-		|| die "could not tweak makefile.am!"
-
-	epatch "${FILESDIR}"/${PN}-implicit_declaration.patch
-
-	xorg-2_src_prepare
-}
