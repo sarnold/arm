@@ -19,22 +19,29 @@ if [[ ${PV} != 9999 ]]; then
 	S="${WORKDIR}/${P}-${MY_PR}"
 else
 	inherit git-r3
-	EGIT_REPO_URI="https://github.com/mdrjr/xf86-video-armsoc.git
-		git@github.com:mdrjr/xf86-video-armsoc.git"
+	EGIT_REPO_URI="http://anongit.freedesktop.org/git/xorg/driver/xf86-video-armsoc.git"
+	EGIT_COMMIT="1.3.0"
+	#EGIT_REPO_URI="https://github.com/mdrjr/xf86-video-armsoc.git
+	#	git@github.com:mdrjr/xf86-video-armsoc.git"
 	## release branch for github tarballs: r4p0-umplock
 	## alternate 5422 branch is more active: 5422_r5p1
-	EGIT_BRANCH="5422_r5p1"
+	#EGIT_BRANCH="5422_r5p1"
 fi
 
 DESCRIPTION="Open-source X.org graphics driver for ARM graphics"
 HOMEPAGE="https://github.com/mdrjr/xf86-video-armsoc"
 LICENSE="MIT"
 
-RDEPEND=">=x11-base/xorg-server-1.9
-	!x11-drivers/mali-drivers"
+RDEPEND=">=x11-base/xorg-server-1.10
+	>=x11-libs/pixman-0.32.6
+	>=x11-libs/libump-3.0
+	>=x11-libs/libdrm-2.4.60[video_cards_exynos]"
 
 DEPEND="${RDEPEND}
-	x11-proto/xextproto"
+	x11-proto/xproto
+	x11-proto/xextproto
+	x11-proto/fontsproto
+	x11-proto/dri2proto"
 
 # Best way to jam this into the config parameter?
 #IUSE="exynos pl111"
