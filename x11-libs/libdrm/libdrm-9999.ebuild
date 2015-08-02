@@ -22,7 +22,7 @@ for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
-IUSE="${IUSE_VIDEO_CARDS} libkms valgrind"
+IUSE="${IUSE_VIDEO_CARDS} libkms -kernel-src -test valgrind"
 RESTRICT="test" # see bug #236845
 
 RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
@@ -30,10 +30,16 @@ RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
 	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )
 	valgrind? ( dev-util/valgrind )"
 DEPEND="${RDEPEND}"
+# kernel-src? ( virtual/linux-sources )
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-arm-update.patch
 )
+
+pkg_pretend() {
+	ewarn "Set USE=kernel-src to build against your local kernel source."
+	ewarn "This will eventually depend on real kernel sources ebuilds."
+}
 
 src_prepare() {
 	if [[ ${PV} = 9999* ]]; then
@@ -44,10 +50,15 @@ src_prepare() {
 }
 
 src_configure() {
+	if use kernel-src ; then
+		my_conf="--with-kernel-source=${EPREFIX}/usr/src/linux}"
+	else
+		my_conf=""
+	fi
+
 	XORG_CONFIGURE_OPTIONS=(
 		# Udev is only used by tests now.
-		--disable-udev
-		--disable-cairo-tests
+		$(use_enable test cairo-tests)
 		$(use_enable video_cards_exynos exynos-experimental-api)
 		$(use_enable video_cards_freedreno freedreno)
 		$(use_enable video_cards_intel intel)
@@ -58,6 +69,7 @@ src_configure() {
 		$(use_enable video_cards_vmware vmwgfx)
 		$(use_enable libkms)
 		$(use_enable valgrind)
+		${my_conf}
 	)
 	xorg-2_src_configure
 }
