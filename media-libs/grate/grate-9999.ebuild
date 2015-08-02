@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -27,10 +27,6 @@ RDEPEND="x11-libs/libX11
 DEPEND="${RDEPEND}"
 
 AUTOTOOLS_IN_SOURCE_BUILD=1
-
-PATCHES=(
-	"${FILESDIR}/${PN}-implicit_declaration.patch"
-)
 
 src_configure() {
 	local myeconfargs=(
