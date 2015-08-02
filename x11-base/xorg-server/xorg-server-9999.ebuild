@@ -13,7 +13,7 @@ SLOT="0/${PV}"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
 IUSE_SERVERS="dmx kdrive xephyr xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} glamor ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
+IUSE="${IUSE_SERVERS} extra-warn glamor glx ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	dev-libs/openssl
@@ -133,7 +133,7 @@ PDEPEND="
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
 	)
-	xephyr? ( kdrive )"
+	xephyr? ( kdrive glx )"
 
 #UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
@@ -145,12 +145,22 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.12-unloadsubmodule.patch
 	# needed for new eselect-opengl, bug #541232
 	"${FILESDIR}"/${PN}-1.17-support-multiple-Files-sections.patch
+	"${FILESDIR}"/${PN}-fix_stupid_array_bounds_warning.patch
+	"${FILESDIR}"/${PN}-fix_declaration_mismatch.patch
 )
 
 pkg_pretend() {
 	# older gcc is not supported
 	[[ "${MERGE_TYPE}" != "binary" && $(gcc-major-version) -lt 4 ]] && \
 		die "Sorry, but gcc earlier than 4.0 will not work for xorg-server."
+
+	# -flto reveals bugs and anomalous behavoir in xephyr and unwind
+	if  use unwind || use xephyr ; then
+		is-flagq "-flto*" && \
+		eerror "Sorry but you must disable unwind and xephyr to use -flto"
+		eerror ""
+		die "Whole program optimization reveals latent build errors in Xephyr"
+	fi
 }
 
 src_configure() {
@@ -164,6 +174,9 @@ src_configure() {
 	# sysconfdir is used for the xorg.conf location; same applies
 	# NOTE: fop is used for doc generating ; and i have no idea if gentoo
 	#	package it somewhere
+
+	# should try $(use_enable dri3) some day...
+
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
 		$(use_enable dmx)
@@ -181,22 +194,24 @@ src_configure() {
 		$(use_enable !minimal install-libxf86config)
 		$(use_enable !minimal dri)
 		$(use_enable !minimal dri2)
-		$(use_enable !minimal glx)
+		$(use_enable glx)
+		$(use_enable glx aiglx)
 		$(use_enable xephyr)
 		$(use_enable xnest)
 		$(use_enable xorg)
 		$(use_enable xvfb)
-		$(use_enable nptl glx-tls)
 		$(use_enable udev config-udev)
 		$(use_with doc doxygen)
 		$(use_with doc xmlto)
 		$(use_with systemd systemd-daemon)
 		$(use_enable systemd systemd-logind)
+		$(use_enable extra-warn selective-werror)
 		--enable-libdrm
 		--sysconfdir="${EPREFIX}"/etc/X11
 		--localstatedir="${EPREFIX}"/var
 		--with-fontrootdir="${EPREFIX}"/usr/share/fonts
 		--with-xkb-output="${EPREFIX}"/var/lib/xkb
+		--disable-xquartz
 		--disable-config-hal
 		--disable-linux-acpi
 		--without-dtrace
