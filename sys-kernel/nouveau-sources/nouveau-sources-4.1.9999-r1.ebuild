@@ -51,7 +51,13 @@ src_prepare() {
 		UNIPATCH_LIST+=" ${p}"
 	done
 
+	UNIPATCH_EXCLUDE="drm-tegra-dpaux-Fix-transfers-larger-than-4-bytes.patch"
+
 	unipatch "${UNIPATCH_LIST}"
+
+	git config user.email "arm@gentoo.org"
+	git config user.name "Portage git-2"
+	git commit -a -n -m"removing -dirty flag"
 }
 
 update_config() {
