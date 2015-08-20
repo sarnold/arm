@@ -19,7 +19,7 @@ DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-IUSE="X aqua debug directfb drm gallium gles2 +glib glx lto opengl qt4 static-libs +svg valgrind xcb -xlib-xcb"
+IUSE="X aqua debug directfb -drm egl gallium gles2 +glib -glx -lto -opengl qt4 static-libs +svg valgrind xcb -xlib-xcb"
 # gtk-doc regeneration doesn't seem to work with out-of-source builds
 #[[ ${PV} == *9999* ]] && IUSE="${IUSE} doc" # API docs are provided in tarball, no need to regenerate
 
@@ -33,6 +33,7 @@ RDEPEND=">=dev-libs/lzo-2.06-r1[${MULTILIB_USEDEP}]
 	>=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}]
 	>=x11-libs/pixman-0.32.4[${MULTILIB_USEDEP}]
 	directfb? ( dev-libs/DirectFB )
+	egl? ( >=media-libs/mesa-9.1.6[egl,${MULTILIB_USEDEP}] )
 	gles2? ( >=media-libs/mesa-9.1.6[gles2,${MULTILIB_USEDEP}] )
 	glib? ( >=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}] )
 	opengl? ( || ( >=media-libs/mesa-9.1.6[egl,${MULTILIB_USEDEP}] media-libs/opengl-apple ) )
@@ -72,6 +73,7 @@ DEPEND="${RDEPEND}
 REQUIRED_USE="
 	drm? ( X )
 	gallium? ( drm )
+	egl? ( !glx !drm )
 	gles2? ( !glx !drm )
 	glx? ( !gles2 opengl )
 	xlib-xcb? ( xcb )
@@ -100,6 +102,7 @@ pkg_setup() {
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.12.18-disable-test-suite.patch
 	epatch "${FILESDIR}"/${PN}-respect-fontconfig.patch
+	epatch "${FILESDIR}"/${PN}-drm_missing_include.patch
 
 	# tests and perf tools require X, bug #483574
 	if ! use X; then
@@ -150,6 +153,7 @@ multilib_src_configure() {
 		$(use_enable debug test-surfaces) \
 		$(use_enable drm) \
 		$(use_enable directfb) \
+		$(use_enable egl) \
 		$(use_enable gallium) \
 		$(use_enable gles2 glesv2) \
 		$(use_enable glib gobject) \
