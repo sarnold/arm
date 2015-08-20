@@ -22,13 +22,13 @@ LICENSE="LGPL-2+ BSD"
 SLOT="4/37" # soname version of libwebkit2gtk-4.0
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
 
-IUSE="coverage doc +egl +geoloc gles2 +glx +gstreamer +introspection +jit libsecret neon +opengl spell wayland +webgl X"
+IUSE="coverage doc +egl +geoloc gles2 +glx +gstreamer +introspection +jit libsecret neon opengl spell wayland +webgl X"
 REQUIRED_USE="
 	geoloc? ( introspection )
 	gles2? ( egl !glx !opengl )
 	introspection? ( gstreamer )
-	webgl? ( ^^ ( gles2 opengl ) )
-	!webgl? ( ?? ( gles2 opengl ) )
+	webgl? ( ^^ ( egl opengl ) )
+	!webgl? ( ?? ( egl opengl ) )
 	^^ ( wayland X )
 "
 

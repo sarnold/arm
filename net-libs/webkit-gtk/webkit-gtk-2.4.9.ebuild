@@ -17,14 +17,14 @@ LICENSE="LGPL-2+ BSD"
 SLOT="3/25" # soname version of libwebkit2gtk-3.0
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-macos"
 
-IUSE="aqua coverage debug +egl +geoloc gles2 +gstreamer +introspection +jit libsecret +opengl spell wayland +webgl +X"
+IUSE="aqua coverage debug +egl +geoloc gles2 +gstreamer +introspection +jit libsecret opengl spell wayland +webgl +X"
 # bugs 372493, 416331
 REQUIRED_USE="
 	geoloc? ( introspection )
 	gles2? ( egl )
 	introspection? ( gstreamer )
-	webgl? ( ^^ ( gles2 opengl ) )
-	!webgl? ( ?? ( gles2 opengl ) )
+	webgl? ( ^^ ( egl opengl ) )
+	!webgl? ( ?? ( egl opengl ) )
 	|| ( aqua wayland X )
 "
 
@@ -64,7 +64,7 @@ RDEPEND="
 	wayland? ( >=x11-libs/gtk+-3.10:3[wayland] )
 	webgl? (
 		|| ( x11-libs/cairo[opengl]
-		x11-libs/cairo[gles2]
+		x11-libs/cairo[egl]
 		)
 		x11-libs/libXcomposite
 		x11-libs/libXdamage )
