@@ -246,7 +246,7 @@ src_configure() {
 	# force jit  - switched to config option instead
 	#mozconfig_annotate '' --enable-ion
 	# workaround for arm config missing graphics
-	mozconfig_annotate '' --enable-skia
+	use arm && mozconfig_annotate '' --enable-skia
 
 	# Allow for a proper pgo build
 	if use pgo; then
