@@ -21,7 +21,7 @@ KEYWORDS="~amd64 ~arm ~hppa ~sh ~x86 ~amd64-linux ~x86-linux"
 
 # +alsa-plugin as discussed in bug #519530
 IUSE="+alsa +alsa-plugin +asyncns bluetooth +caps dbus doc equalizer +gdbm +glib
-	gnome gtk ipv6 jack libsamplerate lirc native-headset neon ofono-headset
+	gnome gtk imx ipv6 jack libsamplerate lirc native-headset neon ofono-headset
 	+orc oss qt4 realtime selinux ssl systemd system-wide tcpd test +udev
 	+webrtc-aec +X xen zeroconf"
 
@@ -160,6 +160,7 @@ multilib_src_configure() {
 	# failure on arm with neon
 	if [[ ${CHOST} == armv* ]] ; then
 		use neon && append-cflags -mfpu=neon
+		use imx && export ax_cv_PTHREAD_PRIO_INHERIT="no"
 	fi
 
 	local myconf=()
