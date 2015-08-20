@@ -5,6 +5,9 @@
 	<email>nerdboy@gentoo.org</email>
 	<name>Steve Arnold</name>
 </maintainer>
+<upstream>
+	<remote-id type="github">RobertCNelson/armv7-multiplatform</remote-id>
+</upstream>
 <use>
 	<flag name="imx">Apply upstream patch (mostly) for i.MX boards</flag>
 </use>

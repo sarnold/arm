@@ -5,6 +5,7 @@
 EAPI="5"
 
 ETYPE="sources"
+K_DEFCONFIG="gentoo-armv7multi_defconfig"
 UNIPATCH_STRICTORDER="1"
 K_WANT_GENPATCHES="base extras experimental"
 K_GENPATCHES_VER="8"
@@ -22,26 +23,30 @@ EXTRAVERSION="-${MY_PR}"
 MY_P="${OKV}-${MY_PR}"
 
 MULTI_PATCH="patch-${MY_P}.diff"
-MULTI_URI="https://rcn-ee.com/deb/sid-armhf/v${MY_P}/${MULTI_PATCH}.gz"
+MULTI_CONFIG="defconfig"
+MULTI_URI="https://rcn-ee.com/deb/sid-armhf/v${MY_P}"
+M_PATCH_URI="${MULTI_URI}/${MULTI_PATCH}.gz"
+M_CONFIG_URI="${MULTI_URI}/${MULTI_CONFIG}"
 
 KEYWORDS="~arm"
-HOMEPAGE="https://eewiki.net/display/linuxonarm/Home"
+HOMEPAGE="https://eewiki.net/display/linuxonarm/Wandboard"
 
 DESCRIPTION="Full sources for ${OKV} kernel plus Wandboard, Udoo, and BeagleBone patches"
 SRC_URI="
 	${KERNEL_URI}
-	${MULTI_URI}
 	${ARCH_URI}
-	imx? ( ${GENPATCHES_URI} )
-	"
+	${GENPATCHES_URI}
+	imx? ( ${M_PATCH_URI}
+		${M_CONFIG_URI} -> ${K_DEFCONFIG} )"
 
 KEYWORDS="~arm"
-IUSE="experimental imx"
+IUSE="experimental +imx"
 
 K_EXTRAELOG="This is the bleeding-edge patch set on full gentoo-sources
- kernel from LinuxOnArm maintainer Robert C Nelson.  Intended mainly
- for i.MX-based boards like Wand or Udoo (use bone-sources for building
- a beaglebone kernel)."
+kernel from LinuxOnArm maintainer Robert C Nelson.  Intended mainly
+for i.MX-based boards like Wand or Udoo (use bone-sources for building
+a beaglebone kernel).  A copy of the latest config has been installed as
+${K_DEFCONFIG}.  If you are reading this, you know what to do..."
 
 RDEPEND=""
 DEPEND="${RDEPEND}
@@ -64,6 +69,8 @@ src_prepare() {
 			patch -p1 "${WORKDIR}"/${MULTI_PATCH}
 		eend $? || return
 	fi
+
+	use imx && update_config
 }
 
 pkg_postinst() {
@@ -75,3 +82,9 @@ pkg_postinst() {
 pkg_postrm() {
 	kernel-2_pkg_postrm
 }
+
+update_config() {
+	cp -f "${DISTDIR}"/${K_DEFCONFIG} "${S}"/arch/arm/configs/ \
+		|| die "failed to install ${K_DEFCONFIG}!"
+}
+
