@@ -39,7 +39,6 @@ SRC_URI="
 	imx? ( ${M_PATCH_URI}
 		${M_CONFIG_URI} -> ${K_DEFCONFIG} )"
 
-KEYWORDS="~arm"
 IUSE="experimental +imx"
 
 K_EXTRAELOG="This is the bleeding-edge patch set on full gentoo-sources
