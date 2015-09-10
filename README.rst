@@ -84,6 +84,4 @@ Config differences are minimal, mainly graphics and neon. Webkit-gtk builds with
 
 You can (optionally) add this overlay with layman::
 
-  $ wget "https://raw.github.com/gentoo/arm/master/configs/layman.xml" -O /etc/layman/overlays/arm_support.xml
-  $ layman -f -a arm_support
-
+  $ layman -f -a arm_support -o https://raw.github.com/gentoo/arm/master/configs/layman.xml
