@@ -5,17 +5,18 @@
 EAPI="5"
 
 ETYPE="sources"
-KPATCH_DIR="${WORKDIR}/tegra-patches/"
-K_DEFCONFIG="nyan-big_steev_test_defconfig"
+K_WANT_GENPATCHES="base extras experimental"
+K_GENPATCHES_VER="2"
 K_DEBLOB_AVAILABLE="0"
+K_KDBUS_AVAILABLE="1"
+
+K_DEFCONFIG="nyan-big_steev_test_defconfig"
 K_NOUSEPR="1"
-K_SECURITY_UNSUPPORTED="1"
 EXTRAVERSION="-${PN}/-*"
 
 EGIT_REPO_URI=https://github.com/Gnurou/linux.git
 EGIT_PROJECT="nouveau-linux.git"
 EGIT_BRANCH="staging/nouveau"
-EGIT_COMMIT="d211d87e14d0c1b28a60cb6b512d162634ca6a99"
 
 inherit kernel-2
 detect_version
@@ -29,41 +30,41 @@ NV_URI="mirror://gentoo/${NV_PATCHES}"
 DESCRIPTION="The latest staging version of the Tegra-nouveau Linux kernel"
 HOMEPAGE="https://github.com/NVIDIA/tegra-nouveau-rootfs"
 
-SRC_URI="${NV_URI}"
+SRC_URI="${NV_URI} ${GENPATCHES_URI} ${ARCH_URI}"
+
+UNIPATCH_LIST="${NV_URI} ${GENPATCHES_URI} ${ARCH_URI}"
+#UNIPATCH_STRICTORDER="1"
 
 KEYWORDS="~arm"
-IUSE="deblob"
+IUSE="experimental"
 
-K_EXTRAELOG="This kernel is not supported by Gentoo due to its unstable and
-experimental nature, and although it's very recent, may still have security
-vulnerabilities. See gentoo-embedded on IRC if you have questions, or feel
-free to file an issue on github: https://github.com/gentoo/arm/issues.
-A copy of the latest steev config has been installed as ${K_DEFCONFIG}.
-If you are reading this, you know what to do..."
+K_EXTRAELOG="This kernel is still unstable and experimental but is now
+fully patched up to genpatches base (so is essentially gentoo-sources
+for Tegra with nouveau).  A copy of the latest steev config has been
+installed as ${K_DEFCONFIG}. If you are reading this, you know what to do..."
+
+UNIPATCH_EXCLUDE="
+	drm-tegra-dpaux-Fix-transfers-larger-than-4-bytes.patch"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
 	>=sys-devel/patch-2.7.4"
 
 src_prepare() {
-	update_config
-
-	for p in "${KPATCH_DIR}"/*.patch* ; do
-		UNIPATCH_LIST+=" ${p}"
-	done
-
-	UNIPATCH_EXCLUDE="drm-tegra-dpaux-Fix-transfers-larger-than-4-bytes.patch"
-
 	unipatch "${UNIPATCH_LIST}"
 
-	git config user.email "arm@gentoo.org"
-	git config user.name "Portage git-2"
-	git commit -a -n -m"removing -dirty flag"
+	update_config
 }
 
 update_config() {
 	cp -f "${WORKDIR}"/steev_nyan-big_config \
 		"${S}"/arch/arm/configs/${K_DEFCONFIG} \
 		|| die "failed to install custom config!"
+
+	cd "${S}"
+	git config user.email "arm@gentoo.org"
+	git config user.name "Portage git-2"
+	git add .
+	git commit -n -m"removing -dirty flag"
 }
 
