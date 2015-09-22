@@ -23,8 +23,8 @@ REQUIRED_USE="
 	geoloc? ( introspection )
 	gles2? ( egl )
 	introspection? ( gstreamer )
-	webgl? ( ^^ ( egl opengl ) )
-	!webgl? ( ?? ( egl opengl ) )
+	webgl? ( ^^ ( gles2 opengl ) )
+	!webgl? ( ?? ( gles2 opengl ) )
 	|| ( aqua wayland X )
 "
 

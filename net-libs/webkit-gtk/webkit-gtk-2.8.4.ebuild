@@ -27,8 +27,8 @@ REQUIRED_USE="
 	geoloc? ( introspection )
 	gles2? ( egl !glx !opengl )
 	introspection? ( gstreamer )
-	webgl? ( ^^ ( egl opengl ) )
-	!webgl? ( ?? ( egl opengl ) )
+	webgl? ( ^^ ( gles2 opengl ) )
+	!webgl? ( ?? ( gles2 opengl ) )
 	^^ ( wayland X )
 "
 
