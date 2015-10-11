@@ -21,13 +21,12 @@ for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
-IUSE="${IUSE_VIDEO_CARDS} linux-headers libkms valgrind"
+IUSE="${IUSE_VIDEO_CARDS} libkms valgrind"
 RESTRICT="test" # see bug #236845
 
 RDEPEND=">=dev-libs/libpthread-stubs-0.3-r1:=[${MULTILIB_USEDEP}]
 	video_cards_intel? ( >=x11-libs/libpciaccess-0.13.1-r1:=[${MULTILIB_USEDEP}] )
-	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )
-	linux-headers? ( >=sys-kernel/linux-headers-4.0 )"
+	abi_x86_32? ( !app-emulation/emul-linux-x86-opengl[-abi_x86_32(-)] )"
 DEPEND="${RDEPEND}
 	valgrind? ( dev-util/valgrind )"
 
@@ -63,19 +62,4 @@ src_configure() {
 	)
 
 	xorg-2_src_configure
-}
-
-src_install() {
-	xorg-2_src_install
-
-	file_collides="drm_fourcc.h drm.h drm_mode.h drm_sarea.h i915_drm.h
-		mga_drm.h nouveau_drm.h qxl_drm.h r128_drm.h radeon_drm.h
-		savage_drm.h sis_drm.h tegra_drm.h via_drm.h"
-
-	if has_version '>=sys-kernel/linux-headers-4.0' ; then
-		for file in $file_collides ; do
-			find "${ED}" -name $file -type f -print0 \
-				| xargs -0 /bin/rm -f
-		done
-	fi
 }
