@@ -151,8 +151,8 @@ src_prepare() {
 	# plus a couple more
 	epatch "${FILESDIR}"/${PN}-2.8.4-config-options.patch
 	epatch "${FILESDIR}"/${PN}-2.8.4-fix-opengl-off.patch
-	epatch "${FILESDIR}"/${PN}-2.8.4-fix-FindCairoGL.patch
-	epatch "${FILESDIR}"/${PN}-2.8.4-gles2-config.patch
+	epatch "${FILESDIR}"/${P}-fix-FindCairoGL.patch
+	epatch "${FILESDIR}"/${P}-gles2-config.patch
 
 	gnome2_src_prepare
 }
