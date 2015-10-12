@@ -1,3 +1,6 @@
+www-client/epiphany jit -nss
+net-misc/openvpn iproute2 passwordsave pkcs11
+net-misc/ethercard-diag diag-only
 x11-drivers/xf86-video-fbturbo gles2
 app-misc/mc samba sftp
 net-fs/nfs-utils nfsv41
@@ -7,6 +10,7 @@ www-client/chromium -proprietary-codecs
 dev-libs/libdbusmenu -gtk
 
 dev-qt/qtcore:5 icu
+dev-qt/qtdeclarative localstorage
 dev-python/PyQt5 webkit widgets printsupport network
 dev-qt/qtwebkit printsupport -multimedia opengl qml webp
 dev-qt/qtprintsupport opengl
@@ -60,15 +64,17 @@ x11-libs/libxcb xkb
 mail-client/claws-mail gdata smime -webkit calendar spam-report spamassassin
 
 net-libs/libproxy -webkit
-net-libs/webkit-gtk egl -opengl -glx geoloc gles2 gstreamer introspection jit webgl -webkit1
+>=net-libs/webkit-gtk-2.4.6 jit
+>=net-libs/webkit-gtk-2.8.4 egl -opengl -glx geoloc gles2 gstreamer introspection jit webgl -webkit1
+www-client/midori granite jit webkit2 -deprecated -introspection zeitgeist
 media-libs/cogl opengl gles2
-x11-libs/cairo -drm -lto gles2 -opengl xcb -xlib-xcb
+x11-libs/cairo -drm -lto gles2 -opengl xcb xlib-xcb
 
 sys-devel/llvm -ncurses
-dev-libs/weston colord editor examples fbdev rdp -resize-optimization view wayland-compositor xwayland -opengl
-www-client/midori -granite -jit webkit2 -deprecated -introspection zeitgeist
+dev-libs/weston colord editor examples fbdev gles2 -opengl rdp -resize-optimization view wayland-compositor xwayland
 gnome-extra/zeitgeist downloads-monitor extensions -fts icu -plugins telepathy
-media-sound/pulseaudio gnome
+net-im/telepathy-mission-control -upower
+media-sound/pulseaudio gnome -libsamplerate
 
 sys-libs/glibc -nscd
 sys-apps/kmod lzma
@@ -82,9 +88,6 @@ app-misc/mc -slang sftp
 dev-libs/DirectFB fbcon imlib2 jpeg2k drmkms -egl input_hub mpeg2 mpeg3 multicore
 media-libs/libsdl alsa fbcon -joystick pulseaudio sound video -aalib
 
-# for midori crashing bug on arm
-=net-libs/webkit-gtk-1* -jit
-
 net-libs/glib-networking  -libproxy
 
 media-libs/libcanberra sound
@@ -92,7 +95,7 @@ sys-fs/lvm2 -static static-libs -thin
 >=virtual/libudev-215-r1 static-libs
 >=sys-fs/udev-208-r1 static-libs
 
-gnome-base/gvfs archive avahi bluetooth cdda fuse gdu gnome-keyring gphoto2 http ios mtp samba udisks
+gnome-base/gvfs archive cdda fuse gtk gnome-keyring http nfs samba udisks zeroconf
 dev-libs/boost icu
 sys-devel/make guile
 sys-libs/ncurses tinfo
@@ -101,23 +104,16 @@ app-text/ghostscript-gpl cups
 sys-apps/util-linux tty-helpers
 
 media-sound/exaile aws cddb libnotify mtp -context-info droptray -ffmpeg mpris2
+media-plugins/exaile-soundmenu-indicator xfce
 sys-auth/polkit wheel
 media-libs/gd fontconfig
 media-video/vlc faad gnutls opengl -vaapi vpx
 media-gfx/imagemagick  corefonts djvu fftw fontconfig graphviz jbig jpeg2k lzma
+media-gfx/graphviz -examples gdk-pixbuf gtk
 x11-libs/vte glade
 x11-terms/xterm Xaw3d toolbar
->=dev-python/markupsafe-0.18 python_targets_python3_3
->=dev-python/mako-0.7.3-r2 python_targets_python3_3
-=dev-python/setuptools-1.1.6 python_targets_python3_3
->=app-editors/gedit-3.12.2 python_targets_python3_3
 
 net-irc/hexchat -gtkspell libcanberra perl plugin-checksum plugin-doat plugin-fishlim plugin-sysinfo sexy
-media-sound/rhythmbox python_single_target_python3_3 python_targets_python3_3
-
->=dev-python/pycairo-1.10.0-r4 python_targets_python3_3
->=dev-python/pygobject-3.8.3 python_targets_python3_3
->=virtual/python-unittest2-1-r2 python_targets_python3_3
 
 net-fs/samba -winbind
 net-fs/cifs-utils -acl -ads creds
@@ -129,10 +125,10 @@ media-video/vlc cddb egl fontconfig -opengl live matroska neon omxil alsa rtsp t
 x11-themes/gentoo-artwork -grub offensive
 x11-misc/tint2 battery tint2conf
 sys-libs/libunwind lzma
-x11-base/xorg-server -minimal xvfb kdrive xorg unwind xephyr
+x11-base/xorg-server drm -glx -minimal xvfb kdrive xorg -unwind -xephyr -extra-warn
 x11-apps/xinit -minimal
 
-x11-libs/libdrm libkms
+x11-libs/libdrm libkms -kernel-src
 =media-libs/mesa-10* -xa -dri3 -llvm -pic -gallium
 # don't use dri3 interface for mali?
 >=media-libs/mesa-9999 -dri3
@@ -149,7 +145,7 @@ media-plugins/gst-plugins-meta:0.10 -ffmpeg
 dev-libs/glib utils
 
 virtual/udev hwdb
-net-misc/networkmanager modemmanager gnutls -nss -wext ppp connection-sharing
+net-misc/networkmanager -dhclient -dhcpcd nodhcp modemmanager gnutls -nss -wext ppp connection-sharing
 
 net-misc/tightvnc server
 net-dns/avahi mdnsresponder-compat autoipd gtk3
@@ -158,10 +154,9 @@ media-libs/harfbuzz icu
 media-video/mplayer2 -dvd -dvdnav yuv4mpeg
 media-video/mplayer live lzo rtc -dvd -dvdnav -encode libmpeg2 -opengl -osdmenu -xscreensaver -xv -X
 media-video/ffmpeg armv7 armvfp -encode -opengl -X
-media-video/libav armv7 armvfp encode gpl gsm jack jpeg2k speex -opengl opus X tools theora
+media-video/libav -vdpau vpx armv7 armvfp encode gpl gsm jack jpeg2k speex -opengl opus X tools theora
 # needs neon/asm patches
-media-video/libav -neon
-virtual/ffmpeg gsm jpeg2k opus theora 
+virtual/ffmpeg gsm jpeg2k opus speex theora
 
 media-sound/lame  sndfile
 media-video/ffmpeg -bindist fontconfig jack libv4l flite openssl theora threads
