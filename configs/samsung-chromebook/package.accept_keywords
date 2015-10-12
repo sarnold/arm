@@ -1,3 +1,7 @@
+#>=sys-devel/binutils-9999 **
+
+>=x11-libs/cairo-9999 **
+
 >=app-text/pastebinit-1.4.1 **
 >=dev-python/configobj-5.0.6 **
 
