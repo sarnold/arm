@@ -36,7 +36,7 @@ UNIPATCH_LIST="${NV_URI} ${GENPATCHES_URI} ${ARCH_URI}"
 #UNIPATCH_STRICTORDER="1"
 
 KEYWORDS="~arm"
-IUSE="experimental"
+IUSE="experimental firmware"
 
 K_EXTRAELOG="This kernel is still unstable and experimental but is now
 fully patched up to genpatches base (so is essentially gentoo-sources
@@ -46,7 +46,7 @@ installed as ${K_DEFCONFIG}. If you are reading this, you know what to do..."
 UNIPATCH_EXCLUDE="
 	drm-tegra-dpaux-Fix-transfers-larger-than-4-bytes.patch"
 
-RDEPEND=""
+RDEPEND="firmware? ( >=sys-kernel/linux-firmware-99999999 )"
 DEPEND="${RDEPEND}
 	>=sys-devel/patch-2.7.4"
 
