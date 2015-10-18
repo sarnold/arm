@@ -20,7 +20,7 @@ if [[ ${PV} != 9999 ]]; then
 else
 	inherit git-r3
 	EGIT_REPO_URI="http://anongit.freedesktop.org/git/xorg/driver/xf86-video-armsoc.git"
-	EGIT_COMMIT="1.3.0"
+	EGIT_COMMIT="1.3.1"
 	#EGIT_REPO_URI="https://github.com/mdrjr/xf86-video-armsoc.git
 	#	git@github.com:mdrjr/xf86-video-armsoc.git"
 	## release branch for github tarballs: r4p0-umplock
@@ -32,7 +32,8 @@ DESCRIPTION="Open-source X.org graphics driver for ARM graphics"
 HOMEPAGE="https://github.com/mdrjr/xf86-video-armsoc"
 LICENSE="MIT"
 
-RDEPEND=">=x11-base/xorg-server-1.10
+RDEPEND="virtual/udev
+	>=x11-base/xorg-server-1.10
 	>=x11-libs/pixman-0.32.6
 	>=x11-libs/libump-3.0
 	>=x11-libs/libdrm-2.4.60[video_cards_exynos]"
@@ -57,4 +58,11 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-implicit_declaration.patch
 
 	xorg-2_src_prepare
+}
+
+src_install() {
+	xorg-2_src_install
+
+	insinto /etc/udev/rules.d
+	doins "${FILESDIR}"/50-ump.rules
 }
