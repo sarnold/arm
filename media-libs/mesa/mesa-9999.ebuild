@@ -13,7 +13,7 @@ fi
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit autotools multilib-minimal python-any-r1 pax-utils ${GIT_ECLASS}
+inherit autotools flag-o-matic multilib-minimal python-any-r1 pax-utils ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -192,6 +192,9 @@ src_prepare() {
 }
 
 multilib_src_configure() {
+	# new drm include confusion (who provides, libdrm or linux-headers?
+	append-cflags -I/usr/include/drm
+
 	local myconf
 
 	if use classic; then
