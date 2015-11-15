@@ -72,7 +72,7 @@ src_install() {
 		mga_drm.h nouveau_drm.h qxl_drm.h r128_drm.h radeon_drm.h
 		savage_drm.h sis_drm.h tegra_drm.h via_drm.h"
 
-	if has_version '>=sys-kernel/linux-headers-4.0' ; then
+	if [ has_version '>=sys-kernel/linux-headers-4.0' ] && [ use linux-headers ] ; then
 		for file in $file_collides ; do
 			find "${ED}" -name $file -type f -print0 \
 				| xargs -0 /bin/rm -f
