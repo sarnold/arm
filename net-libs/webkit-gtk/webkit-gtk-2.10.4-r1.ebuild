@@ -25,11 +25,10 @@ IUSE="aqua coverage doc +egl +geoloc gles2 glx gnome-keyring +gstreamer +introsp
 
 REQUIRED_USE="
 	geoloc? ( introspection )
-	gles2? ( egl !glx !opengl )
+	gles2? ( egl !glx opengl )
 	introspection? ( gstreamer )
 	nsplugin? ( X )
-	webgl? ( ^^ ( gles2 opengl ) )
-	!webgl? ( ?? ( gles2 opengl ) )
+	webgl? ( opengl )
 	|| ( aqua wayland X )
 "
 
@@ -70,8 +69,9 @@ RDEPEND="
 		>=media-libs/gst-plugins-bad-1.5.0:1.0[opengl?] )
 	introspection? ( >=dev-libs/gobject-introspection-1.32.0:= )
 	nsplugin? ( >=x11-libs/gtk+-2.24.10:2 )
-	opengl? ( virtual/opengl
-		x11-libs/cairo[opengl] )
+	opengl? (
+		virtual/opengl
+		|| ( x11-libs/cairo[opengl] x11-libs/cairo[gles2] ) )
 	spell? ( >=app-text/enchant-0.22:= )
 	wayland? ( >=x11-libs/gtk+-3.14:3[wayland] )
 	webgl? (
@@ -158,9 +158,9 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2.8.5-webkit2gtkinjectedbundle-j1.patch
 	# plus a couple more
 	epatch "${FILESDIR}"/${PN}-2.8.4-config-options.patch
-	epatch "${FILESDIR}"/${PN}-2.8.4-fix-opengl-off.patch
-	epatch "${FILESDIR}"/${P}-fix-FindCairoGL.patch
-	epatch "${FILESDIR}"/${P}-gles2-config.patch
+	epatch "${FILESDIR}"/${PN}-2.10.4-fix-opengl-off.patch
+	epatch "${FILESDIR}"/${PN}-2.8.5-fix-FindCairoGL.patch
+	epatch "${FILESDIR}"/${PN}-2.10.4-gles2-config.patch
 
 	gnome2_src_prepare
 }
