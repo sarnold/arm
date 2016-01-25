@@ -141,11 +141,9 @@ REQUIRED_USE="!minimal? (
 
 PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
-	"${FILESDIR}"/${PN}-1.17-ia64-fix_inx_outx.patch
 	"${FILESDIR}"/${PN}-1.12-unloadsubmodule.patch
 	# needed for new eselect-opengl, bug #541232
 	"${FILESDIR}"/${PN}-1.17-support-multiple-Files-sections.patch
-	"${FILESDIR}"/${PN}-1.17.2-uninit-clientsWritable.patch
 	"${FILESDIR}"/${PN}-fix_stupid_array_bounds_warning.patch
 	"${FILESDIR}"/${PN}-fix_declaration_mismatch.patch
 )
