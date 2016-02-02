@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit check-reqs eutils flag-o-matic autotools multilib-minimal
+inherit eutils flag-o-matic autotools multilib-minimal
 
 if [[ ${PV} == *9999* ]]; then
 	inherit git-r3
@@ -19,7 +19,7 @@ DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-IUSE="X aqua debug directfb -drm egl gallium gles2 +glib -glx -lto -opengl qt4 static-libs +svg valgrind xcb -xlib-xcb"
+IUSE="X aqua debug -directfb -drm egl -gallium -gles2 +glib -glx -opengl qt4 static-libs +svg valgrind xcb -xlib-xcb"
 # gtk-doc regeneration doesn't seem to work with out-of-source builds
 #[[ ${PV} == *9999* ]] && IUSE="${IUSE} doc" # API docs are provided in tarball, no need to regenerate
 
@@ -85,21 +85,6 @@ MULTILIB_WRAPPED_HEADERS=(
 	/usr/include/cairo/cairo-directfb.h
 )
 
-CHECKREQS_MEMORY="768M"
-
-pkg_pretend() {
-	if [[ ${MERGE_TYPE} != "binary" ]] && use lto; then
-		einfo "Checking for sufficient memory to build $PN with USE=lto"
-		check-reqs_pkg_pretend
-	fi
-}
-
-pkg_setup() {
-	if [[ ${MERGE_TYPE} != "binary" ]] && use lto; then
-		check-reqs_pkg_setup
-	fi
-}
-
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.12.18-disable-test-suite.patch
 	epatch "${FILESDIR}"/${PN}-respect-fontconfig.patch
@@ -125,7 +110,10 @@ src_prepare() {
 multilib_src_configure() {
 	local myopts
 
-	[[ ${CHOST} == *-interix* ]] && append-flags -D_REENTRANT
+	[[ ${CHOST} == *-interix* ]] && append-cppflags -D_REENTRANT
+
+	strip-flags "-D*_SOURCE"
+	append-cppflags -D_DEFAULT_SOURCE
 
 	use elibc_FreeBSD && myopts+=" --disable-symbol-lookup"
 
@@ -159,7 +147,6 @@ multilib_src_configure() {
 		$(use_enable gles2 glesv2) \
 		$(use_enable glib gobject) \
 		$(use_enable glx) \
-		$(use_enable lto) \
 		$(use_enable opengl gl) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
@@ -169,6 +156,7 @@ multilib_src_configure() {
 		$(use_enable xcb xcb-shm) \
 		$(use_enable xlib-xcb) \
 		--enable-ft \
+		--enable-fc
 		--enable-pdf \
 		--enable-png \
 		--enable-ps \
