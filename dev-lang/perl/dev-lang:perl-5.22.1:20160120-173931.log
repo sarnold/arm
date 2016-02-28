@@ -1,0 +1,957 @@
+[32;01m * [39;49;00mPackage:    dev-lang/perl-5.22.1
+[32;01m * [39;49;00mRepository: gentoo
+[32;01m * [39;49;00mMaintainer: perl@gentoo.org
+[32;01m * [39;49;00mUSE:        arm berkdb elibc_glibc gdbm kernel_linux userland_GNU
+[32;01m * [39;49;00mFEATURES:   preserve-libs sandbox userpriv usersandbox
+>>> Unpacking source...
+>>> Unpacking perl-5.22.1.tar.bz2 to /var/tmp/portage/dev-lang/perl-5.22.1/work
+>>> Unpacking perl-5.22.1-patches-1.tar.xz to /var/tmp/portage/dev-lang/perl-5.22.1/work
+>>> Source unpacked in /var/tmp/portage/dev-lang/perl-5.22.1/work
+>>> Preparing source in /var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1 ...
+ [32;01m*[0m Applying patches from perl-5.22.1-1 ...
+ [32;01m*[0m   gentoo/hints_hpux.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/aix_soname.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/EUMM-RUNPATH.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/config_over.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/opensolaris_headers.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/patchlevel.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/cpanplus_definstalldirs.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/cleanup-paths.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/enc2xs.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/darwin-cc-ld.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/cpan_definstalldirs.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/interix.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/create_libperl_soname.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/mod_paths.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/EUMM_perllocalpod.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/drop_fstack_protector.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/usr_local.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/D-SHA-CFLAGS.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/io_socket_ip_tests.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   gentoo/tests.patch ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   debian/cpan-missing-site-dirs.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   debian/makemaker-pasthru.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   debian/locale-robustness.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/memoize_storable_nstore.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/podman-pipe.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/respect_umask.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/podman-utc.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/podman-utc-docs.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/net_smtp_docs.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+ [32;01m*[0m   fixes/document_makemaker_ccflags.diff ...
+[A[72C [34;01m[ [32;01mok[34;01m ][0m
+>>> Source prepared.
+>>> Configuring source in /var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1 ...
+First let's make sure your kit is complete.  Checking...
+Locating common programs...
+Checking compatibility between /bin/echo and builtin echo (if any)...
+Symbolic links are supported.
+Checking how to test for symbolic links...
+You can test for symbolic links with 'test -h'.
+Checking for cross-compile
+No targethost for running compiler tests against defined, running locally
+Good, your tr supports [:lower:] and [:upper:] to convert case.
+Using [:upper:] and [:lower:] to convert case.
+aix   	      dragonfly       irix_4   		nonstopux     stellar   
+aix_3         dynix   	      irix_5   		openbsd       sunos_4_0   
+aix_4         dynixptx        irix_6   		opus          sunos_4_1   
+altos486      epix   	      irix_6_0   	os2   	      super-ux   
+amigaos       esix4   	      irix_6_1   	os390         svr4   
+atheos        fps   	      isc   		os400         svr5   
+aux_3         freebsd         isc_2   		posix-bc      ti1500   
+bitrig        freemint        linux-android   	powerux       ultrix_4   
+bsdos         genix   	      linux   		qnx   	      umips   
+catamount     gnu   	      lynxos   		riscos        unicos   
+convexos      gnukfreebsd     midnightbsd   	sco   	      unicosmk   
+cxux          gnuknetbsd      mips   		sco_2_3_0     unisysdynix   
+cygwin        greenhills      mirbsd   		sco_2_3_1     utekv   
+darwin        haiku   	      mpc   		sco_2_3_2     uwin   
+dcosx         hpux   	      ncr_tower   	sco_2_3_3     vos   
+dec_osf       i386   	      netbsd   		sco_2_3_4   
+dos_djgpp     interix         newsos4   	solaris_2   
+Which of these apply, if any? [linux]  
+
+You appear to have ELF support.  I'll try to use it for dynamic loading.
+If dynamic loading doesn't work, read hints/linux.sh for further information.
+Operating system name? [linux]  
+Operating system version? [4.4.0-armv7-x3.1]  
+Installation prefix to use? (~name ok) [/usr]  
+AFS does not seem to be running...
+What installation prefix should I use for installing files? (~name ok)
+[/usr]  
+Getting the current patchlevel...
+Build a threading Perl? [n]  
+Build Perl for multiplicity? [n]  
+Use which C compiler? [armv7a-hardfloat-linux-gnueabi-gcc]  
+Checking for GNU cc in disguise and/or its version number...
+Now, how can we feed standard input to your C preprocessor...
+Directories to use for library searches?
+[/usr/lib/gcc/armv7a-hardfloat-linux-gnueabi/5.3.0/include-fixed /usr/lib /lib]  
+What is the file extension used for shared libraries? [so]  
+Make shared library basenames unique? [n]  
+Build Perl for SOCKS? [n]  
+Try to use long doubles if available? [n]  
+Checking for optional libraries...
+What libraries to use?
+[-lpthread -lnsl -lnm -lgdbm -ldb -ldl -lm -lcrypt -lutil -lc -lgdbm_compat]  
+What optimizer/debugger flag should be used?
+[-march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe]  
+Any additional cc flags? [-fwrapv -fno-strict-aliasing -pipe]  
+Let me guess what the preprocessor flags are...
+Any additional ld flags (NOT including libraries)? [-Wl,-O1 -Wl,--as-needed]  
+Checking your choice of C compiler and flags for coherency...
+Computing filename position in cpp output for #include directives...
+<stdlib.h> found.
+Checking to see how big your integers are...
+Checking to see if you have long long...
+Checking to see how big your long longs are...
+<inttypes.h> found.
+Checking to see if you have int64_t...
+Checking which 64-bit integer type we could use...
+We could use 'long long' for 64-bit integers.
+Try to use 64-bit integers, if available? [n]  
+Try to use maximal 64-bit support, if available? [n]  
+Checking for GNU C Library...
+Shall I use /usr/bin/nm to extract C symbols from the libraries? [n]  
+Checking for C++...
+Checking to see how big your double precision numbers are...
+<float.h> found.
+Checking to see if you have long double...
+ldexpl() found.
+Checking to see how big your long doubles are...
+Checking the kind of long doubles you have...
+Your long doubles are doubles.
+What is your architecture name [armv7a-linux]  
+Add the Perl API version to your archname? [n]  
+Pathname where the public executables will reside? (~name ok) [/usr/bin]  
+Use relocatable @INC? [n]  
+Pathname where the private library files will reside? (~name ok)
+[/usr/lib/perl5/5.22.1]  
+Where do you want to put the public architecture-dependent libraries? (~name ok)
+[/usr/lib/perl5/5.22.1/armv7a-linux]  
+Other username to test security of setuid scripts with? [none]  
+Well, the recommended value is *not* secure.
+Does your kernel have *secure* setuid scripts? [n]  
+Installation prefix to use for add-on modules and utilities? (~name ok)
+[/usr/local]  
+Pathname for the site-specific library files? (~name ok)
+[/usr/local/lib/perl5/5.22.1]  
+List of earlier versions to include in @INC? [5.22.0/armv7a-linux 5.22.0 ]  
+<malloc/malloc.h> NOT found.
+<malloc.h> found.
+Checking to see how big your pointers are...
+Do you wish to wrap malloc calls to protect against potential overflows? [y]  
+Do you wish to attempt to use the malloc that comes with perl5? [n]  
+Your system wants malloc to return 'void *', it would seem.
+Your system uses void free(), it would seem.
+Pathname for the site-specific architecture-dependent library files? (~name ok)
+[/usr/local/lib/perl5/5.22.1/armv7a-linux]  
+Do you want to configure vendor-specific add-on directories? [y]  
+Installation prefix to use for vendor-supplied add-ons? (~name ok) [/usr]  
+Pathname for the vendor-supplied library files? (~name ok)
+[/usr/lib/perl5/vendor_perl/5.22.1]  
+Pathname for vendor-supplied architecture-dependent files? (~name ok)
+[/usr/lib/perl5/vendor_perl/5.22.1/armv7a-linux]  
+Colon-separated list of additional directories for perl to search? [none]  
+Checking out function prototypes...
+Support DTrace if available? [n]  
+Install any extra modules (y or n)? [n]  
+Directory for the main Perl5 html pages? (~name ok) [none]  
+Directory for the Perl5 module html pages? (~name ok) [none]  
+dlopen() found.
+<unistd.h> found.
+Do you wish to use dynamic loading? [y]  
+Source file to use for dynamic loading [ext/DynaLoader/dl_dlopen.xs]  
+Any special flags to pass to armv7a-hardfloat-linux-gnueabi-gcc -c to compile shared library modules?
+[-fPIC]  
+What command should be used to create dynamic libraries?
+[armv7a-hardfloat-linux-gnueabi-gcc]  
+Any special flags to pass to armv7a-hardfloat-linux-gnueabi-gcc to create a dynamically loaded library?
+[-shared -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe]  
+Any special flags to pass to armv7a-hardfloat-linux-gnueabi-gcc to use dynamic linking?
+[-Wl,-E]  
+ld supports scripting
+Build a shared libperl.so (y/n) [y]  
+What name do you want to give to the shared libperl? [libperl.so.5.22.1]  
+System manual is in /usr/share/man/man1.
+Where do the main Perl5 manual pages (source) go? (~name ok)
+[/usr/share/man/man1]  
+What suffix should be used for the main Perl5 man pages? [1]  
+You can have filenames longer than 14 characters.
+Where do the perl5 library man pages (source) go? (~name ok)
+[/usr/share/man/man3]  
+What suffix should be used for the perl5 library man pages? [3pm]  
+Figuring out host name...
+Your host name appears to be "localhost". Right? [y]  
+What is your domain name? [.localdomain]  
+What is your e-mail address? [Gentoo@localhost.localdomain]  
+Perl administrator e-mail address [root@localhost]  
+Do you want to install only the version-specific parts of perl? [n]  
+What shall I put after the #! to start up perl ("none" to not use #!)?
+[/usr/bin/perl]  
+Where do you keep publicly executable scripts? (~name ok) [/usr/bin]  
+Pathname where the add-on public executables should be installed? (~name ok)
+[/usr/local/bin]  
+Pathname where the site-specific html pages should be installed? (~name ok)
+[none]  
+Pathname where the site-specific library html pages should be installed? (~name ok)
+[none]  
+Pathname where the site-specific manual pages should be installed? (~name ok)
+[/usr/local/man/man1]  
+Pathname where the site-specific library manual pages should be installed? (~name ok)
+[/usr/local/man/man3]  
+Pathname where add-on public executable scripts should be installed? (~name ok)
+[/usr/local/bin]  
+backtrace() found.
+Use the "fast stdio" if available? [n]  
+off_t found.
+Checking to see how big your file offsets are...
+fpos_t found.
+Checking the size of fpos_t...
+Try to understand large files, if available? [y]  
+Rechecking to see how big your file offsets are...
+Rechecking the size of fpos_t... 16 bytes.
+Pathname for the vendor-supplied executables directory? (~name ok)
+[/usr/bin]  
+Pathname for the vendor-supplied html pages? (~name ok) [none]  
+Pathname for the vendor-supplied html pages? (~name ok) [none]  
+Pathname for the vendor-supplied manual section 1 pages? (~name ok)
+[/usr/share/man/man1]  
+Pathname for the vendor-supplied manual section 3 pages? (~name ok)
+[/usr/share/man/man3]  
+Pathname for the vendor-supplied scripts directory? (~name ok) [/usr/bin]  
+Using <string.h> instead of <strings.h>.
+qgcvt() found.
+Checking the kind of doubles you have...
+You have IEEE 754 64-bit little endian doubles.
+Checking how to print long doubles...
+gconvert NOT found.
+gcvt() found.
+I'll use gcvt to convert floats into a string.
+fwalk() NOT found.
+access() found.
+<sys/file.h> defines the *_OK access constants.
+accessx() NOT found.
+acosh() found.
+aintl() NOT found.
+alarm() found.
+ctime64() NOT found.
+localtime64() NOT found.
+gmtime64() NOT found.
+mktime64() NOT found.
+difftime64() NOT found.
+asctime64() NOT found.
+<pthread.h> found.
+<sys/types.h> found.
+<sys/select.h> found.
+Testing to see if we should include <time.h>, <sys/time.h> or both.
+We'll include <time.h>.
+We'll include <sys/time.h>.
+Checking to see if your struct tm has tm_zone field...
+Checking to see if your struct tm has tm_gmtoff field...
+asctime_r() found.
+asinh() found.
+atanh() found.
+atolf() NOT found.
+atoll() found.
+Checking whether your compiler can handle __attribute__((format)) ...
+Checking whether your compiler allows __printf__ format to be null ...
+Checking whether your compiler can handle __attribute__((malloc)) ...
+Checking whether your compiler can handle __attribute__((nonnull(1))) ...
+Checking whether your compiler can handle __attribute__((noreturn)) ...
+Checking whether your compiler can handle __attribute__((pure)) ...
+Checking whether your compiler can handle __attribute__((unused)) ...
+Checking whether your compiler can handle __attribute__((deprecated)) ...
+Checking whether your compiler can handle __attribute__((warn_unused_result)) ...
+bcmp() found.
+bcopy() found.
+getpgrp() found.
+You have to use getpgrp() instead of getpgrp(pid).
+setpgrp() found.
+You have to use setpgrp() instead of setpgrp(pid,pgrp).
+Checking whether your compiler can handle __builtin_choose_expr ...
+Checking whether your compiler can handle __builtin_expect ...
+bzero() found.
+<stdarg.h> found.
+<varargs.h> found.
+We'll include <stdarg.h> to get va_dcl definition.
+You have <stdarg.h> and <stdlib.h>, so checking for C99 variadic macros.
+You have C99 variadic macros.
+You have void (*signal())().
+Checking whether your C compiler can cast large floats to int32.
+Checking whether your C compiler can cast negative float to unsigned.
+cbrt() found.
+vprintf() found.
+Your vsprintf() returns (int).
+chown() found.
+chroot() found.
+chsize() NOT found.
+class() NOT found.
+clearenv() found.
+Hmm... Looks like you have Berkeley networking support.
+socketpair() found.
+Checking the availability sa_len in the sock struct ...
+Checking the availability struct sockaddr_in6 ...
+Checking the availability sin6_scope_id in struct sockaddr_in6 ...
+Checking the availability struct ip_mreq ...
+Checking the availability struct ip_mreq_source ...
+Checking the availability struct ipv6_mreq ...
+Checking the availability struct ipv6_mreq_source ...
+Checking the availability of certain socket constants...
+<sys/uio.h> found.
+Checking to see if your system supports struct cmsghdr...
+Checking to see if your C compiler knows about "const"...
+copysign() found.
+copysignl() found.
+crypt() found.
+<crypt.h> found.
+crypt_r() found.
+ctermid() found.
+ctermid_r() NOT found.
+ctime_r() found.
+cuserid() found.
+<limits.h> found.
+DBL_DIG found.
+dbmclose() found.
+<dbm.h> NOT found.
+<rpcsvc/dbm.h> NOT found.
+difftime() found.
+<dirent.h> found.
+Your directory entries are struct dirent.
+Your directory entry does not know about the d_namlen field.
+Checking to see if DIR has a dd_fd member variable
+<sys/dir.h> found.
+<sys/ndir.h> NOT found.
+dirfd() found.
+dladdr() found.
+dlerror() found.
+<dlfcn.h> found.
+What is the extension of dynamically loaded modules [so]  
+Checking whether your dlsym() needs a leading underscore ...
+dlsym doesn't need a leading underscore.
+drand48_r() found.
+dup2() found.
+eaccess() found.
+endgrent() found.
+<grp.h> found.
+endgrent_r() NOT found.
+endhostent() found.
+<netdb.h> found.
+endhostent_r() NOT found.
+endnetent() found.
+endnetent_r() NOT found.
+endprotoent() found.
+endprotoent_r() NOT found.
+endpwent() found.
+<pwd.h> found.
+endpwent_r() NOT found.
+endservent() found.
+endservent_r() NOT found.
+<sys/file.h> defines the O_* constants...
+and you have the 3 argument form of open().
+<sys/file.h> found.
+We'll be including <sys/file.h>.
+<fcntl.h> found.
+We don't need to include <fcntl.h> if we include <sys/file.h>.
+fork() NOT found.
+pipe() found.
+Figuring out the flag used by open() for non-blocking I/O...
+Let's see what value errno gets from read() on a O_NONBLOCK file...
+erf() found.
+erfc() found.
+exp2() found.
+expm1() found.
+Checking how std your stdio is...
+fchdir() found.
+fchmod() found.
+fchown() found.
+fcntl() found.
+Well, your system has some sort of fd_set available...
+and you have the normal fd_set macros.
+fdim() found.
+fegetround() found.
+fgetpos() found.
+finite() found.
+finitel() found.
+flock() found.
+fma() found.
+fmax() found.
+fmin() found.
+fp_class() NOT found.
+<math.h> found.
+Checking to see if you have fpclassify...
+fp_classify() NOT found.
+fp_classl() NOT found.
+pathconf() found.
+fpathconf() found.
+fpclass() NOT found.
+fpclassl() NOT found.
+fpgetround() NOT found.
+Checking to see if you have fpos64_t...
+frexpl() found.
+<sys/param.h> found.
+<sys/mount.h> found.
+Checking to see if your system supports struct fs_data...
+fseeko() found.
+fsetpos() found.
+fstatfs() found.
+statvfs() found.
+fstatvfs() found.
+fsync() found.
+ftello() found.
+Checking if you have a working futimes()
+Yes, you have
+<ndbm.h> NOT found.
+Hmm.  Based on the hints in hints/linux.sh, 
+the recommended value for $i_ndbm on this machine was "define"!
+    Keep the recommended value? [y]  
+<gdbm/ndbm.h> found.
+<gdbm-ndbm.h> NOT found.
+dbm_open() found.
+Checking if your <ndbm.h> uses prototypes...
+Checking if your <gdbm/ndbm.h> uses prototypes...
+getaddrinfo() found.
+getcwd() found.
+getespwnam() NOT found.
+getfsstat() NOT found.
+getgrent() found.
+getgrent_r() found.
+getgrgid_r() found.
+getgrnam_r() found.
+gethostbyaddr() found.
+gethostbyname() found.
+gethostent() found.
+gethostname() found.
+uname() found.
+Shall I ignore gethostname() from now on? [n]  
+gethostbyaddr_r() found.
+gethostbyname_r() found.
+gethostent_r() found.
+getitimer() found.
+getlogin() found.
+getlogin_r() found.
+getmnt() NOT found.
+getmntent() found.
+getnameinfo() found.
+getnetbyaddr() found.
+getnetbyname() found.
+getnetent() found.
+getnetbyaddr_r() found.
+getnetbyname_r() found.
+getnetent_r() found.
+getpagesize() found.
+getprotobyname() found.
+getprotobynumber() found.
+getprotoent() found.
+getpgid() found.
+getpgrp2() NOT found.
+getppid() found.
+getpriority() found.
+getprotobyname_r() found.
+getprotobynumber_r() found.
+getprotoent_r() found.
+getprpwnam() NOT found.
+getpwent() found.
+getpwent_r() found.
+getpwnam_r() found.
+getpwuid_r() found.
+getservbyname() found.
+getservbyport() found.
+getservent() found.
+getservbyname_r() found.
+getservbyport_r() found.
+getservent_r() found.
+getspnam() found.
+<shadow.h> found.
+getspnam_r() found.
+gettimeofday() found.
+gmtime_r() found.
+hasmntopt() found.
+<netinet/in.h> found.
+<arpa/inet.h> found.
+htonl() found.
+hypot() found.
+ilogb() found.
+ilogbl() found.
+strchr() found.
+inet_aton() found.
+inet_ntop() found.
+inet_pton() found.
+isascii() found.
+isblank() found.
+Checking to see if you have isfinite...
+isfinitel() NOT found.
+Checking to see if you have isinf...
+isinfl() found.
+Checking to see if you have isless...
+Checking to see if you have isnan...
+isnanl() found.
+Checking to see if you have isnormal...
+j0() found.
+j0l() found.
+killpg() found.
+localeconv() found.
+lchown() found.
+LDBL_DIG found.
+lgamma() found.
+lgamma_r() found.
+Checking to see if your libm supports _LIB_VERSION...
+Yes, it does (2)
+link() found.
+llrint() found.
+llrintl() found.
+llround() found.
+llroundl() found.
+localtime_r() found.
+lockf() found.
+log1p() found.
+log2() found.
+logb() found.
+lrint() found.
+lrintl() found.
+lround() found.
+lroundl() found.
+lstat() found.
+madvise() found.
+malloc_size() NOT found.
+malloc_good_size() NOT found.
+mblen() found.
+mbstowcs() found.
+mbtowc() found.
+memchr() found.
+memcmp() found.
+memcpy() NOT found.
+memmove() found.
+memset() found.
+mkdir() found.
+mkdtemp() found.
+mkfifo() found.
+mkstemp() found.
+mkstemps() found.
+mktime() found.
+<sys/mman.h> found.
+mmap() found.
+and it returns (void *).
+sqrtl() found.
+scalbnl() found.
+truncl() found.
+modfl() found.
+Your modfl() seems okay for large values.
+mprotect() found.
+msgctl() found.
+msgget() found.
+msgsnd() found.
+msgrcv() found.
+You have the full msg*(2) library.
+Checking to see if your system supports struct msghdr...
+msync() found.
+munmap() found.
+nan() found.
+nearbyint() found.
+nextafter() found.
+nexttoward() found.
+nice() found.
+<langinfo.h> found.
+nl_langinfo() found.
+<quadmath.h> NOT found.
+Checking to see if your C compiler knows about "volatile"...
+Choosing the C types to be used for Perl's internal types...
+Checking how many bits of your UVs your NVs can preserve...
+Checking to find the largest integer value your NVs can hold...
+The largest integer your NVs can preserve is equal to 256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0
+Checking whether NV 0.0 is all bits zero in memory...
+0.0 is represented as all bits zero in memory
+Checking to see if you have off64_t...
+pause() found.
+poll() found.
+prctl() found.
+readlink() found.
+vfork() NOT found.
+pthread_attr_setscope() found.
+Checking to see if you have ptrdiff_t...
+random_r() found.
+readdir() found.
+seekdir() found.
+telldir() found.
+rewinddir() found.
+readdir64_r() found.
+readdir_r() found.
+readv() found.
+recvmsg() found.
+regcomp() found.
+remainder() found.
+remquo() found.
+rename() found.
+rint() found.
+rmdir() found.
+round() found.
+<memory.h> found.
+Checking if your memcmp() can compare relative magnitude...
+scalbn() found.
+select() found.
+semctl() found.
+semget() found.
+semop() found.
+You have the full sem*(2) library.
+You do not have union semun in <sys/sem.h>.
+You can use union semun for semctl IPC_STAT.
+You can also use struct semid_ds* for semctl IPC_STAT.
+sendmsg() found.
+setegid() found.
+seteuid() found.
+setgrent() found.
+setgrent_r() NOT found.
+sethostent() found.
+sethostent_r() NOT found.
+setitimer() found.
+setlinebuf() found.
+setlocale() found.
+<locale.h> found.
+setlocale_r() NOT found.
+setnetent() found.
+setnetent_r() NOT found.
+setprotoent() found.
+setpgid() found.
+setpgrp2() NOT found.
+setpriority() found.
+setproctitle() NOT found.
+setprotoent_r() NOT found.
+setpwent() found.
+setpwent_r() NOT found.
+setregid() found.
+setresgid() found.
+setreuid() found.
+setresuid() found.
+setrgid() NOT found.
+setruid() NOT found.
+setservent() found.
+setservent_r() NOT found.
+setsid() found.
+setvbuf() found.
+shmctl() found.
+shmget() found.
+shmat() found.
+and it returns (void *).
+shmdt() found.
+You have the full shm*(2) library.
+sigaction() found.
+<sunmath.h> NOT found.
+Checking to see if you have signbit() available to work on double... Yes.
+sigprocmask() found.
+POSIX sigsetjmp found.
+snprintf() found.
+vsnprintf() found.
+sockatmark() found.
+socks5_init() NOT found.
+Checking whether sprintf returns the length of the string...
+sprintf returns the length of the string (as ANSI says it should)
+srand48_r() found.
+srandom_r() found.
+stat() found.
+<sys/stat.h> found.
+Checking to see if your struct stat has st_blocks field...
+<sys/vfs.h> found.
+<sys/statfs.h> found.
+Checking to see if your system supports struct statfs...
+Checking to see if your struct statfs has f_flags field...
+Your compiler supports static __inline__.
+Checking how to access stdio streams by file descriptor number...
+I can't figure out how to access stdio streams by file descriptor number.
+strcoll() found.
+Checking to see if your C compiler can copy structs...
+strerror() found.
+strerror_r() found.
+strftime() found.
+strlcat() NOT found.
+strlcpy() NOT found.
+strtod() found.
+strtol() found.
+strtold() found.
+strtoll() found.
+strtoq() found.
+strtoul() found.
+strtoull() found.
+strtouq() found.
+strxfrm() found.
+symlink() found.
+syscall() found.
+sysconf() found.
+system() NOT found.
+tcgetpgrp() found.
+tcsetpgrp() found.
+tgamma() found.
+time() found.
+time_t found.
+timegm() found.
+<sys/times.h> found.
+times() found.
+clock_t found.
+tmpnam_r() found.
+trunc() found.
+truncate() found.
+ttyname_r() found.
+tzname[] found.
+[01m[Ktry.c:[m[K In function '[01m[Kmain[m[K':
+[01m[Ktry.c:46:13:[m[K [01;35m[Kwarning: [m[Kformat '[01m[K%x[m[K' expects argument of type '[01m[Kunsigned int[m[K', but argument 2 has type '[01m[Klong unsigned int[m[K' [-Wformat=]
+      printf("read failed (%x)\n", *up);
+[01;32m[K             ^[m[K
+[01m[Ktry.c:56:13:[m[K [01;35m[Kwarning: [m[Kformat '[01m[K%x[m[K' expects argument of type '[01m[Kunsigned int[m[K', but argument 2 has type '[01m[Klong unsigned int[m[K' [-Wformat=]
+      printf("write failed (%x)\n", *up);
+[01;32m[K             ^[m[K
+(Testing for character data alignment may crash the test.  That's okay.)
+You can access character data pretty unalignedly.
+ualarm() found.
+umask() found.
+unordered() NOT found.
+unsetenv() found.
+usleep() found.
+ustat() found.
+closedir() found.
+Checking whether closedir() returns a status...
+wait4() found.
+waitpid() found.
+A working wcscmp() found.
+wcstombs() found.
+A working wcsxfrm() found.
+wctomb() found.
+writev() found.
+Checking alignment constraints...
+Doubles must be aligned on a how-many-byte boundary? [8]  
+Checking how long a character is (in bits)...
+What is the length of a character (in bits)? [8]  
+Checking to see how your cpp does stuff like concatenate tokens...
+Oh!  Smells like ANSI's been here.
+<db.h> found.
+Checking Berkeley DB version ...
+Looks OK.
+Checking return type needed for hash for Berkeley DB ...
+Checking return type needed for prefix for Berkeley DB ...
+Using our internal random number implementation...
+Determining whether or not we are on an EBCDIC system...
+Nope, no EBCDIC, probably ASCII or some ISO Latin. Or UTF-8.
+Checking how to flush all pending stdio output...
+Your fflush(NULL) works okay for output streams.
+Let's see if it clobbers input pipes...
+fflush(NULL) seems to behave okay with input streams.
+Checking the size of gid_t...
+Checking the sign of gid_t...
+Checking how to print 64-bit integers...
+Checking the format strings to be used for Perl's internal types...
+Checking the format string to be used for gids...
+getgroups() found.
+setgroups() found.
+What type pointer is the second argument to getgroups() and setgroups()?
+[gid_t]  
+Checking if your /usr/bin/make program sets $(MAKE)...
+mode_t found.
+It seems that you don't need va_copy().
+size_t found.
+What pager is used on your system? [/usr/bin/less -R]  
+pid_t found.
+Checking how to generate random libraries on your machine...
+<values.h> found.
+Your select() operates on 32 bits at a time.
+Generating a list of signal names and numbers...
+Checking the size of size_t...
+Checking to see if you have socklen_t...
+<socks.h> NOT found.
+I'll be using ssize_t for functions returning a byte count.
+Checking the size of st_ino...
+Checking the sign of st_ino...
+Your stdio uses signed chars.
+Checking the size of uid_t...
+Checking the sign of uid_t...
+Checking the format string to be used for uids...
+Determining whether we can use sysctl with KERN_PROC_PATHNAME to find executing program...
+I'm unable to compile the test program.
+I'll assume no sysctl with KERN_PROC_PATHNAME here.
+Determining whether we can use _NSGetExecutablePath to find executing program...
+I'm unable to compile the test program.
+I'll assume no _NSGetExecutablePath here.
+It appears we'll be able to prototype varargs functions.
+Which compiler compiler (yacc or bison -y) shall I use? [yacc]  
+<assert.h> found.
+<bfd.h> found.
+<execinfo.h> found.
+<fenv.h> found.
+<fp.h> NOT found.
+<fp_class.h> NOT found.
+<gdbm.h> found.
+gdbm_open() found.
+<ieeefp.h> NOT found.
+<libutil.h> NOT found.
+<mntent.h> found.
+<net/errno.h> NOT found.
+<netinet/tcp.h> found.
+<poll.h> found.
+<prot.h> NOT found.
+Guessing which symbols your C compiler and preprocessor define...
+You seem not to have gcc 4.*, not adding -D_FORTIFY_SOURCE.
+tcsetattr() found.
+You have POSIX termios.h... good!
+<stdbool.h> found.
+<stddef.h> found.
+<stdint.h> found.
+<sys/access.h> NOT found.
+<sys/filio.h> NOT found.
+<sys/ioctl.h> found.
+<syslog.h> found.
+<sys/mode.h> NOT found.
+<sys/poll.h> found.
+<sys/resource.h> found.
+<sys/security.h> NOT found.
+<sys/statvfs.h> found.
+<sys/un.h> found.
+<sys/utsname.h> found.
+<sys/wait.h> found.
+<ustat.h> found.
+<utime.h> found.
+Looking for extensions...
+You have requested that certain extensions be ignored...
+What extensions do you wish to load dynamically?
+[B Compress/Raw/Bzip2 Compress/Raw/Zlib Cwd DB_File Data/Dumper Devel/PPPort Devel/Peek Digest/MD5 Digest/SHA Encode Fcntl File/DosGlob File/Glob Filter/Util/Call GDBM_File Hash/Util Hash/Util/FieldHash I18N/Langinfo IO IPC/SysV List/Util MIME/Base64 Math/BigInt/FastCalc NDBM_File Opcode POSIX PerlIO/encoding PerlIO/mmap PerlIO/scalar PerlIO/via SDBM_File Socket Storable Sys/Hostname Sys/Syslog Tie/Hash/NamedCapture Time/HiRes Time/Piece Unicode/Collate XS/APItest XS/Typemap arybase attributes mro re threads threads/shared]  
+What extensions do you wish to load statically? [none]  
+I see a config.over file.  Do you wish to load it? [y]  
+Stripping down executable paths...
+Creating config.sh...
+Doing variable substitutions on .SH files...
+Extracting config.h (with variable substitutions)
+cflags.SH: Adding -std=c89.
+cflags.SH: Adding -Werror=declaration-after-statement.
+cflags.SH: Adding -Wextra.
+cflags.SH: Adding -Wc++-compat.
+cflags.SH: Adding -Wwrite-strings.
+cflags.SH: cc       = armv7a-hardfloat-linux-gnueabi-gcc
+cflags.SH: ccflags  = -fwrapv -fno-strict-aliasing -pipe -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+cflags.SH: stdflags =  -std=c89
+cflags.SH: optimize = -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe
+cflags.SH: warn     =  -Wall -Werror=declaration-after-statement -Wextra -Wc++-compat -Wwrite-strings
+Extracting cflags (with variable substitutions)
+Not re-extracting config.h
+Extracting makedepend (with variable substitutions)
+Extracting Makefile (with variable substitutions)
+Extracting myconfig (with variable substitutions)
+Extracting pod/Makefile (with variable substitutions)
+Extracting Policy.sh (with variable substitutions)
+Extracting runtests (with variable substitutions)
+Run make depend now? [y]  
+armv7a-hardfloat-linux-gnueabi-gcc -c -DPERL_CORE -fwrapv -fno-strict-aliasing -pipe -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -std=c89 -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe -Wall -Werror=declaration-after-statement -Wextra -Wc++-compat -Wwrite-strings -fPIC generate_uudmap.c
+armv7a-hardfloat-linux-gnueabi-gcc -o generate_uudmap -Wl,-O1 -Wl,--as-needed generate_uudmap.o -lpthread -lnsl -lnm -ldl -lm -lcrypt -lutil -lc 
+./generate_uudmap uudmap.h bitcount.h mg_data.h
+sh ./makedepend MAKE="make" cflags
+make[1]: Entering directory '/var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1'
+rm -f opmini.c
+/bin/ln -s op.c opmini.c
+rm -f perlmini.c
+/bin/ln -s perl.c perlmini.c
+echo av.c scope.c op.c doop.c doio.c dump.c gv.c hv.c mg.c reentr.c mro_core.c perl.c perly.c pp.c pp_hot.c pp_ctl.c pp_sys.c regcomp.c regexec.c utf8.c sv.c taint.c toke.c util.c deb.c run.c universal.c pad.c globals.c keywords.c perlio.c perlapi.c numeric.c mathoms.c locale.c pp_pack.c pp_sort.c caretx.c  miniperlmain.c opmini.c perlmini.c | tr ' ' '\n' >.clist
+make[1]: Leaving directory '/var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1'
+Finding dependencies for av.o.
+Finding dependencies for scope.o.
+Finding dependencies for op.o.
+Finding dependencies for doop.o.
+Finding dependencies for doio.o.
+Finding dependencies for dump.o.
+Finding dependencies for gv.o.
+Finding dependencies for hv.o.
+Finding dependencies for mg.o.
+Finding dependencies for reentr.o.
+Finding dependencies for mro_core.o.
+Finding dependencies for perl.o.
+Finding dependencies for perly.o.
+Finding dependencies for pp.o.
+Finding dependencies for pp_hot.o.
+Finding dependencies for pp_ctl.o.
+Finding dependencies for pp_sys.o.
+Finding dependencies for regcomp.o.
+Finding dependencies for regexec.o.
+Finding dependencies for utf8.o.
+Finding dependencies for sv.o.
+Finding dependencies for taint.o.
+Finding dependencies for toke.o.
+Finding dependencies for util.o.
+Finding dependencies for deb.o.
+Finding dependencies for run.o.
+Finding dependencies for universal.o.
+Finding dependencies for pad.o.
+Finding dependencies for globals.o.
+Finding dependencies for keywords.o.
+Finding dependencies for perlio.o.
+Finding dependencies for perlapi.o.
+Finding dependencies for numeric.o.
+Finding dependencies for mathoms.o.
+Finding dependencies for locale.o.
+Finding dependencies for pp_pack.o.
+Finding dependencies for pp_sort.o.
+Finding dependencies for caretx.o.
+Finding dependencies for miniperlmain.o.
+Finding dependencies for opmini.o.
+Finding dependencies for perlmini.o.
+Updating makefile...
+Now you must run 'make'.
+
+If you compile perl5 on a different machine or from a different object
+directory, copy the Policy.sh file from this object directory to the
+new one before you run Configure -- this will help you with most of
+the policy defaults.
+
+>>> Source configured.
+>>> Compiling source in /var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1 ...
+make -j1 
+echo @`sh  cflags "optimize='-march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe'" perlmini.o` -fPIC -DPERL_IS_MINIPERL -DPERL_EXTERNAL_GLOB perlmini.c
+@armv7a-hardfloat-linux-gnueabi-gcc -c -DPERL_CORE -fwrapv -fno-strict-aliasing -pipe -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -std=c89 -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe -Wall -Werror=declaration-after-statement -Wextra -Wc++-compat -Wwrite-strings -fPIC -DPERL_IS_MINIPERL -DPERL_EXTERNAL_GLOB perlmini.c
+echo @`sh  cflags "optimize='-march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe'" opmini.o` -fPIC -DPERL_IS_MINIPERL -DPERL_EXTERNAL_GLOB opmini.c
+@armv7a-hardfloat-linux-gnueabi-gcc -c -DPERL_CORE -fwrapv -fno-strict-aliasing -pipe -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -std=c89 -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfp16-format=ieee -mfloat-abi=hard -O2 -pipe -Wall -Werror=declaration-after-statement -Wextra -Wc++-compat -Wwrite-strings -fPIC -DPERL_IS_MINIPERL -DPERL_EXTERNAL_GLOB opmini.c
+[01m[Kop.c:[m[K In function '[01m[KPerl_block_start[m[K':
+[01m[Kop.c:3898:5:[m[K [01;31m[Kerror: [m[Kinvalid use of void expression
+     PL_compiling.cop_warnings = DUP_WARNINGS(PL_compiling.cop_warnings);
+[01;32m[K     ^[m[K
+[01m[Kop.c:[m[K In function '[01m[KPerl_newSTATEOP[m[K':
+[01m[Kop.c:6704:5:[m[K [01;31m[Kerror: [m[Kinvalid use of void expression
+     cop->cop_warnings = DUP_WARNINGS(PL_curcop->cop_warnings);
+[01;32m[K     ^[m[K
+[01m[Kop.c:[m[K In function '[01m[KPerl_newCONSTSUB_flags[m[K':
+[01m[Kop.c:8990:3:[m[K [01;31m[Kerror: [m[Kinvalid use of void expression
+   PL_compiling.cop_warnings = DUP_WARNINGS(PL_curcop->cop_warnings);
+[01;32m[K   ^[m[K
+makefile:309: recipe for target 'opmini.o' failed
+make: *** [opmini.o] Error 1
+ [31;01m*[0m ERROR: dev-lang/perl-5.22.1::gentoo failed (compile phase):
+ [31;01m*[0m   emake failed
+ [31;01m*[0m 
+ [31;01m*[0m If you need support, post the output of `emerge --info '=dev-lang/perl-5.22.1::gentoo'`,
+ [31;01m*[0m the complete build log and the output of `emerge -pqv '=dev-lang/perl-5.22.1::gentoo'`.
+ [31;01m*[0m The complete build log is located at '/var/log/portage/dev-lang:perl-5.22.1:20160120-173931.log'.
+ [31;01m*[0m For convenience, a symlink to the build log is located at '/var/tmp/portage/dev-lang/perl-5.22.1/temp/build.log'.
+ [31;01m*[0m The ebuild environment file is located at '/var/tmp/portage/dev-lang/perl-5.22.1/temp/environment'.
+ [31;01m*[0m Working directory: '/var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1'
+ [31;01m*[0m S: '/var/tmp/portage/dev-lang/perl-5.22.1/work/perl-5.22.1'
