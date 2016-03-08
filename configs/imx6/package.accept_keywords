@@ -1,3 +1,29 @@
+#>=sys-devel/binutils-9999 **
+
+>=dev-scheme/guile-2.0 **
+
+>=x11-libs/cairo-9999 **
+>=x11-proto/fontsproto-9999 **
+>=x11-proto/randrproto-9999 **
+>=x11-proto/xproto-9999 **
+
+>=app-text/pastebinit-1.4.1 **
+>=dev-python/configobj-5.0.6 **
+
+>=media-libs/libclastfm-0.5 **
+>=x11-themes/commonbox-styles-extra-0.2-r2 **
+>=x11-themes/blueglass-xcursors-0.4 **
+>=x11-themes/gtk-engines-nodoka-0.7.5 **
+>=x11-themes/gtk-engines-aurora-1.5.1 **
+>=x11-themes/gtk-engines-rezlooks-0.6 **
+>=x11-themes/gtk-engines-flat-2.0-r3 **
+>=media-gfx/xv-3.10a-r16 **
+>=x11-themes/silver-xcursors-0.4 **
+>=x11-themes/echo-icon-theme-0.3.89.0_pre20081031 **
+>=x11-themes/nuovo-icon-theme-0.5 **
+>=x11-themes/obsidian-xcursors-1.0 **
+>=x11-themes/pulse-glass-20100616 **
+
 >=kde-frameworks/extra-cmake-modules-5.9.0 **
 >=kde-frameworks/kguiaddons-5.8.0 **
 >=kde-frameworks/kwindowsystem-5.8.0 **
@@ -24,6 +50,7 @@
 >=media-sound/qtmpc-0.6.1 **
 >=dev-vcs/qct-1.7-r1 **
 
+>=app-editors/vim-qt-20150102 **
 >=dev-libs/libqtxdg-1.1.0 **
 >=x11-misc/pcmanfm-qt-0.9.0 **
 media-gfx/lximage-qt **
@@ -58,23 +85,25 @@ lxqt-base/lxqt-session **
 >=x11-plugins/hexchat-javascript-0.3.1 **
 >=net-misc/ssh-askpass-fullscreen-1.0-r1 **
 
->=sys-block/zram-init-2.7 **
-
 >=x11-themes/gnome-colors-common-5.5.1 **
 >=x11-themes/gnome-colors-themes-5.5.1 **
 >=x11-themes/light-themes-0.1.93-r3 **
+
+=sys-devel/llvm-9999 **
+>=sys-block/zram-init-2.7 **
 
 >=dev-python/thunarx-python-0.3.0 **
 >=x11-themes/gentoo-artwork-0.4.2-r1 **
 >=media-plugins/exaile-soundmenu-indicator-0.0.5 **
 >=x11-themes/gentoo10-backgrounds-20110309 **
->=x11-misc/arandr-0.1.7.1 **
 
->=sys-devel/llvm-9999 **
+>=x11-misc/arandr-0.1.7.1 **
 >=x11-libs/libdrm-9999 **
 >=media-libs/mesa-9999 **
 >=x11-base/xorg-server-9999 **
 >=x11-base/xorg-drivers-9999 **
+# >= would pull in google chromeos version
+=x11-drivers/xf86-video-armsoc-9999 **
 
 >=net-wireless/blueman-9999 **
 >=dev-python/fuse-python-0.2.1 **
@@ -94,6 +123,7 @@ lxqt-base/lxqt-session **
 >=x11-misc/gtk2fontsel-0.1 **
 >=media-fonts/proggy-fonts-1 **
 
+>=media-libs/libmpris2client-0.1.0 **
 >=media-sound/exaile-0.3.2.1-r1 **
 >=media-libs/mutagen-1.21 **
 >=media-gfx/gthumb-3.2.3 **
@@ -124,3 +154,8 @@ lxqt-base/lxqt-session **
 >=x11-themes/gtk-engines-unico-1.0.3_pre20121212 **
 >=x11-themes/gtk-engines-cleanice-2.4.1 **
 
+>=app-pda/gtkpod-2.1.4 **
+>=media-plugins/gst-plugins-dts-1.4.5 **
+>=dev-util/anjuta-3.16.0 **
+>=dev-libs/gdl-3.16.0 **
+>=gnome-extra/libgda-5.2.4 **
