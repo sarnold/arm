@@ -107,7 +107,7 @@ eblit-perl-src_configure() {
 
 	myconf -Dnoextensions="${disabled_extensions}"
 
-	use arm && myconf -Ud_longdbl
+	[[ ${ARCH} == arm* ]] &&  myconf -Ud_longdbl
 
 	use nmext && myconf -Uusenm
 

@@ -104,11 +104,16 @@ eblit-run() {
 
 src_prepare()	{ eblit-run src_prepare   v50160001 ; }
 src_configure()	{
+	append-cflags -fPIC
 	eblit-run src_configure v50180002
-	use arm && sed -i \
-		-e "s|d_fork='undef'|d_fork='define'|" \
-		-e "s|d_memcpy='undef'|d_memcpy='define'|" \
-			"${S}"/config.sh
+#	use arm && sed -i \
+#		-e "s|d_fork='undef'|d_fork='define'|" \
+#		-e "s|d_memcpy='undef'|d_memcpy='define'|" \
+#			"${S}"/config.sh
+#	use arm64 && sed -i \
+#		-e "s|use64bitall='define'|use64bitall='undef'|" \
+#		-e "s|use64bitint='define'|use64bitint='undef'|" \
+#			"${S}"/config.sh
 }
 #src_compile()	{ eblit-run src_compile   v50160001 ; }
 src_test()		{
