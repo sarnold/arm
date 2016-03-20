@@ -1,0 +1,11 @@
+--- gcc/config/arm/arm-builtins.c.orig	2016-03-17 11:23:43.549377929 -0700
++++ gcc/config/arm/arm-builtins.c	2016-03-17 11:27:20.852527292 -0700
+@@ -2160,7 +2160,7 @@
+   neon_builtin_datum *d =
+ 		&neon_builtin_data[fcode - ARM_BUILTIN_NEON_BASE];
+   enum insn_code icode = d->code;
+-  builtin_arg args[SIMD_MAX_BUILTIN_ARGS];
++  builtin_arg args[SIMD_MAX_BUILTIN_ARGS + 1];
+   int num_args = insn_data[d->code].n_operands;
+   int is_void = 0;
+   int k;
