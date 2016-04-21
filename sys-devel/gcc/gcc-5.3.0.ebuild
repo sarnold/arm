@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -40,9 +40,16 @@ src_prepare() {
 		ewarn "Please rebuild gcc after upgrading to >=glibc-2.12 #362315"
 		EPATCH_EXCLUDE+=" 10_all_default-fortify-source.patch"
 	fi
-	is_crosscompile && EPATCH_EXCLUDE+=" 05_all_gcc-spec-env.patch"
+	if is_crosscompile ; then
+		EPATCH_EXCLUDE+=" 05_all_gcc-spec-env.patch"
+	fi
 
-	[[ ${ARCH} == arm* ]] && epatch "${FILESDIR}"/${PV}/${P}-arm-neon-array-size.patch
+	# add some arm/arm64 goodness
+	epatch "${FILESDIR}"/${PV}/${P}-arm-neon-array-size.patch
+	epatch "${FILESDIR}"/${PV}/${P}-local_atomic-dont-redefine-inline.patch
+
+	# add upstream alignment patch
+	epatch "${FILESDIR}"/${PV}/${P}-save_require_frame-pointer_when_stack_misaligned.patch
 
 	toolchain_src_prepare
 }
