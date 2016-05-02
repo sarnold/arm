@@ -1,0 +1,22 @@
+--- gcc/ChangeLog.orig	2016-04-30 12:34:56.124963397 -0700
++++ gcc/ChangeLog	2016-04-30 12:37:47.530147870 -0700
+@@ -1,3 +1,8 @@
++2016-04-30  Stephen Arnold  <sarnold@vctlabs.com>
++
++	* config/arm/bpabi.h: Backport and apply patch to tell the
++	linker which emulation to use based on target endianness.
++
+ 2015-12-04  Release Manager
+ 
+ 	* GCC 5.3.0 released.
+--- gcc/config/arm/bpabi.h.orig	2016-04-30 12:34:43.461247170 -0700
++++ gcc/config/arm/bpabi.h	2016-04-30 12:39:52.437261505 -0700
+@@ -128,7 +128,7 @@
+ 
+ /* The generic link spec in elf.h does not support shared libraries.  */
+ #define BPABI_LINK_SPEC \
+-  "%{mbig-endian:-EB} %{mlittle-endian:-EL} "		\
++  "%{mbig-endian:-EB -m armelfb} %{mlittle-endian:-EL -m armelf} "		\
+   "%{static:-Bstatic} %{shared:-shared} %{symbolic:-Bsymbolic} "	\
+   "-X" SUBTARGET_EXTRA_LINK_SPEC EABI_LINK_SPEC
+ 

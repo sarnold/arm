@@ -48,8 +48,9 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PV}/${P}-arm-neon-array-size.patch
 	epatch "${FILESDIR}"/${PV}/${P}-local_atomic-dont-redefine-inline.patch
 
-	# add upstream alignment patch
-	epatch "${FILESDIR}"/${PV}/${P}-save_require_frame-pointer_when_stack_misaligned.patch
+	# add upstream bigendian and alignment patches
+	epatch "${FILESDIR}"/${PV}/${P}-fix-lto-bigendian.patch \
+		"${FILESDIR}"/${PV}/${P}-save_require_frame-pointer_when_stack_misaligned.patch
 
 	toolchain_src_prepare
 }
