@@ -1,6 +1,6 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-boot/vboot-utils/vboot-utils-42_p20150219.ebuild,v 1.2 2015/03/23 17:17:36 vapier Exp $
+# $Id$
 
 EAPI=5
 
@@ -66,7 +66,9 @@ src_test() {
 src_install() {
 	_emake DESTDIR="${ED}/usr" install
 	if ! use minimal ; then
-		rm -r "${ED}"/usr/default || die
+		mkdir -p "${ED}"/etc/
+		cp -R "${ED}"/usr/default "${ED}"/etc/ || die
+		rm -rf "${ED}"/usr/default || die
 	fi
 
 	insinto /usr/share/vboot/devkeys
