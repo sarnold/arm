@@ -15,7 +15,7 @@ detect_arch
 inherit git-2 versionator
 EGIT_REPO_URI=https://github.com/anholt/linux.git
 EGIT_PROJECT="rpi-drm-linux.git"
-EGIT_BRANCH="vc4-kms-v3d"
+EGIT_BRANCH="rpi-4.2.y"
 
 DESCRIPTION="Raspberry PI kernel sources with bleeding edge VC4 DRM patches"
 HOMEPAGE="https://github.com/anholt"
