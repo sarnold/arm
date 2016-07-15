@@ -52,5 +52,8 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PV}/${P}-fix-lto-bigendian.patch \
 		"${FILESDIR}"/${PV}/${P}-save_require_frame-pointer_when_stack_misaligned.patch
 
+	# upstream bug #65948
+	epatch "${FILESDIR}"/${PV}/${P}-fix-internal-compiler-error-in-odr_types_equivalent_p.patch
+
 	toolchain_src_prepare
 }
