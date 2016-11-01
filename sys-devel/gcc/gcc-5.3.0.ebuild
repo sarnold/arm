@@ -34,11 +34,8 @@ if [[ ${CATEGORY} != cross-* ]] ; then
 fi
 
 src_prepare() {
-	if has_version '<sys-libs/glibc-2.12' ; then
-		ewarn "Your host glibc is too old; disabling automatic fortify."
-		ewarn "Please rebuild gcc after upgrading to >=glibc-2.12 #362315"
-		EPATCH_EXCLUDE+=" 10_all_default-fortify-source.patch"
-	fi
+	EPATCH_EXCLUDE+="91_all_pr69140-msabi-stack-alignment.patch"
+	has_version '<sys-libs/glibc-2.12' && EPATCH_EXCLUDE+=" 10_all_default-fortify-source.patch"
 	if is_crosscompile ; then
 		EPATCH_EXCLUDE+=" 05_all_gcc-spec-env.patch"
 	fi
