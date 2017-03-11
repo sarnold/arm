@@ -63,7 +63,7 @@ index c603c21..c3820d5 100644
  // should submit a result. The original command is passed in as a parameter
  // to provide the command ID and path to results queue. The command ID
 diff --git a/test/Makefile.am b/test/Makefile.am
-index 5493edc..eb05acf 100644
+index 5493edc..a73edc0 100644
 --- a/test/Makefile.am
 +++ b/test/Makefile.am
 @@ -1,4 +1,4 @@
@@ -72,7 +72,15 @@ index 5493edc..eb05acf 100644
  
  LIBREDISIPC = $(top_srcdir)/src/.libs/libredis_ipc.la
  
-@@ -14,22 +14,22 @@ check_PROGRAMS = $(BUILT_TESTS)
+@@ -8,28 +8,30 @@ BUILT_TESTS = command_result_test \
+               settings_status_test \
+               pub_sub_test
+ 
++XFAIL_TESTS = command_result_test
++
+ #TESTS = $(BUILT_TESTS) tests/runtests.sh
+ TESTS = $(check_PROGRAMS)
+ check_PROGRAMS = $(BUILT_TESTS)
  include_HEADERS = $(top_srcdir)/inc/json.hh
  
  command_result_test_SOURCES = command_result_test.c

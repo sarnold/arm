@@ -19,7 +19,7 @@ fi
 DESCRIPTION="A wrapper library for using redis server and JSON as IPC mechanism"
 HOMEPAGE="https://github.com/VCTLabs/redis-ipc"
 
-LICENSE="Apache-2.0"
+LICENSE="GPL-2"
 SLOT="0"
 
 DEPEND="virtual/pkgconfig
@@ -41,3 +41,4 @@ src_configure() {
                 $(use_enable static) \
                 "${myconf[@]}"
 }
+
