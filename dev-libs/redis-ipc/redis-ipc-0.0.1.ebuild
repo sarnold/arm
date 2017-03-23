@@ -23,11 +23,12 @@ LICENSE="GPL-2"
 SLOT="0"
 
 DEPEND="virtual/pkgconfig
-	dev-db/hiredis
+	dev-libs/hiredis
 	dev-libs/json-c"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-fix-qa-warning.patch"
+	epatch "${FILESDIR}/${P}-fix-qa-warning.patch" \
+		"${FILESDIR}/${P}-autotools-updates.patch"
 
 	export ac_cv_prog_STRIP="$(type -P true ) faking strip"
 

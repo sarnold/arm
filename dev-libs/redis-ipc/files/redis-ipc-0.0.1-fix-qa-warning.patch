@@ -1,56 +1,8 @@
-diff --git a/configure.ac b/configure.ac
-index 595873b..ce52489 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -53,8 +53,8 @@ JSON_C_MIN_VERSION="0.9"
- PKG_CHECK_MODULES(JSONC, libjson-c >= $JSON_C_MIN_VERSION, ,
-   AC_CHECK_HEADER(json-c/json.h, [JSONC_LIBS="-ljson-c"], [json-c=no])
-   AC_CHECK_HEADER(json-c/json.h, [JSONC_CFLAGS="-I$includedir"
--                                      JSONC_LIBS="-L$libdir -ljson-c"], [json-c=no])
--  AC_SUBST([JSONC_CFLAGS])
-+                                  JSONC_LIBS="-L$libdir -ljson-c"], [json-c=no])
-+  #AC_SUBST([JSONC_CFLAGS])
-   AC_SUBST([JSONC_LIBS])
- )
- 
-@@ -62,7 +62,7 @@ PKG_CHECK_MODULES(HIREDIS, libhiredis, ,
-   AC_CHECK_HEADER(hiredis/hiredis.h, [HIREDIS_LIBS="-lhiredis"], [hiredis=no])
-   AC_CHECK_HEADER(hiredis/hiredis.h, [HIREDIS_CFLAGS="-I$includedir"
-                                       HIREDIS_LIBS="-L$libdir -lhiredis"], [hiredis=no])
--  AC_SUBST([HIREDIS_CFLAGS])
-+  #AC_SUBST([HIREDIS_CFLAGS])
-   AC_SUBST([HIREDIS_LIBS])
- )
- #[
-diff --git a/src/redis_ipc.c b/src/redis_ipc.c
-index 84d7c2a..cc2e9cc 100644
---- a/src/redis_ipc.c
-+++ b/src/redis_ipc.c
-@@ -207,7 +207,11 @@ int get_debug_verbosity()
- //@@@@ FIXME: debug will be dynamically configurable from a setting or config file
- int stderr_debug_is_enabled()
- {
-+#if ENABLE_DEBUG
-     return 1;
-+#else
-+    return 0;
-+#endif
- }
- 
- // check for errors in redis command execution;
 diff --git a/src/redis_ipc.h b/src/redis_ipc.h
-index c603c21..c3820d5 100644
+index c603c21..fecb68b 100644
 --- a/src/redis_ipc.h
 +++ b/src/redis_ipc.h
-@@ -4,6 +4,7 @@
- 
- #include <sys/types.h>
- #include <json-c/json.h>
-+#include <config.h>
- 
- #ifdef __cplusplus
- extern "C" {
-@@ -94,7 +95,10 @@ int redis_ipc_cleanup(pid_t tid);
+@@ -94,7 +94,10 @@ int redis_ipc_cleanup(pid_t tid);
  // is received, it will be logged as an error to submitter component's 
  // debug channel then freed, and the wait on results queue will restart
  // (expiration time will be reset to original).
@@ -62,49 +14,3 @@ index c603c21..c3820d5 100644
  // After receiving and executing a command, the receiving component
  // should submit a result. The original command is passed in as a parameter
  // to provide the command ID and path to results queue. The command ID
-diff --git a/test/Makefile.am b/test/Makefile.am
-index 5493edc..a73edc0 100644
---- a/test/Makefile.am
-+++ b/test/Makefile.am
-@@ -1,4 +1,4 @@
--AM_CPPFLAGS    = -I$(top_srcdir)/inc -I$(top_srcdir)/src -I$(includedir)
-+AM_CPPFLAGS    = -I$(top_srcdir)/inc -I$(top_srcdir)/src
- 
- LIBREDISIPC = $(top_srcdir)/src/.libs/libredis_ipc.la
- 
-@@ -8,28 +8,30 @@ BUILT_TESTS = command_result_test \
-               settings_status_test \
-               pub_sub_test
- 
-+XFAIL_TESTS = command_result_test
-+
- #TESTS = $(BUILT_TESTS) tests/runtests.sh
- TESTS = $(check_PROGRAMS)
- check_PROGRAMS = $(BUILT_TESTS)
- include_HEADERS = $(top_srcdir)/inc/json.hh
- 
- command_result_test_SOURCES = command_result_test.c
--command_result_test_LDADD = -lhiredis -ljson-c $(LIBREDISIPC) -lpthread
-+command_result_test_LDADD = $(HIREDIS_LIBS) $(JSONC_LIBS) $(LIBREDISIPC) -lpthread
- command_result_test_LDFLAGS = -Wl,--hash-style=gnu -no-install
- 
- json_test_SOURCES = json_test.cpp
--json_test_LDADD = -lhiredis -ljson-c $(LIBREDISIPC) -lpthread
-+json_test_LDADD = $(HIREDIS_LIBS) $(JSONC_LIBS) $(LIBREDISIPC) -lpthread
- json_test_LDFLAGS = -Wl,--hash-style=gnu -no-install
- 
- multithread_test_SOURCES = multithread_test.c
--multithread_test_LDADD = -lhiredis -ljson-c $(LIBREDISIPC) -lpthread
-+multithread_test_LDADD = $(HIREDIS_LIBS) $(JSONC_LIBS) $(LIBREDISIPC) -lpthread
- multithread_test_LDFLAGS = -Wl,--hash-style=gnu -no-install
- 
- pub_sub_test_SOURCES = pub_sub_test.c
--pub_sub_test_LDADD = -lhiredis -ljson-c $(LIBREDISIPC) -lpthread
-+pub_sub_test_LDADD = $(HIREDIS_LIBS) $(JSONC_LIBS) $(LIBREDISIPC) -lpthread
- pub_sub_test_LDFLAGS = -Wl,--hash-style=gnu -no-install
- 
- settings_status_test_SOURCES = settings_status_test.c
--settings_status_test_LDADD = -lhiredis -ljson-c $(LIBREDISIPC) -lpthread
-+settings_status_test_LDADD = $(HIREDIS_LIBS) $(JSONC_LIBS) $(LIBREDISIPC) -lpthread
- settings_status_test_LDFLAGS = -Wl,--hash-style=gnu -no-install
- 
