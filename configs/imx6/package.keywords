@@ -1,1 +1,5 @@
 =sys-boot/vboot-utils-1.0_p20130222 **
+
+>=dev-libs/gom-0.3.1
+#>=media-libs/grilo-0.3.1
+>=media-plugins/grilo-plugins-0.3.1
