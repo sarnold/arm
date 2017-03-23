@@ -1,12 +1,14 @@
 #>=sys-devel/binutils-9999 **
 
->=dev-scheme/guile-2.0 **
+>=sys-firmware/b43-firmware-6.30.163.46 **
+>=net-wireless/b43-fwcutter-019 **
+>=sys-firmware/bluez-firmware-1.2 **
+>=dev-python/pybluez-0.18-r1 **
 
 >=x11-libs/cairo-9999 **
->=x11-proto/fontsproto-9999 **
->=x11-proto/randrproto-9999 **
->=x11-proto/xproto-9999 **
 
+>=sys-power/cpudyn-1.0.1 **
+>=sys-apps/usbmon-6-r1 **
 >=app-text/pastebinit-1.4.1 **
 >=dev-python/configobj-5.0.6 **
 

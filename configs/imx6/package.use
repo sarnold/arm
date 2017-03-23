@@ -1,15 +1,22 @@
-sys-devel/autogen guile
+app-crypt/pinentry -gtk
+dev-vcs/git -gpg
+dev-util/cmake -qt5
+
+net-misc/ntp -samba -snmp
 app-pda/gtkpod -aac -cdr clutter
 www-client/epiphany jit -nss
 net-misc/openvpn iproute2 passwordsave pkcs11
 net-misc/ethercard-diag diag-only
 x11-drivers/xf86-video-fbturbo -gles2
+
 app-misc/mc samba sftp
-net-fs/nfs-utils nfsv41
+net-fs/nfs-utils nfsv4 -nfsv41 -tcpd
 x11-themes/gentoo-artwork kde
 x11-misc/lightdm gtk qt4
 www-client/chromium -proprietary-codecs
 dev-libs/libdbusmenu -gtk
+gnome-base/librsvg vala introspection -tools
+app-crypt/gcr gtk vala introspection
 
 dev-qt/qtcore:5 icu
 dev-qt/qtdeclarative localstorage
@@ -41,9 +48,9 @@ net-im/qutim histman irc jabber jingle oscar plugman purple qml telepathy tools 
 media-sound/clementine googledrive lastfm
 media-sound/cantata  dynamic musicbrainz online-services replaygain streams taglib
 
-dev-vcs/subversion -dso perl
+dev-vcs/subversion -dso perl -gnome-keyring
 dev-lang/perl -ithreads
-dev-vcs/qct cvs subversion
+dev-vcs/git cvs subversion perl
 sys-apps/man gdbm -berkdb
 net-dns/avahi gdbm
 app-crypt/gcr gtk
@@ -59,6 +66,7 @@ xfce-base/xfce4-settings  libcanberra libinput
 media-libs/netpbm jbig rle
 x11-misc/xdg-user-dirs gtk
 x11-misc/xscreensaver opengl
+11-libs/libxkbcommon X
 xfce-extra/xfce4-soundmenu-plugin lastfm
 
 # needed by qt-webkit?
@@ -73,7 +81,7 @@ www-client/midori granite jit webkit2 -deprecated -introspection zeitgeist
 media-libs/cogl opengl gles2
 x11-libs/cairo -drm -lto gles2 -opengl xcb xlib-xcb
 
-sys-devel/llvm -ncurses clang
+sys-devel/llvm -ncurses
 dev-libs/weston colord editor examples fbdev gles2 -opengl rdp -resize-optimization view wayland-compositor xwayland
 gnome-extra/zeitgeist downloads-monitor extensions -fts icu -plugins telepathy
 net-im/telepathy-mission-control -upower
@@ -86,7 +94,7 @@ sys-apps/kmod lzma
 sys-libs/ncurses tinfo
 net-dns/avahi mdnsresponder-compat
 dev-libs/boost icu
-media-libs/harfbuzz icu
+media-libs/harfbuzz icu -graphite
 
 app-misc/mc -slang sftp
 dev-libs/DirectFB fbcon imlib2 jpeg2k drmkms -egl input_hub mpeg2 mpeg3 multicore
@@ -96,11 +104,13 @@ net-libs/glib-networking  -libproxy
 
 media-libs/libcanberra sound
 sys-fs/lvm2 -static static-libs -thin
+>=sys-fs/eudev-3.2.1-r1 static-libs
 >=virtual/libudev-215-r1 static-libs
 >=sys-fs/udev-208-r1 static-libs
 
 gnome-base/gvfs archive cdda fuse gtk gnome-keyring http nfs samba udisks zeroconf
 dev-libs/boost icu
+sys-devel/make guile
 sys-auth/pambase gnome-keyring mktemp pam_ssh
 app-text/ghostscript-gpl cups
 sys-apps/util-linux tty-helpers
@@ -120,7 +130,7 @@ net-irc/hexchat -gtkspell libcanberra perl plugin-checksum plugin-doat plugin-fi
 net-fs/samba -winbind
 net-fs/cifs-utils -acl -ads creds
 media-libs/gst-plugins-base theora
-media-libs/gst-plugins-bad -gles2 opengl
+media-libs/gst-plugins-bad -gles2
 
 media-video/vlc cddb egl fontconfig -opengl live matroska neon omxil alsa rtsp taglib theora wma-fixed
 
@@ -133,8 +143,8 @@ x11-apps/xinit -minimal
 x11-libs/libdrm libkms -kernel-src
 =media-libs/mesa-10* -dri3 -llvm -pic -gallium
 # don't use dri3 interface for mali?
->=media-libs/mesa-9999 -dri3
-media-libs/mesa classic gallium egl gles1 gles2 llvm nptl osmesa xa xvmc -bindist
+>=media-libs/mesa-9999 dri3 -llvm
+media-libs/mesa dri3 gallium egl gles1 gles2 -llvm nptl osmesa xa xvmc -bindist -classic
 x11-apps/mesa-progs egl gles1 gles2
 
 www-client/firefox -minimal -system-libvpx
@@ -156,7 +166,7 @@ media-libs/harfbuzz icu
 media-video/mplayer2 -dvd -dvdnav yuv4mpeg
 media-video/mplayer live lzo rtc -dvd -dvdnav -encode libmpeg2 -opengl -osdmenu -xscreensaver -xv -X
 media-video/ffmpeg armv7 armvfp -encode -opengl -X
-media-video/libav vdpau vpx armv7 armvfp encode gpl gsm jack jpeg2k speex -opengl opus X tools theora webp
+media-video/libav -vdpau vpx armv7 armvfp encode gpl gsm jack jpeg2k speex -opengl opus X tools theora
 # needs neon/asm patches
 virtual/ffmpeg gsm jpeg2k opus speex theora
 
