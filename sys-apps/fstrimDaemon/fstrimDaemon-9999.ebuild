@@ -28,6 +28,7 @@ src_install() {
 	dosbin usr/sbin/fstrimDaemon.sh
 	dodoc README.md
 	if ! use systemd ; then
+		sed -i -e "s|sbin/runscript|sbin/openrc-run|" etc/init.d/fstrimDaemon
 		doinitd etc/init.d/fstrimDaemon
 		doconfd etc/conf.d/fstrimDaemon
 	else
