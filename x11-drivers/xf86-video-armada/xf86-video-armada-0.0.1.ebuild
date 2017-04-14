@@ -8,18 +8,19 @@ XORG_BASE_INDIVIDUAL_URI=""
 EGIT_REPO_URI="https://github.com/VCTLabs/xf86-video-armada"
 XORG_DRI="always"
 
-inherit xorg-2 git-r3
+inherit autotools xorg-2 git-r3
 
 if [[ ${PV} = 9999 ]]; then
 	EGIT_BRANCH="devel"
 	KEYWORDS=""
 else
-	EGIT_COMMIT="87e9fa065c8aa82715a2941ebb8d3af73b145263"
+	#EGIT_COMMIT="87e9fa065c8aa82715a2941ebb8d3af73b145263"
+	EGIT_COMMIT="a5cdb15c7e2552327de4a79be86044d18b4cdad8"
 	KEYWORDS="~arm"
 fi
 
 DESCRIPTION="Xorg graphics driver for KMS based systems with pluggable GPU backend"
-IUSE="+etnaviv"
+IUSE=""
 
 RDEPEND=">=x11-base/xorg-server-1.18"
 
@@ -34,6 +35,10 @@ pkg_setup() {
 	# note: vivante requires libGAL
 	XORG_CONFIGURE_OPTIONS=(
 		--disable-vivante
-#		$(use_enable etnaviv)
+		--enable-etnaviv
 	)
+}
+
+src_prepare() {
+	eautoreconf
 }
