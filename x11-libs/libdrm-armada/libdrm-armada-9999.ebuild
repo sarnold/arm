@@ -5,6 +5,8 @@
 EAPI=5
 
 EGIT_REPO_URI="https://github.com/sarnold/libdrm-armada.git"
+## upstream doesn't have patch yet
+# git://git.armlinux.org.uk/~rmk/libdrm-armada.git
 
 AUTOTOOLS_AUTORECONF=1
 
@@ -15,7 +17,7 @@ HOMEPAGE="http://git.armlinux.org.uk/cgit/libdrm-armada.git"
 
 KEYWORDS="~arm ~arm-linux"
 SLOT="0"
-IUSE=""
+IUSE="static-libs"
 
 RDEPEND="media-libs/mesa[egl,gles1,gles2]"
 
@@ -25,7 +27,7 @@ DEPEND="${RDEPEND}
 #AUTOTOOLS_IN_SOURCE_BUILD=1
 
 src_configure() {
-	autotools-utils_src_configure
+	autotools-utils_src_configure $(use_enable static-libs static)
 }
 
 src_compile() {
