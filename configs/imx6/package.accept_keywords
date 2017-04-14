@@ -79,7 +79,7 @@ lxqt-base/lxqt-session **
 >=x11-themes/gtk-theme-switch-2.1.0 **
 >=x11-themes/tango-icon-theme-extras-0.1.0-r1 **
 
->=x11-misc/sddm-9999 **
+#>=x11-misc/sddm-9999 **
 
 >=media-libs/libmpd-11.8.17-r1 **
 >=media-libs/x264-9999 **
@@ -92,7 +92,6 @@ lxqt-base/lxqt-session **
 >=x11-themes/light-themes-0.1.93-r3 **
 
 =sys-devel/llvm-9999 **
->=sys-block/zram-init-2.7 **
 
 >=dev-python/thunarx-python-0.3.0 **
 >=x11-themes/gentoo-artwork-0.4.2-r1 **
@@ -100,12 +99,13 @@ lxqt-base/lxqt-session **
 >=x11-themes/gentoo10-backgrounds-20110309 **
 
 >=x11-misc/arandr-0.1.7.1 **
->=x11-libs/libdrm-9999 **
->=media-libs/mesa-9999 **
->=x11-base/xorg-server-9999 **
->=x11-base/xorg-drivers-9999 **
+#>=x11-libs/libdrm-9999 **
+#>=media-libs/mesa-9999 **
+#>=x11-base/xorg-server-9999 **
+#>=x11-base/xorg-drivers-9999 **
+#>=x11-libs/libetnaviv-99999999 **
 # >= would pull in google chromeos version
-=x11-drivers/xf86-video-armsoc-9999 **
+#>=x11-drivers/xf86-video-armsoc-9999 **
 
 >=net-wireless/blueman-9999 **
 >=dev-python/fuse-python-0.2.1 **
