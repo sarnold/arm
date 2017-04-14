@@ -6,22 +6,24 @@ EAPI=5
 
 XORG_DOC=doc
 inherit xorg-2 multilib versionator flag-o-matic
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/xserver"
+EGIT_REPO_URI="git://anongit.freedesktop.org/xorg/xserver"
 
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
+KEYWORDS=""
 
 IUSE_SERVERS="dmx kdrive xephyr xnest xorg xvfb"
-IUSE="${IUSE_SERVERS} +drm extra-warn glamor glx ipv6 minimal nptl selinux +suid systemd tslib +udev unwind wayland"
+IUSE="${IUSE_SERVERS} debug glamor ipv6 libressl minimal selinux +suid systemd tslib +udev unwind wayland"
 
 CDEPEND=">=app-eselect/eselect-opengl-1.3.0
-	dev-libs/openssl
+	!libressl? ( dev-libs/openssl:0= )
+	libressl? ( dev-libs/libressl )
 	media-libs/freetype
 	>=x11-apps/iceauth-1.0.2
 	>=x11-apps/rgb-1.0.3
 	>=x11-apps/xauth-1.0.3
 	x11-apps/xkbcomp
+	>=x11-libs/libdrm-2.4.74
 	>=x11-libs/libpciaccess-0.12.901
 	>=x11-libs/libXau-1.0.4
 	>=x11-libs/libXdmcp-1.0.2
@@ -45,7 +47,6 @@ CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 		>=x11-libs/libXres-1.0.3
 		>=x11-libs/libXtst-1.0.99.2
 	)
-	drm? ( >=x11-libs/libdrm-2.4.46 )
 	glamor? (
 		media-libs/libepoxy
 		>=media-libs/mesa-10.3.4-r1[egl,gbm]
@@ -66,7 +67,7 @@ CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	!minimal? (
 		>=x11-libs/libX11-1.1.5
 		>=x11-libs/libXext-1.0.5
-		>=media-libs/mesa-10.3.4-r1[nptl=]
+		>=media-libs/mesa-10.3.4-r1
 	)
 	tslib? ( >=x11-libs/tslib-1.0 )
 	udev? ( >=virtual/udev-150 )
@@ -74,6 +75,7 @@ CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	wayland? (
 		>=dev-libs/wayland-1.3.0
 		media-libs/libepoxy
+		>=dev-libs/wayland-protocols-1.1
 	)
 	>=x11-apps/xinit-1.3.3-r1
 	systemd? (
@@ -89,9 +91,9 @@ DEPEND="${CDEPEND}
 	>=x11-proto/fixesproto-5.0
 	>=x11-proto/fontsproto-2.1.3
 	>=x11-proto/glproto-1.4.17-r1
-	>=x11-proto/inputproto-2.2.99.1
+	>=x11-proto/inputproto-2.3
 	>=x11-proto/kbproto-1.0.3
-	>=x11-proto/randrproto-1.4.0
+	>=x11-proto/randrproto-1.5.0
 	>=x11-proto/recordproto-1.13.99.1
 	>=x11-proto/renderproto-0.11
 	>=x11-proto/resourceproto-1.2.0
@@ -104,7 +106,7 @@ DEPEND="${CDEPEND}
 	>=x11-proto/xf86rushproto-1.1.2
 	>=x11-proto/xf86vidmodeproto-2.2.99.1
 	>=x11-proto/xineramaproto-1.1.3
-	>=x11-proto/xproto-7.0.26
+	>=x11-proto/xproto-7.0.31
 	>=x11-proto/presentproto-1.0
 	>=x11-proto/dri3proto-1.0
 	dmx? (
@@ -133,7 +135,7 @@ PDEPEND="
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
 	)
-	xephyr? ( kdrive glx )"
+	xephyr? ( kdrive )"
 
 #UPSTREAMED_PATCHES=(
 #	"${WORKDIR}/patches/"
@@ -143,9 +145,8 @@ PATCHES=(
 	"${UPSTREAMED_PATCHES[@]}"
 	"${FILESDIR}"/${PN}-1.12-unloadsubmodule.patch
 	# needed for new eselect-opengl, bug #541232
-	"${FILESDIR}"/${PN}-1.17-support-multiple-Files-sections.patch
-	"${FILESDIR}"/${PN}-fix_stupid_array_bounds_warning.patch
-	"${FILESDIR}"/${PN}-fix_declaration_mismatch.patch
+	"${FILESDIR}"/${PN}-1.18-support-multiple-Files-sections.patch
+	"${FILESDIR}"/${PN}-1.18-sysmacros.patch
 )
 
 pkg_pretend() {
@@ -166,20 +167,17 @@ src_configure() {
 	# might still be needed
 	#use arm && append-cppflags -D__arm32__
 
-	use kdrive && replace-flags "-O3" "-O2"
-
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
-	# NOTE: fop is used for doc generating ; and i have no idea if gentoo
+	# NOTE: fop is used for doc generating; and I have no idea if Gentoo
 	#	package it somewhere
 	XORG_CONFIGURE_OPTIONS=(
 		$(use_enable ipv6)
+		$(use_enable debug)
 		$(use_enable dmx)
 		$(use_enable glamor)
 		$(use_enable kdrive)
-		$(use_enable kdrive kdrive-kbd)
-		$(use_enable kdrive kdrive-mouse)
 		$(use_enable kdrive kdrive-evdev)
 		$(use_enable suid install-setuid)
 		$(use_enable tslib)
@@ -187,11 +185,9 @@ src_configure() {
 		$(use_enable wayland xwayland)
 		$(use_enable !minimal record)
 		$(use_enable !minimal xfree86-utils)
-		$(use_enable !minimal install-libxf86config)
 		$(use_enable !minimal dri)
 		$(use_enable !minimal dri2)
-		$(use_enable glx)
-		$(use_enable glx aiglx)
+		$(use_enable !minimal glx)
 		$(use_enable xephyr)
 		$(use_enable xnest)
 		$(use_enable xorg)
@@ -201,13 +197,11 @@ src_configure() {
 		$(use_with doc xmlto)
 		$(use_with systemd systemd-daemon)
 		$(use_enable systemd systemd-logind)
-		$(use_enable extra-warn selective-werror)
-		$(use_enable drm libdrm)
+		--enable-libdrm
 		--sysconfdir="${EPREFIX}"/etc/X11
 		--localstatedir="${EPREFIX}"/var
 		--with-fontrootdir="${EPREFIX}"/usr/share/fonts
 		--with-xkb-output="${EPREFIX}"/var/lib/xkb
-		--disable-xquartz
 		--disable-config-hal
 		--disable-linux-acpi
 		--without-dtrace
@@ -224,7 +218,7 @@ src_install() {
 
 	server_based_install
 
-	if ! use minimal &&	use xorg; then
+	if ! use minimal && use xorg; then
 		# Install xorg.conf.example into docs
 		dodoc "${AUTOTOOLS_BUILD_DIR}"/hw/xfree86/xorg.conf.example
 	fi

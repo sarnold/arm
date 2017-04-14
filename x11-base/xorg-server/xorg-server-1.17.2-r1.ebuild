@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -47,7 +47,7 @@ CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	)
 	drm? ( >=x11-libs/libdrm-2.4.46 )
 	glamor? (
-		media-libs/libepoxy
+		media-libs/libepoxy[X]
 		>=media-libs/mesa-10.3.4-r1[egl,gbm]
 		!x11-libs/glamor
 	)
