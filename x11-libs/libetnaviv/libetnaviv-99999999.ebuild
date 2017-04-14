@@ -8,10 +8,11 @@ inherit autotools
 MY_PN="${PN/_/}"
 P="${MY_PN}-${PV}"
 
-if [ "${PV}" = "9999" ]; then
+if [ "${PV}" = "99999999" ]; then
 	EGIT_REPO_URI="git://github.com/etnaviv/etna_viv"
 	inherit git-r3
-	KEYWORDS="~arm"
+	KEYWORDS=""
+	IUSE="src"
 else
 	# this commit is 1 before the attic-move; if you want to try
 	# building the src, you might start here...
@@ -37,6 +38,11 @@ MERGE_TYPE="binary"
 
 src_install() {
 	insinto /usr/include/etnaviv
-	doins src/etnaviv/*.h attic/etnaviv/*.h
+
+	if use src; then
+		doins -r src attic
+	else
+		doins src/etnaviv/*.h attic/etnaviv/*.h
+	fi
 }
 
