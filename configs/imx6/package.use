@@ -2,41 +2,55 @@ app-crypt/pinentry -gtk
 dev-vcs/git -gpg
 dev-util/cmake -qt5
 
+media-libs/grilo playlist
+media-plugins/grilo-plugins -dvd daap
+x11-wm/openbox startup-notification
+app-text/xmlto text
+media-plugins/alsa-plugins pulseaudio
+
 net-misc/ntp -samba -snmp
 app-pda/gtkpod -aac -cdr clutter
 www-client/epiphany jit -nss
-net-misc/openvpn iproute2 passwordsave pkcs11
+# move net-misc/openvpn net-vpn/openvpn
+net-vpn/openvpn iproute2 passwordsave pkcs11
 net-misc/ethercard-diag diag-only
 x11-drivers/xf86-video-fbturbo -gles2
 
 app-misc/mc samba sftp
 net-fs/nfs-utils nfsv4 -nfsv41 -tcpd
-x11-themes/gentoo-artwork kde
-x11-misc/lightdm gtk qt4
+media-libs/libmediaart gtk introspection -qt5 vala -qt4
+x11-misc/lightdm gtk -qt4
 www-client/chromium -proprietary-codecs
 dev-libs/libdbusmenu -gtk
 gnome-base/librsvg vala introspection -tools
 app-crypt/gcr gtk vala introspection
 
 dev-qt/qtcore:5 icu
+dev-qt/qtnetwork connman
 dev-qt/qtdeclarative localstorage
 dev-python/PyQt5 webkit widgets printsupport network
 dev-qt/qtwebkit printsupport -multimedia opengl qml webp
 dev-qt/qtprintsupport opengl
 dev-qt/qt-mobility multimedia
 dev-qt/qtmultimedia opengl qml widgets
+
+net-wireless/wpa_supplicant -ap eap-sim
+net-misc/connman -ethernet policykit wifi -examples -l2tp -ofono -openconnect openvpn -pptp tools
 www-client/qupzilla qt5 -qt4
 app-editors/tea aspell -hunspell
 >=kde-base/kdelibs-4.14.6-r1 opengl
 >=dev-python/PyQt4-4.11.3 sql webkit declarative script
-net-libs/jreen qt4
+
+net-libs/libgsasl gcrypt
+net-libs/jreen -qt4
 app-crypt/qca gcrypt gpg
 dev-python/PyQt4 opengl phonon
 dev-qt/designer -phonon webkit
 net-irc/quassel -crypt webkit
 media-video/mpv opengl
 
-sys-auth/polkit-qt qt4
+lxqt-base/lxqt-meta lightdm sudo
+sys-auth/polkit-qt -qt4
 dev-qt/qtwidgets:5 opengl
 app-i18n/ibus gtk3
 dev-libs/libpcre pcre16
@@ -81,7 +95,7 @@ www-client/midori granite jit webkit2 -deprecated -introspection zeitgeist
 media-libs/cogl opengl gles2
 x11-libs/cairo -drm -lto gles2 -opengl xcb xlib-xcb
 
-sys-devel/llvm -ncurses
+sys-devel/llvm -ncurses gold
 dev-libs/weston colord editor examples fbdev gles2 -opengl rdp -resize-optimization view wayland-compositor xwayland
 gnome-extra/zeitgeist downloads-monitor extensions -fts icu -plugins telepathy
 net-im/telepathy-mission-control -upower
@@ -127,24 +141,25 @@ x11-terms/xterm Xaw3d toolbar
 
 net-irc/hexchat -gtkspell libcanberra perl plugin-checksum plugin-doat plugin-fishlim plugin-sysinfo sexy
 
-net-fs/samba -winbind
+net-fs/samba -winbind client
 net-fs/cifs-utils -acl -ads creds
 media-libs/gst-plugins-base theora
 media-libs/gst-plugins-bad -gles2
 
 media-video/vlc cddb egl fontconfig -opengl live matroska neon omxil alsa rtsp taglib theora wma-fixed
 
-x11-themes/gentoo-artwork -grub offensive
+x11-themes/gentoo-artwork -grub offensive kde
 x11-misc/tint2 battery tint2conf
 sys-libs/libunwind lzma
-x11-base/xorg-server drm -glx -minimal xvfb kdrive xorg -unwind -xephyr -extra-warn
+x11-base/xorg-server drm glx -minimal xvfb kdrive xorg -unwind -xephyr -extra-warn
 x11-apps/xinit -minimal
 
+x11-libs/libdrm-armada static-libs
 x11-libs/libdrm libkms -kernel-src
-=media-libs/mesa-10* -dri3 -llvm -pic -gallium
-# don't use dri3 interface for mali?
->=media-libs/mesa-9999 dri3 -llvm
-media-libs/mesa dri3 gallium egl gles1 gles2 -llvm nptl osmesa xa xvmc -bindist -classic
+=media-libs/mesa-10* -llvm -pic -gallium
+# don't use dri3 interface for etnaviv/mesa, not sure about mali?
+>=media-libs/mesa-9999 -dri3 -llvm
+media-libs/mesa gallium egl gles1 gles2 llvm nptl osmesa xa xvmc -bindist -classic
 x11-apps/mesa-progs egl gles1 gles2
 
 www-client/firefox -minimal -system-libvpx
