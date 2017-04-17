@@ -37,14 +37,14 @@ RESTRICT="!bindist? ( bindist )"
 
 INTEL_CARDS="i915 i965 ilo intel"
 RADEON_CARDS="r100 r200 r300 r600 radeon radeonsi"
-VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} freedreno imx nouveau vc4 vivante vmware"
+VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} freedreno nouveau vc4 vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
 	bindist +classic d3d9 debug +dri3 +egl +gallium +gbm gles1 gles2 +llvm
-	+nptl opencl osmesa pax_kernel openmax pic selinux +udev vaapi valgrind
+	mir +nptl opencl osmesa pax_kernel openmax pic selinux +udev vaapi valgrind
 	vdpau wayland xvmc xa kernel_FreeBSD"
 
 REQUIRED_USE="
@@ -63,7 +63,6 @@ REQUIRED_USE="
 	video_cards_i915?   ( || ( classic gallium ) )
 	video_cards_i965?   ( classic )
 	video_cards_ilo?    ( gallium )
-	video_cards_imx?    ( gallium )
 	video_cards_nouveau? ( || ( classic gallium ) )
 	video_cards_radeon? ( || ( classic gallium )
 						  gallium? ( x86? ( llvm ) amd64? ( llvm ) ) )
@@ -72,7 +71,6 @@ REQUIRED_USE="
 	video_cards_r300?   ( gallium x86? ( llvm ) amd64? ( llvm ) )
 	video_cards_r600?   ( gallium )
 	video_cards_radeonsi?   ( gallium llvm )
-	video_cards_vivante? ( gallium )
 	video_cards_vmware? ( gallium )
 	${PYTHON_REQUIRED_USE}
 "
@@ -116,7 +114,7 @@ RDEPEND="
 	vdpau? ( >=x11-libs/libvdpau-1.1:=[${MULTILIB_USEDEP}] )
 	wayland? ( >=dev-libs/wayland-1.2.0:=[${MULTILIB_USEDEP}] )
 	xvmc? ( >=x11-libs/libXvMC-1.0.8:=[${MULTILIB_USEDEP}] )
-	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_nouveau?,video_cards_vc4?,video_cards_vivante?,video_cards_vmware?,${MULTILIB_USEDEP}]
+	${LIBDRM_DEPSTRING}[video_cards_freedreno?,video_cards_nouveau?,video_cards_vc4?,video_cards_vmware?,${MULTILIB_USEDEP}]
 "
 for card in ${INTEL_CARDS}; do
 	RDEPEND="${RDEPEND}
@@ -196,8 +194,12 @@ src_prepare() {
 		eautoreconf
 	else
 		epatch "${FILESDIR}"/07_gallium-fix-build-failure-on-powerpcspe.diff \
-			"${FILESDIR}"/egl-platform-mir.patch \
-			"${FILESDIR}"/i915-dont-default-to-2.1.patch
+			"${FILESDIR}"/i915-dont-default-to-2.1.patch \
+			"${FILESDIR}"/egl-platform-mir.patch
+
+#		use mir && epatch "${FILESDIR}"/egl-platform-mir.patch
+
+		eautoreconf
 	fi
 }
 
@@ -229,7 +231,7 @@ multilib_src_configure() {
 	fi
 
 	if use egl; then
-		myconf+=" --with-egl-platforms=x11$(use wayland && echo ",wayland")$(use gbm && echo ",drm")"
+		myconf+=" --with-egl-platforms=x11$(use wayland && echo ",wayland")$(use gbm && echo ",drm")$(use mir && echo ",mir")"
 	fi
 
 	if use gallium; then
@@ -250,7 +252,6 @@ multilib_src_configure() {
 		gallium_enable video_cards_nouveau nouveau
 		gallium_enable video_cards_i915 i915
 		gallium_enable video_cards_ilo ilo
-		gallium_enable video_cards_imx imx
 		if ! use video_cards_i915 && \
 			! use video_cards_i965; then
 			gallium_enable video_cards_intel i915
@@ -265,7 +266,6 @@ multilib_src_configure() {
 		fi
 
 		gallium_enable video_cards_freedreno freedreno
-		gallium_enable video_cards_vivante etnaviv
 		# opencl stuff
 		if use opencl; then
 			myconf+="
