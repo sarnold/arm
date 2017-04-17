@@ -20,7 +20,7 @@ else
 fi
 
 DESCRIPTION="Xorg graphics driver for KMS based systems with pluggable GPU backend"
-IUSE=""
+IUSE="dri3"
 
 RDEPEND=">=x11-base/xorg-server-1.18"
 
@@ -32,10 +32,12 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	xorg-2_pkg_setup
 
-	# note: vivante requires libGAL
+	# note: vivante requires libGAL and other vendor-y stuff
 	XORG_CONFIGURE_OPTIONS=(
 		--disable-vivante
 		--enable-etnaviv
+		--enable-dri2
+		$(use_enable dri3)
 	)
 }
 
