@@ -1,5 +1,5 @@
 #>=sys-block/zram-init-3.0
->=media-libs/speex-1.2.0
+#>=media-libs/speex-1.2.0
 
 #>=media-sound/exaile-9999
 #>=www-client/firefox-24.0
@@ -14,7 +14,8 @@
 
 >=media-libs/galcore-headers-4.6.9
 >=x11-libs/libetnaviv-20151011
->=media-libs/mesa-9999
+#>=media-libs/mesa-9999
+>=media-libs/mesa-18.0
 >=sys-devel/llvm-9999
 >=x11-libs/cairo-9999
 

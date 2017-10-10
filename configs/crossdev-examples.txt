@@ -1,0 +1,31 @@
+This works with new USE=ada toolchain overlay and the crossdev-fixes
+branch, however, the current crossdev-99999999 wants to put the cross
+overlay in the wrong place.  The --ov-output swicth does create the
+overlay but then fails to look there.  Apparently using the (deprecated)
+PORTDIR_OVERLAY env var is the only way...
+
+This worked for arm:
+
+ USE="-graphite hardened -fortran -jit" \
+ EXTRA_ECONF="--with-arch=armv7-a --with-tune=cortex-a9 \
+ --with-float-abi=hard --with-fpu=vfpv3-d16" \
+ crossdev -v -t armv7a-hardfloat-linux-gnueabi --ex-gdb
+
+as of 10/06/2017 with:
+ gcc 6.4.0/5.4.0 
+ binutils 2.29.1/2.28.1
+ glibc 2.25-r5
+ linux-headers 4.13
+
+This worked for arm64:
+
+crossdev -v -t aarch64-unknown-linux-gnu --ex-gdb
+
+This worked for cortex-M4:
+
+USE="hardened multitarget lzma -multilib -openmp -fortran -jit" \
+ EXTRA_ECONF="--disable-multilib --disable-libsanitizer \
+ --with-arch=armv7e-m --with-tune=cortex-m4 --with-float-abi=hard \
+ --with-fpu=fpv4-sp-d16 --with-mode=thumb" \
+ crossdev -t armv7m-hardfloat-eabi --ex-gdb  \
+ --show-fail-log  --ov-output /usr/local/cortex-m4
