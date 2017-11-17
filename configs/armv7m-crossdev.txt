@@ -42,12 +42,13 @@ crtbegin.o, add INHIBIT_LIBC_CFLAGS to EXTRA_ECONF:
 
 --genv 'EXTRA_ECONF="--with-host-libstdcxx=-static-libgcc -Wl,-Bstatic,-lstdc++,-Bdynamic -lm" INHIBIT_LIBC_CFLAGS="-DUSE_TM_CLONE_REGISTRY=0"'
 
-Basic CFLAGS for target builds:
+Basic FLAGS for target builds:
 
-CFLAGS="-mthumb -march=armv7e-m -mtune=cortex-m4 -mabi=aapcs \
+CFLAGS_FOR_TARGET="-mthumb -march=armv7e-m -mtune=cortex-m4 -mabi=aapcs \
  -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mfp16-format=ieee \
- -Wa,-mimplicit-it=thumb"
+ -Wa,-mimplicit-it=thumb -O[s2]"
 
+CXXFLAGS_FOR_TARGET="-g -O[s2] -ffunction-sections -fdata-sections -fno-exceptions"
 
 Current vendor toolchain produces:
 
