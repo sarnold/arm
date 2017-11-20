@@ -7,7 +7,7 @@ EAPI="6"
 ETYPE="sources"
 K_DEFCONFIG="espressobin_defconfig"
 UNIPATCH_STRICTORDER="1"
-K_WANT_GENPATCHES="base extras experimental"
+K_WANT_GENPATCHES="base"
 K_GENPATCHES_VER="14"
 K_DEBLOB_AVAILABLE="0"
 K_KDBUS_AVAILABLE="1"
@@ -31,7 +31,7 @@ SRC_URI="
 	${ARCH_URI}
 	${GENPATCHES_URI}"
 
-IUSE="experimental mvebu64"
+IUSE="mvebu64"
 
 K_EXTRAELOG="This is the bleeding-edge patch set on full gentoo-sources
 kernel with patches for Marvell espressobin and a few others, and intended
