@@ -43,7 +43,7 @@ RDEPEND=""
 DEPEND="${RDEPEND}
 	>=sys-devel/patch-2.7.4"
 
-PATCHES=( "${FILESDIR}/" )
+PATCHES=( "${FILESDIR}/4.13/" )
 
 src_prepare() {
 	handle_genpatches
