@@ -89,3 +89,17 @@ PORTDIR_OVERLAY="/usr/local/portage/cross-avr" \
  EXTRA_ECONF="--enable-libstdcxx-time=no" \
  crossdev --g 4.9.4-r1 --b 2.25.1-r1 -t avr -s4 \
  --ex-gdb  --show-fail-log  -v
+
+
+Hardened mipsel with musl, for that Onion thing (mips abi is a guess)
+
+Note: cross-musl gets contaminated with host cflags/ldflags so you need
+to pass -march and -mtune to match your tatget:
+
+PORTDIR_OVERLAY="/usr/local/mips32r2" \
+ USE="-graphite hardened multitarget -multilib -vtv -openmp -jit -fortran -sanitize" \
+ EXTRA_ECONF="--with-mips-plt --with-arch=mips32r2 --with-tune=24kec" \
+ crossdev -t mipsel-unknown-linux-musl --abis "o32" \
+ --lenv 'CFLAGS="-march=mips32r2 -mtune=24kec -O2 -pipe" CXXFLAGS="${CFLAGS}" LDFLAGS="${CFLAGS}"' \
+ -v -b  --without-headers --ex-gdb
+

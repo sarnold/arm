@@ -5,9 +5,9 @@
     <name><![CDATA[arm_support]]></name>
     <description lang="en"><![CDATA[ARM Support Gentoo Overlay]]></description>
     <homepage>https://github.com/gentoo/arm</homepage>
-    <owner type="person">
-      <name><![CDATA[steev]]></name>
-      <email>steev@gentoo.org</email>
+    <owner type="project">
+      <name><![CDATA[arm]]></name>
+      <email>arm@gentoo.org</email>
     </owner>
     <source type="git">git://github.com/gentoo/arm.git</source>
     <source type="git">https://github.com/gentoo/arm.git</source>
