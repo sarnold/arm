@@ -63,7 +63,7 @@ pkg_postrm() {
 }
 
 update_config() {
-	cp -f "${FILESDIR}"/4.14.0/${K_DEFCONFIG} "${S}"/arch/arm64/configs/ \
+	cp -f "${FILESDIR}"/4.14/${K_DEFCONFIG} "${S}"/arch/arm64/configs/ \
 		|| die "failed to install ${K_DEFCONFIG}!"
 }
 
