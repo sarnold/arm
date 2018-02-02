@@ -46,9 +46,6 @@ S="${WORKDIR}/${P}/mjpg-streamer-experimental"
 src_configure() {
 	append-cxxflags -std=gnu++11
 	cmake-utils_src_configure
-
-	sed -i -e 's|usr/lib|usr/$(get_libdir)|' \
-		"${FILESDIR}"/mjpg-streamer.initd || die
 }
 
 src_install() {
@@ -56,6 +53,8 @@ src_install() {
 
 	newinitd "${FILESDIR}"/${PN}.initd ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
+
+	sed -i -e 's|usr/lib|usr/$(get_libdir)|g' /etc/init.d/${PN}
 }
 
 pkg_postinst() {
