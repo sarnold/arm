@@ -1,8 +1,7 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI="4"
+EAPI="5"
 
 #EGIT_REPO_URI="git://gitorious.org/thierryreding/${PN}.git
 #	http://git.gitorious.org/thierryreding/${PN}.git"
@@ -10,6 +9,7 @@ EAPI="4"
 
 EGIT_REPO_URI="https://github.com/grate-driver/xf86-video-opentegra.git"
 
+XORG_DRI=always
 inherit autotools-utils xorg-2 git-2
 
 DESCRIPTION="Unaccelerated WIP driver for tegra devices"
