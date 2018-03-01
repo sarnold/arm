@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-<maintainer>
-	<email>nerdboy@gentoo.org</email>
-	<name>Steve Arnold</name>
+<maintainer type="project">
+  <email>arm@gentoo.org</email>
+  <name>Gentoo ARM Project</name>
 </maintainer>
-<upstream>
-	<remote-id type="github">RobertCNelson/armv7-multiplatform</remote-id>
-</upstream>
 <use>
-	<flag name="imx">Apply upstream patch (mostly) for i.MX boards</flag>
+  <flag name="imx">Apply ARM multipatch; for more information, see https://github.com/RobertCNelson/armv7-multiplatform".</flag>
+  <flag name="udooqdl">Apply UDOO Quad/Dual Arduino device patches</flag>
 </use>
+<upstream>
+  <remote-id type="cpe">cpe:/o:linux:linux_kernel</remote-id>
+</upstream>
 </pkgmetadata>

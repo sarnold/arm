@@ -69,8 +69,8 @@ src_prepare() {
 			patch -p1 "${WORKDIR}"/${MULTI_PATCH}
 		eend $? || return
 
-		use udooqdl && eapply "${FILESDIR}"/${PV}-udoo-enable-uart4-serial-interface-f.patch \
-			"${FILESDIR}"/${PV}-udooqdl-add-arduino-manager-driv.patch
+		use udooqdl && eapply "${FILESDIR}"/4.14.5-udoo-enable-uart4-serial-interface-f.patch \
+			"${FILESDIR}"/4.14.5-udooqdl-add-arduino-manager-driv.patch
 	fi
 
 	use imx && update_config
@@ -91,9 +91,9 @@ pkg_postrm() {
 update_config() {
 	if use udooqdl ; then
 		export DEFCONFIG="udooqdl_defconfig"
-		cp -f "${FILESDIR}"/${PV}-udooqdl_defconfig "${S}"/arch/arm/configs/udooqdl_defconfig \
+		cp -f "${FILESDIR}"/${PV}-udooqdl_defconfig \
+			"${S}"/arch/arm/configs/${DEFCONFIG} \
 			|| die "failed to install ${DEFCONFIG}!"
-		export DEFCONFIG="udooqdl_defconfig"
 	else
 		export DEFCONFIG="${K_DEFCONFIG}"
 		cp -f "${DISTDIR}"/${K_DEFCONFIG} "${S}"/arch/arm/configs/ \
