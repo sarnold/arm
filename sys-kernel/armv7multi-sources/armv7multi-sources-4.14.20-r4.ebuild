@@ -4,10 +4,10 @@
 EAPI="6"
 
 ETYPE="sources"
-K_DEFCONFIG="gentoo-armv7multi_defconfig"
+K_DEFCONFIG="gentoo-multi_v7_defconfig"
 UNIPATCH_STRICTORDER="1"
-K_WANT_GENPATCHES="base extras"
-K_GENPATCHES_VER="2"
+K_WANT_GENPATCHES="base extras experimental"
+K_GENPATCHES_VER="25"
 K_DEBLOB_AVAILABLE="0"
 K_KDBUS_AVAILABLE="1"
 
@@ -34,29 +34,29 @@ SRC_URI="
 	${KERNEL_URI}
 	${ARCH_URI}
 	${GENPATCHES_URI}
-	imx? ( ${M_PATCH_URI}
-		${M_CONFIG_URI} -> ${K_DEFCONFIG} )"
+	${M_PATCH_URI}
+	${M_CONFIG_URI} -> ${K_DEFCONFIG}"
 
-IUSE="imx udooqdl"
+IUSE="experimental"
 
 K_EXTRAELOG="This is the bleeding-edge mainline ARM patch set on full
 gentoo-sources kernel from LinuxOnArm maintainer Robert C Nelson.
-Intended mainly for i.MX-based boards like Wand or Udoo (use bone-sources
-for building a beaglebone kernel) although it should work on many ARM
-boards.  A copy of the latest config has been installed as ${DEFCONFIG}.
+Intended mainly for TI, Allwinner, and NXP boards like Wand or Udoo,
+although it should work on other ARM boards.  A copy of the latest
+config has been installed as ${K_DEFCONFIG}.
 If you are reading this, you know what to do..."
 
 RDEPEND=""
 DEPEND="${RDEPEND}
 	>=sys-devel/patch-2.7.4"
 
-REQUIRED_USE="udooqdl? ( imx )"
-
 src_unpack() {
 	# need to unpack manually due to patch reqs below
-	use imx && unpack ${MULTI_PATCH}.xz
+	unpack ${MULTI_PATCH}.xz
 
 	kernel-2_src_unpack
+
+	cp "${DISTDIR}"/"${K_DEFCONFIG}" "${S}"/arch/arm/configs/ || die "copy defconfig failed!"
 }
 
 src_prepare() {
@@ -64,16 +64,13 @@ src_prepare() {
 	# diffs that always cause dry-run errors (even with --force).
 	# That is okay since this is not intended for beaglebone.
 
-	if use imx ; then
-		ebegin "Applying ${MULTI_PATCH}"
-			patch -p1 "${WORKDIR}"/${MULTI_PATCH}
-		eend $? || return
+	ebegin "Applying ${MULTI_PATCH}"
+		patch -p1 "${WORKDIR}"/${MULTI_PATCH}
+	eend $? || return
 
-		use udooqdl && eapply "${FILESDIR}"/4.14.5-udoo-enable-uart4-serial-interface-f.patch \
-			"${FILESDIR}"/4.14.5-udooqdl-add-arduino-manager-driv.patch
-	fi
-
-	use imx && update_config
+	sed -i '/CONFIG_EXTRA_FIRMWARE/s/".*"/""/' \
+		-e 's|CONFIG_VIDEO_CODA=y|CONFIG_VIDEO_CODA=m|' \
+		"${S}"/arch/arm/configs/"${K_DEFCONFIG}" || die "sed defconfig failed!"
 
 	default
 }
@@ -86,18 +83,5 @@ pkg_postinst() {
 
 pkg_postrm() {
 	kernel-2_pkg_postrm
-}
-
-update_config() {
-	if use udooqdl ; then
-		export DEFCONFIG="udooqdl_defconfig"
-		cp -f "${FILESDIR}"/${PV}-udooqdl_defconfig \
-			"${S}"/arch/arm/configs/${DEFCONFIG} \
-			|| die "failed to install ${DEFCONFIG}!"
-	else
-		export DEFCONFIG="${K_DEFCONFIG}"
-		cp -f "${DISTDIR}"/${K_DEFCONFIG} "${S}"/arch/arm/configs/ \
-			|| die "failed to install ${DEFCONFIG}!"
-	fi
 }
 
