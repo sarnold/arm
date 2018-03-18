@@ -25,11 +25,12 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 
-INPUT_PLUGINS="input_testpicture input_control input_file input_uvc"
-OUTPUT_PLUGINS="output_file output_udp output_http output_autofocus output_rtsp"
+INPUT_PLUGINS="input_testpicture input_control input_file input_uvc input_raspicam input_opencv input_ptp2"
+OUTPUT_PLUGINS="output_file output_udp output_http output_autofocus output_rtsp output_viewer"
 IUSE_PLUGINS="${INPUT_PLUGINS} ${OUTPUT_PLUGINS}"
-IUSE="input_testpicture input_control +input_file input_uvc output_file
-	output_udp +output_http output_autofocus output_rtsp v4l"
+IUSE="input_testpicture input_control +input_file input_uvc -input_opencv
+	output_udp +output_http output_autofocus output_rtsp output_file
+	input_ptp2 -input_raspicam output_viewer v4l"
 
 REQUIRED_USE="|| ( ${INPUT_PLUGINS} )
 	|| ( ${OUTPUT_PLUGINS} )
@@ -39,9 +40,20 @@ RDEPEND="virtual/jpeg
 	v4l? ( input_uvc? ( media-libs/libv4l ) )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
+	input_raspicam? ( media-libs/raspberrypi-userland )
+	input_opencv? ( media-libs/opencv )
+	input_ptp2? ( media-libs/libgphoto2 )
+	output_viewer? ( media-libs/libsdl )
 	input_testpicture? ( media-gfx/imagemagick )"
 
 S="${WORKDIR}/${P}/mjpg-streamer-experimental"
+
+src_prepare() {
+	sed -i -e "s|lib/${PN}|$(get_libdir)/${PN}/plugins|g" \
+		"${S}"/CMakeLists.txt
+
+	cmake-utils_src_prepare
+}
 
 src_configure() {
 	append-cxxflags -std=gnu++11
@@ -53,8 +65,6 @@ src_install() {
 
 	newinitd "${FILESDIR}"/${PN}.initd ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
-
-	sed -i -e 's|usr/lib|usr/$(get_libdir)|g' /etc/init.d/${PN}
 }
 
 pkg_postinst() {
@@ -63,4 +73,7 @@ pkg_postinst() {
 	echo
 	elog "An example webinterface has been installed into"
 	elog "/usr/share/mjpg-streamer/www for your usage."
+	elog "Note: uses output_http plugin for builtin server."
+	ewarn "Note2: opencv input plugin may not work with newer"
+	ewarn "versions of media-libs/opencv, YMMV..."
 }
