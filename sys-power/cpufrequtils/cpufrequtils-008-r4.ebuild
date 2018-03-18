@@ -1,6 +1,5 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-power/cpufrequtils/Attic/cpufrequtils-008-r4.ebuild,v 1.9 2015/02/03 14:51:49 pacho dead $
 
 EAPI=4
 
@@ -59,6 +58,6 @@ src_install() {
 	doexe "${FILESDIR}/cpufrequtils-change.sh"
 
 	systemd_dounit "${FILESDIR}/cpufrequtils.service"
-	newinitd "${FILESDIR}"/${PN}-init.d-007 ${PN}
+	newinitd "${FILESDIR}"/${PN}-init.d-008 ${PN}
 	newconfd "${FILESDIR}"/${PN}-conf.d-006 ${PN}
 }
