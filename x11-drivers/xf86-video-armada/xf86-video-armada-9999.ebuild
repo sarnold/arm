@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -12,8 +12,9 @@ XORG_DRI="always"
 inherit xorg-2 git-r3
 
 if [[ ${PV} = 9999 ]]; then
+	#EGIT_BRANCH="unstable-devel"
 	EGIT_BRANCH="devel"
-	KEYWORDS="2e9cb9c97a7049aed185f0fa182f0b1665e965dc"
+	KEYWORDS=""
 else
 	EGIT_COMMIT="87e9fa065c8aa82715a2941ebb8d3af73b145263"
 	KEYWORDS="~arm"
@@ -34,6 +35,8 @@ pkg_setup() {
 	xorg-2_pkg_setup
 
 	# note: vivante requires libGAL
+	# and with-etnaviv-source is only on devel branch
+	#--with-etnaviv-source="${S}"/etna_viv
 	XORG_CONFIGURE_OPTIONS=(
 		--disable-vivante
 		$(use_enable etnaviv)
