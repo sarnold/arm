@@ -4,7 +4,7 @@
 EAPI=6
 VIRTUALX_REQUIRED="pgo"
 WANT_AUTOCONF="2.1"
-MOZ_ESR=""
+MOZ_ESR=1
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
 MOZ_LANGS=( ach af an ar as ast az bg bn-BD bn-IN br bs ca cak cs cy da de dsb
@@ -24,22 +24,22 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-53.0-patches-02"
+PATCH="${PN}-52.5-patches-02"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_GTK3="enabled"
+MOZCONFIG_OPTIONAL_GTK2ONLY=1
 MOZCONFIG_OPTIONAL_WIFI=1
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.53 pax-utils fdo-mime autotools virtualx mozlinguas-v2
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.52 pax-utils xdg-utils autotools virtualx mozlinguas-v2
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~alpha amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 x86 ~amd64-linux ~x86-linux"
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo rust selinux test"
+IUSE="bindist eme-free +gmp-autoupdate hardened hwaccel jack -pgo -rust selinux test"
 RESTRICT="!bindist? ( bindist )"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
@@ -51,13 +51,13 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 RDEPEND="
 	jack? ( virtual/jack )
-	>=dev-libs/nss-3.29.5
+	>=dev-libs/nss-3.28.3
 	>=dev-libs/nspr-4.13.1
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
 	pgo? ( >=sys-devel/gcc-4.5 )
-	rust? ( dev-lang/rust )
+	rust? ( virtual/rust )
 	amd64? ( ${ASM_DEPEND} virtual/opengl )
 	x86? ( ${ASM_DEPEND} virtual/opengl )"
 
@@ -124,21 +124,15 @@ src_unpack() {
 
 src_prepare() {
 	# Apply our patches
-	eapply "${WORKDIR}/firefox"
-	eapply "${FILESDIR}"/musl_drop_hunspell_alloc_hooks.patch
-	eapply "${FILESDIR}"/${PN}-52.0.1-disable_cachegen.patch
-	eapply "${FILESDIR}"/${PN}-53-turn_off_crash_on_seccomp_fail.patch
+	eapply "${WORKDIR}/firefox" \
+		"${FILESDIR}"/arm
+#		"${FILESDIR}"/${P}-fix-arm-asm-attribute.patch
 
-	# fix lto flag, causes command line error
-	sed -i -e "s|--param lto-partitions=1|-flto-partition=balanced|" \
+	# fix lto flags, causes command line error
+	sed -i -e "s|--param lto-partitions=1|-flto-partition=one|" \
 		"${S}"/security/sandbox/linux/moz.build \
 		"${S}"/ipc/app/pie/moz.build \
 		"${S}"/ipc/app/moz.build
-
-	# try to fix skia neon config since we can't disable it any more
-	if is-flagq -mfpu=neon* ; then
-		append-cppflags -DSK_ARM_HAS_NEON -USK_ARM_HAS_OPTIONAL_NEON
-	fi
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -217,6 +211,8 @@ src_configure() {
 	# enable JACK, bug 600002
 	mozconfig_use_enable jack
 
+	use eme-free && mozconfig_annotate '+eme-free' --disable-eme
+
 	# It doesn't compile on alpha without this LDFLAGS
 	use alpha && append-ldflags "-Wl,--no-relax"
 
@@ -252,7 +248,7 @@ src_configure() {
 	fi
 
 	# workaround for funky/broken upstream configure...
-	SHELL="${SHELL:-${EPREFIX}/bin/bash}" \
+	SHELL="${SHELL:-${EPREFIX%/}/bin/bash}" \
 	emake -f client.mk configure
 }
 
@@ -278,10 +274,10 @@ src_compile() {
 		shopt -u nullglob
 		[[ -n "${cards}" ]] && addpredict "${cards}"
 
-		MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX}/bin/bash}" \
+		MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX%/}/bin/bash}" \
 		virtx emake -f client.mk profiledbuild || die "virtx emake failed"
 	else
-		MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX}/bin/bash}" \
+		MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX%/}/bin/bash}" \
 		emake -f client.mk realbuild
 	fi
 
@@ -312,20 +308,14 @@ src_install() {
 		"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
 		|| die
 
-	if use nsplugin; then
-		echo "pref(\"plugin.load_flash_only\", false);" >> \
-			"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
-			|| die
-	fi
-
 	local plugin
-	use gmp-autoupdate || for plugin in "${GMP_PLUGIN_LIST[@]}" ; do
+	use gmp-autoupdate || use eme-free || for plugin in "${GMP_PLUGIN_LIST[@]}" ; do
 		echo "pref(\"media.${plugin}.autoupdate\", false);" >> \
 			"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
 			|| die
 	done
 
-	MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX}/bin/bash}" \
+	MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX%/}/bin/bash}" \
 	emake DESTDIR="${D}" install
 
 	# Install language packs
@@ -404,17 +394,17 @@ pkg_preinst() {
 
 pkg_postinst() {
 	# Update mimedb for the new .desktop file
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 	gnome2_icon_cache_update
 
-	if ! use gmp-autoupdate ; then
+	if ! use gmp-autoupdate && ! use eme-free ; then
 		elog "USE='-gmp-autoupdate' has disabled the following plugins from updating or"
 		elog "installing into new profiles:"
 		local plugin
 		for plugin in "${GMP_PLUGIN_LIST[@]}"; do elog "\t ${plugin}" ; done
 	fi
 
-	if use pulseaudio && has_version ">=media-sound/apulse-0.1.9"; then
+	if use pulseaudio && has_version ">=media-sound/apulse-0.1.9" ; then
 		elog "Apulse was detected at merge time on this system and so it will always be"
 		elog "used for sound.  If you wish to use pulseaudio instead please unmerge"
 		elog "media-sound/apulse."

@@ -24,22 +24,22 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-53.0-patches-02"
+PATCH="${PN}-57.0-patches-01"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_GTK3="enabled"
 MOZCONFIG_OPTIONAL_WIFI=1
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.53 pax-utils fdo-mime autotools virtualx mozlinguas-v2
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.57 pax-utils xdg-utils autotools \
+	virtualx mozlinguas-v2
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~x86"
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo rust selinux test"
+IUSE="bindist eme-free +gmp-autoupdate hardened hwaccel jack nsplugin pgo +screenshot selinux test"
 RESTRICT="!bindist? ( bindist )"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
@@ -51,14 +51,15 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 RDEPEND="
 	jack? ( virtual/jack )
-	>=dev-libs/nss-3.29.5
-	>=dev-libs/nspr-4.13.1
+	>=dev-libs/nss-3.33
+	>=dev-libs/nspr-4.17
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
 	pgo? ( >=sys-devel/gcc-4.5 )
-	rust? ( dev-lang/rust )
-	amd64? ( ${ASM_DEPEND} virtual/opengl )
+	amd64? ( ${ASM_DEPEND} virtual/opengl
+			>=sys-devel/llvm-4.0.1
+			>=sys-devel/clang-4.0.1 )
 	x86? ( ${ASM_DEPEND} virtual/opengl )"
 
 S="${WORKDIR}/firefox-${MOZ_PV}"
@@ -75,6 +76,9 @@ fi
 
 pkg_setup() {
 	moz_pkgsetup
+
+	# Build stylo 
+	use amd64 &&  export BINDGEN_CFLAGS=$(pkg-config --cflags nspr pixman-1 | xargs)
 
 	# Avoid PGO profiling problems due to enviroment leakage
 	# These should *always* be cleaned up anyway
@@ -98,11 +102,6 @@ pkg_setup() {
 		ewarn "You will do a double build for profile guided optimization."
 		ewarn "This will result in your build taking at least twice as long as before."
 	fi
-
-	if use rust; then
-		einfo
-		ewarn "This is very experimental, should only be used by those developing firefox."
-	fi
 }
 
 pkg_pretend() {
@@ -123,22 +122,13 @@ src_unpack() {
 }
 
 src_prepare() {
-	# Apply our patches
 	eapply "${WORKDIR}/firefox"
-	eapply "${FILESDIR}"/musl_drop_hunspell_alloc_hooks.patch
-	eapply "${FILESDIR}"/${PN}-52.0.1-disable_cachegen.patch
-	eapply "${FILESDIR}"/${PN}-53-turn_off_crash_on_seccomp_fail.patch
 
 	# fix lto flag, causes command line error
-	sed -i -e "s|--param lto-partitions=1|-flto-partition=balanced|" \
+	sed -i -e "s|--param lto-partitions=1|-flto-partition=one|" \
 		"${S}"/security/sandbox/linux/moz.build \
 		"${S}"/ipc/app/pie/moz.build \
 		"${S}"/ipc/app/moz.build
-
-	# try to fix skia neon config since we can't disable it any more
-	if is-flagq -mfpu=neon* ; then
-		append-cppflags -DSK_ARM_HAS_NEON -USK_ARM_HAS_OPTIONAL_NEON
-	fi
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -192,10 +182,6 @@ src_prepare() {
 	# Must run autoconf in js/src
 	cd "${S}"/js/src || die
 	eautoconf old-configure.in
-
-	# Need to update jemalloc's configure
-	cd "${S}"/memory/jemalloc/src || die
-	WANT_AUTOCONF= eautoconf
 }
 
 src_configure() {
@@ -217,24 +203,25 @@ src_configure() {
 	# enable JACK, bug 600002
 	mozconfig_use_enable jack
 
+	use eme-free && mozconfig_annotate '+eme-free' --disable-eme
+
 	# It doesn't compile on alpha without this LDFLAGS
 	use alpha && append-ldflags "-Wl,--no-relax"
 
 	# Add full relro support for hardened
-	use hardened && append-ldflags "-Wl,-z,relro,-z,now"
+	if use hardened; then
+		append-ldflags "-Wl,-z,relro,-z,now"
+		mozconfig_use_enable hardened hardening
+	fi
 
 	# Only available on mozilla-overlay for experimentation -- Removed in Gentoo repo per bug 571180
 	#use egl && mozconfig_annotate 'Enable EGL as GL provider' --with-gl-provider=EGL
-
-	use hardened && mozconfig_annotate '' --disable-startupcache
 
 	# Setup api key for location services
 	echo -n "${_google_api_key}" > "${S}"/google-api-key
 	mozconfig_annotate '' --with-google-api-keyfile="${S}/google-api-key"
 
 	mozconfig_annotate '' --enable-extensions="${MEXTENSIONS}"
-
-	mozconfig_use_enable rust
 
 	# Allow for a proper pgo build
 	if use pgo; then
@@ -246,10 +233,6 @@ src_configure() {
 
 	# Finalize and report settings
 	mozconfig_final
-
-	if [[ $(gcc-major-version) -lt 4 ]]; then
-		append-cxxflags -fno-stack-protector
-	fi
 
 	# workaround for funky/broken upstream configure...
 	SHELL="${SHELL:-${EPREFIX}/bin/bash}" \
@@ -308,6 +291,12 @@ src_install() {
 		|| die
 	fi
 
+	if ! use screenshot; then
+		echo "pref(\"extensions.screenshots.disabled\", true);" >> \
+			"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
+			|| die
+	fi
+
 	echo "pref(\"extensions.autoDisableScopes\", 3);" >> \
 		"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
 		|| die
@@ -319,7 +308,7 @@ src_install() {
 	fi
 
 	local plugin
-	use gmp-autoupdate || for plugin in "${GMP_PLUGIN_LIST[@]}" ; do
+	use gmp-autoupdate || use eme-free || for plugin in "${GMP_PLUGIN_LIST[@]}" ; do
 		echo "pref(\"media.${plugin}.autoupdate\", false);" >> \
 			"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
 			|| die
@@ -404,10 +393,10 @@ pkg_preinst() {
 
 pkg_postinst() {
 	# Update mimedb for the new .desktop file
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 	gnome2_icon_cache_update
 
-	if ! use gmp-autoupdate ; then
+	if ! use gmp-autoupdate && ! use eme-free ; then
 		elog "USE='-gmp-autoupdate' has disabled the following plugins from updating or"
 		elog "installing into new profiles:"
 		local plugin
