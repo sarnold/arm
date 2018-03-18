@@ -4,7 +4,7 @@
 EAPI="6"
 
 ETYPE="sources"
-K_DEFCONFIG="gentoo-multi_v7_defconfig"
+K_DEFCONFIG="gentoo-armv7-${PV}_defconfig"
 UNIPATCH_STRICTORDER="1"
 K_WANT_GENPATCHES="base extras experimental"
 K_GENPATCHES_VER="25"
@@ -48,10 +48,10 @@ If you are reading this, you know what to do..."
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	>=sys-devel/patch-2.7.4"
+	>=dev-vcs/git-1.8.2.1"
 
 src_unpack() {
-	# need to unpack manually due to patch reqs below
+	# need to unpack manually abd depend on git due to patch reqs below
 	unpack ${MULTI_PATCH}.xz
 
 	kernel-2_src_unpack
@@ -64,12 +64,16 @@ src_prepare() {
 	# diffs that always cause dry-run errors (even with --force).
 	# That is okay since this is not intended for beaglebone.
 
-	ebegin "Applying ${MULTI_PATCH}"
-		patch -p1 "${WORKDIR}"/${MULTI_PATCH}
+	ebegin "Applying ARMv7 ${MULTI_PATCH}"
+		git apply -p1 < "${WORKDIR}"/${MULTI_PATCH} || die "multipatch failed!"
 	eend $? || return
 
-	sed -i '/CONFIG_EXTRA_FIRMWARE/s/".*"/""/' \
-		-e 's|CONFIG_VIDEO_CODA=y|CONFIG_VIDEO_CODA=m|' \
+	# remove beaglebone firmware
+#	sed -i '/CONFIG_EXTRA_FIRMWARE/s/".*"/""/' \
+#		"${S}"/arch/arm/configs/"${K_DEFCONFIG}" || die "sed1 defconfig failed!"
+	# remove unsupported compression, make VPU driver a module
+	sed -i -e 's/CONFIG_VIDEO_CODA=y/CONFIG_VIDEO_CODA=m/' \
+		-e 's/_COMPRESS_XZ/_COMPRESS_GZIP/' \
 		"${S}"/arch/arm/configs/"${K_DEFCONFIG}" || die "sed defconfig failed!"
 
 	default
