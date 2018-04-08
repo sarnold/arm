@@ -14,7 +14,7 @@ inherit xorg-2 git-r3
 if [[ ${PV} = 9999 ]]; then
 	#EGIT_BRANCH="unstable-devel"
 	EGIT_BRANCH="devel"
-	KEYWORDS=""
+	KEYWORDS="~arm"
 else
 	EGIT_COMMIT="87e9fa065c8aa82715a2941ebb8d3af73b145263"
 	KEYWORDS="~arm"
