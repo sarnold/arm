@@ -1,0 +1,45 @@
+From 64f51ddefcc39d6b9c83e32a4b3aaead29465757 Mon Sep 17 00:00:00 2001
+From: Steve Arnold <nerdboy@gentoo.org>
+Date: Sun, 10 Dec 2017 12:31:10 -0800
+Subject: [PATCH 1/2] ARM: DTS: imx6qdl: udoo: enable uart4 serial interface
+ for sam3x
+
+Signed-off-by: Steve Arnold <nerdboy@gentoo.org>
+---
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index 906387915dc5..bd1334966f08 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -199,6 +199,13 @@
+ 			>;
+ 		};
+ 
++		pinctrl_uart4: uart4grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
++				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
++			>;
++		};
++
+ 		pinctrl_usbh: usbhgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
+@@ -269,6 +276,12 @@
+ 	status = "okay";
+ };
+ 
++&uart4 { /* sam3x port */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
+ &usbh1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usbh>;
+-- 
+2.16.1
+
