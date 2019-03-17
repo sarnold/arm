@@ -7,7 +7,8 @@ AUTOTOOLS_AUTORECONF="1"
 XORG_BASE_INDIVIDUAL_URI=""
 XORG_DRI="always"
 
-inherit autotools-utils xorg-2
+#inherit autotools-utils xorg-2
+inherit xorg-2
 
 if [[ ${PV} = 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/VCTLabs/xf86-video-armada"
@@ -26,14 +27,16 @@ RDEPEND=">=x11-base/xorg-server-1.18"
 DEPEND="${RDEPEND}
 	x11-libs/libetnaviv
 	x11-libs/libdrm-armada
+	>=x11-libs/libdrm-2.4.79[video_cards_vivante]
 "
 
-pkg_setup() {
-	xorg-2_pkg_setup
+PATCHES=( "${FILESDIR}/etnaviv_module.c-fix-errmaj-xorg-server.patch" )
 
+src_configure() {
 	# note: vivante requires libGAL
 	XORG_CONFIGURE_OPTIONS=(
 		--disable-vivante
 		--enable-etnaviv
 	)
+	xorg-2_src_configure
 }

@@ -1,0 +1,27 @@
+From c194f35422cc461645d8c9d3e61c3e847b0d1ccb Mon Sep 17 00:00:00 2001
+From: Stephen Arnold <nerdboy@gentoo.org>
+Date: Sun, 17 Mar 2019 15:30:31 -0700
+Subject: [PATCH] etnaviv/etnaviv_module.c: fix errmaj for xorg-server 1.20 and
+ up
+
+Signed-off-by: Stephen Arnold <nerdboy@gentoo.org>
+---
+ etnaviv/etnaviv_module.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etnaviv/etnaviv_module.c b/etnaviv/etnaviv_module.c
+index b48da23..464535d 100644
+--- a/etnaviv/etnaviv_module.c
++++ b/etnaviv/etnaviv_module.c
+@@ -42,7 +42,7 @@ static pointer etnaviv_setup(pointer module, pointer opts, int *errmaj,
+ 			   dev_names[i], strerror(errno));
+ 	}
+ 
+-	*errmaj = LDR_NOHARDWARE;
++	*errmaj = LDR_NOLOAD;
+ 	*errmin = 0;
+ 
+ 	return NULL;
+-- 
+2.19.2
+
