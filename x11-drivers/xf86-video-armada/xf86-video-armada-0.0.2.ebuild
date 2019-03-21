@@ -1,14 +1,14 @@
 # Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="7"
+EAPI="5"
 
 XORG_EAUTORECONF=yes
 XORG_BASE_INDIVIDUAL_URI=""
 XORG_DRI="always"
 
 #inherit autotools-utils xorg-2
-inherit xorg-3
+inherit xorg-2
 
 if [[ ${PV} = 9999 ]]; then
 	EGIT_REPO_URI="https://github.com/VCTLabs/xf86-video-armada"
