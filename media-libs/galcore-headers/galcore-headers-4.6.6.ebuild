@@ -6,14 +6,14 @@ EAPI=5
 inherit versionator
 
 MY_PN="${PN/_/-}"
-P="${MY_PN}-${PV}"
+MY_P="${MY_PN}-${PV}"
 
 if [ "${PV}" = "9999" ]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/etnaviv/galcore_headers.git"
 	KEYWORDS=""
 else
-	SRC_URI="mirror://gentoo/${P}.tar.gz"
+	SRC_URI="mirror://gentoo/${MY_P}.tar.gz"
 	KEYWORDS="~arm"
 fi
 

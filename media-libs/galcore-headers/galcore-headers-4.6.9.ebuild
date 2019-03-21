@@ -6,7 +6,7 @@ EAPI=5
 inherit versionator
 
 MY_PN="${PN/_/-}"
-P="${MY_PN}-${PV}"
+MY_P="${MY_PN}-${PV}"
 
 if [ "${PV}" = "9999" ]; then
 	inherit git-r3
@@ -14,7 +14,7 @@ if [ "${PV}" = "9999" ]; then
 	KEYWORDS=""
 else
 	MY_PV=$(replace_all_version_separators '_' )
-	SRC_URI="https://github.com/etnaviv/galcore_headers/archive/master.zip -> ${P}.zip"
+	SRC_URI="https://github.com/etnaviv/galcore_headers/archive/master.zip -> ${MY_P}.zip"
 	KEYWORDS="~arm"
 	IUSE="imx"
 	S="${WORKDIR}/galcore_headers-master"

@@ -6,7 +6,7 @@ EAPI=5
 inherit autotools eutils
 
 MY_PN="${PN/_/}"
-P="${MY_PN}-${PV}"
+MY_P="${MY_PN}-${PV}"
 
 if [ "${PV}" = "99999999" ]; then
 	EGIT_REPO_URI="git://github.com/etnaviv/etna_viv"
@@ -16,7 +16,7 @@ if [ "${PV}" = "99999999" ]; then
 else
 	# Note this is the legacy library plus headers
 	COMMIT_ID="60105d1b0755e48b37d779d8a2b9c4b458b5a2fd"
-	SRC_URI="https://github.com/etnaviv/libetnaviv/archive/master.zip -> ${P}.zip"
+	SRC_URI="https://github.com/etnaviv/libetnaviv/archive/master.zip -> ${MY_P}.zip"
 	KEYWORDS="~arm"
 	IUSE=""
 	S=${WORKDIR}/${PN}-master

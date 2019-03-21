@@ -6,7 +6,7 @@ EAPI=5
 inherit autotools
 
 MY_PN="${PN/_/}"
-P="${MY_PN}-${PV}"
+MY_P="${MY_PN}-${PV}"
 
 if [ "${PV}" = "99999999" ]; then
 	EGIT_REPO_URI="git://github.com/etnaviv/etna_viv"
@@ -18,7 +18,7 @@ else
 	# this commit is 1 before the attic-move; if you want to try
 	# building the src, you might start here...
 	COMMIT_ID="3815bcc09ccef173987f2d346a947a9b7e502762"
-	SRC_URI="https://github.com/etnaviv/${PN}/archive/${COMMIT_ID}.tar.gz -> ${P}-git.tar.gz"
+	SRC_URI="https://github.com/etnaviv/${PN}/archive/${COMMIT_ID}.tar.gz -> ${MY_P}-git.tar.gz"
 	KEYWORDS="~arm"
 	IUSE=""
 	S=${WORKDIR}/${PN}-${COMMIT_ID}

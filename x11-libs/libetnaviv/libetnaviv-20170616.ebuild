@@ -5,7 +5,7 @@ EAPI=5
 inherit autotools
 
 MY_PN="${PN/_/}"
-P="${MY_PN}-${PV}"
+MY_P="${MY_PN}-${PV}"
 
 if [ "${PV}" = "99999999" ]; then
 	EGIT_REPO_URI="git://github.com/etnaviv/etna_viv"
@@ -13,7 +13,7 @@ if [ "${PV}" = "99999999" ]; then
 	EGIT_COMMIT="f64d77abbb54433bd5de955c20afddc6eb4f4cb1"
 	KEYWORDS=""
 else
-	SRC_URI="mirror://gentoo/${P}.tar.gz"
+	SRC_URI="mirror://gentoo/${MY_P}.tar.gz"
 	KEYWORDS="~arm"
 fi
 
