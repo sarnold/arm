@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-<herd>x11</herd>
+<maintainer type="project">
+	<email>arm@gentoo.org</email>
+	<name>Arm Support</name>
+</maintainer>
 <use>
-    <flag name="tegra">enforces tegra lib dependencies</flag>
+	<flag name="tegra">enforces tegra lib dependencies</flag>
 </use>
 </pkgmetadata>

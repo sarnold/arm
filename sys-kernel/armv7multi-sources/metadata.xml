@@ -7,7 +7,6 @@
 </maintainer>
 <use>
   <flag name="imx">Apply ARM multipatch; for more information, see https://github.com/RobertCNelson/armv7-multiplatform".</flag>
-  <flag name="udooqdl">Apply UDOO Quad/Dual Arduino device patches</flag>
 </use>
 <upstream>
   <remote-id type="cpe">cpe:/o:linux:linux_kernel</remote-id>
