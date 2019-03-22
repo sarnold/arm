@@ -13,9 +13,9 @@ flags as needed, and mask packages as needed.  The general config is:
 
  * Basic config: udev, polkit, consolekit, xattr, caps, pam (no systemd or logind)
 
- * X support: xwayland, opentegra, fbturbo, armsoc, rpi (still in testing)
+ * X support: etnaviv/armada, opentegra, fbturbo, armsoc, rpi (still in testing)
 
- * wayland/weston: egl/gles1/gles2, -opengl -glx (except a few odd packages with opengl flag)
+ * wayland/weston: egl/gles1/gles2/dri3, possibly opengl or glx
 
  * Needs package.foo configs for complete install (depends on usage)
 
@@ -31,7 +31,7 @@ flags as needed, and mask packages as needed.  The general config is:
 
    - Wandboard-quad and Udoo-quad: `RCN LinuxOnArm`_ patches on mainline
 
-      + latest 4.1.y mainline branch
+      + latest 4.x.y mainline branch
 
    - BeagleboneBlack: RCN bb_kernel patches on mainline
 
@@ -43,7 +43,7 @@ flags as needed, and mask packages as needed.  The general config is:
       + Samsung Snow - 3.8.11 chromeos-sources
       + Tegra K1 - 3.10.18 chromeos-sources
 
-   - Jetson K1 - 3.19.0-rc6 linux-jetson
+   - Jetson K1 - 4.11.0 mainline
 
    - Efikamx: "Latest" upstream kernel, custom config (2.6.31.14.27-efikamx) external ASIX module, SDCard rootfs
 
@@ -55,7 +55,7 @@ Steev's test setup:
 
 (other) Steve's test setup:
 
- * Hardware: Jetson, Trimslice, Wandboard quad, Chromebooks (snow and K1), Raspberry Pi B/B+/B2, Udoo quad, Cubox quad, BeagleboneBlack
+ * Hardware: Jetson, Trimslice, Wandboard quad, Chromebooks (snow and nyan), Raspberry Pi B/B+/B2/2/3, Udoo quad, Cubox quad, BeagleboneBlack
 
   - Full X is only built for all of them (so far) with wayland/weston testing in progress)
 
