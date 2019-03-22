@@ -13,7 +13,7 @@ if [ "${PV}" = "99999999" ]; then
 	EGIT_COMMIT="f64d77abbb54433bd5de955c20afddc6eb4f4cb1"
 	KEYWORDS=""
 else
-	SRC_URI="mirror://gentoo/${MY_P}.tar.gz"
+	SRC_URI="https://github.com/VCTLabs/etna_viv/archive/${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~arm"
 fi
 
@@ -28,8 +28,9 @@ DEPEND=">=x11-libs/libdrm-2.4.74:=[video_cards_vivante]
 
 MERGE_TYPE="binary"
 
+S="${WORKDIR}/etna_viv-${PV}"
+
 src_install() {
 	insinto /usr/include/etnaviv
 	doins src/etnaviv/*.h attic/etnaviv/*.h
 }
-
