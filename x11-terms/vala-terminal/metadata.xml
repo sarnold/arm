@@ -5,4 +5,7 @@
 	<email>arm@gentoo.org</email>
 	<name>Arm Support</name>
 </maintainer>
+<upstream>
+	<remote-id type="github">freesmartphone/vala-terminal</remote-id>
+</upstream>
 </pkgmetadata>

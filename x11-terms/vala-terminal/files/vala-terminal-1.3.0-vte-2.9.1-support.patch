@@ -1,0 +1,179 @@
+Subject: Add support for libvte 2.91
+Author: Sebastian Reichel <sre@debian.org>
+Last-Updated: 2015-11-06
+
+Index: vala-terminal/Makefile.am
+===================================================================
+--- vala-terminal.orig/Makefile.am
++++ vala-terminal/Makefile.am
+@@ -26,7 +26,7 @@ vala_terminal_SOURCES = \
+ 	$(NULL)
+ 
+ $(BUILT_SOURCES): $(vala_terminal_VALASOURCES)
+-	$(VALAC) -c --pkg vte --save-temps --basedir $(top_srcdir) $^
++	$(VALAC) -c --pkg vte-2.91 --pkg gtk+-3.0 --save-temps --basedir $(top_srcdir) $^
+ 	touch $@
+ 
+ vala_terminal_LDADD = \
+Index: vala-terminal/configure.ac
+===================================================================
+--- vala-terminal.orig/configure.ac
++++ vala-terminal/configure.ac
+@@ -33,8 +33,8 @@ VTE_REQUIRED=0.16.9
+ PKG_CHECK_MODULES(VALA_TERMINAL,
+   glib-2.0 >= $GLIB_REQUIRED
+   gobject-2.0 >= $GLIB_REQUIRED
+-  gtk+-2.0 >= $GTK_REQUIRED
+-  vte >= $VTE_REQUIRED)
++  gtk+-3.0 >= $GTK_REQUIRED
++  vte-2.91 >= $VTE_REQUIRED)
+ AC_SUBST(VALA_TERMINAL_CFLAGS)
+ AC_SUBST(VALA_TERMINAL_LIBS)
+ 
+Index: vala-terminal/src/terminal.vala
+===================================================================
+--- vala-terminal.orig/src/terminal.vala
++++ vala-terminal/src/terminal.vala
+@@ -41,9 +41,9 @@ public class ValaTerminal2.MokoTerminal
+       }
+ 
+    private static bool use_default_fore_color=true;
+-   private static uint16 fore_red   ;
+-   private static uint16 fore_green ;
+-   private static uint16 fore_blue  ;
++   private static double fore_red   ;
++   private static double fore_green ;
++   private static double fore_blue  ;
+ 
+    public signal void title_changed();
+ 
+@@ -55,22 +55,22 @@ public class ValaTerminal2.MokoTerminal
+ 
+    public static void set_fore_color(uint r,uint g,uint b) {
+       use_default_fore_color=false;
+-      fore_red   = (uint16) r;
+-      fore_green = (uint16) g;
+-      fore_blue  = (uint16) b;
++      fore_red   = (double) r / 0xffff;
++      fore_green = (double) g / 0xffff;
++      fore_blue  = (double) b / 0xffff;
+       }
+ 
+ 
+    private static bool use_default_back_color=true;
+-   private static uint16 back_red   ;
+-   private static uint16 back_green ;
+-   private static uint16 back_blue  ;
++   private static double back_red   ;
++   private static double back_green ;
++   private static double back_blue  ;
+ 
+    public static void set_back_color(uint r,uint g,uint b) {
+       use_default_back_color=false;
+-      back_red   = (uint16) r;
+-      back_green = (uint16) g;
+-      back_blue  = (uint16) b;
++      back_red   = (double) r / 0xffff;
++      back_green = (double) g / 0xffff;
++      back_blue  = (double) b / 0xffff;
+       }
+ 
+     public static int starting_width;
+@@ -84,16 +84,16 @@ public class ValaTerminal2.MokoTerminal
+ 
+         if (use_default_fore_color)
+             {
+-            fore_red = 0xffff;
+-            fore_green = 0xffff;
+-            fore_blue = 0xffff;
++            fore_red = 1.0;
++            fore_green = 1.0;
++            fore_blue = 1.0;
+             }
+ 
+         if (use_default_back_color)
+             {
+-            back_red = 0x0000;
+-            back_green = 0x0000;
+-            back_blue = 0x0000;
++            back_red = 0.0;
++            back_green = 0.0;
++            back_blue = 0.0;
+             }
+ 
+         // may read from gconf at some point?
+@@ -112,23 +112,23 @@ public class ValaTerminal2.MokoTerminal
+         } );
+         pack_start( terminal, true, true, 0 );
+ 
+-        scrollbar = new VScrollbar( terminal.adjustment );
++        scrollbar = new VScrollbar( terminal.vadjustment );
+         pack_start( scrollbar, false, false, 0 );
+ 
+-//        var fore = Gdk.Color() { pixel = 0, red = 0xffff, green = 0xffff, blue = 0xffff };
+-//        var back = Gdk.Color() { pixel = 0, red = 0x0000, green = 0x0000, blue = 0x0000 };
+-        var fore = Gdk.Color() { pixel = 0, red = fore_red, green = fore_green, blue = fore_blue };
+-        var back = Gdk.Color() { pixel = 0, red = back_red, green = back_green, blue = back_blue };
+-
+-        var colors = new Gdk.Color[] {
+-            Gdk.Color() { pixel = 0, red = 0x0000, green = 0x0000, blue = 0x0000 },
+-            Gdk.Color() { pixel = 0, red = 0x8000, green = 0x0000, blue = 0x0000 },
+-            Gdk.Color() { pixel = 0, red = 0x0000, green = 0x8000, blue = 0x0000 },
+-            Gdk.Color() { pixel = 0, red = 0x8000, green = 0x8000, blue = 0x0000 },
+-            Gdk.Color() { pixel = 0, red = 0x0000, green = 0x0000, blue = 0x8000 },
+-            Gdk.Color() { pixel = 0, red = 0x8000, green = 0x0000, blue = 0x8000 },
+-            Gdk.Color() { pixel = 0, red = 0x0000, green = 0x8000, blue = 0x8000 },
+-            Gdk.Color() { pixel = 0, red = 0x8000, green = 0x8000, blue = 0x8000 }
++//        var fore = Gdk.RGBA() { red = 1.0, green = 1.0, blue = 1.0, alpha = 1.0 };
++//        var back = Gdk.RGBA() { red = 0.0, green = 0.0, blue = 0.0, alpha = 1.0 };
++        var fore = Gdk.RGBA() { red = fore_red, green = fore_green, blue = fore_blue, alpha = 1.0 };
++        var back = Gdk.RGBA() { red = back_red, green = back_green, blue = back_blue, alpha = 1.0 };
++
++        var colors = new Gdk.RGBA[] {
++            Gdk.RGBA() { red = 0x0000, green = 0x0000, blue = 0x0000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x8000, green = 0x0000, blue = 0x0000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x0000, green = 0x8000, blue = 0x0000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x8000, green = 0x8000, blue = 0x0000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x0000, green = 0x0000, blue = 0x8000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x8000, green = 0x0000, blue = 0x8000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x0000, green = 0x8000, blue = 0x8000, alpha = 1.0 },
++            Gdk.RGBA() { red = 0x8000, green = 0x8000, blue = 0x8000, alpha = 1.0 }
+         };
+ 
+         terminal.set_colors( fore, back, colors );
+@@ -136,10 +136,20 @@ public class ValaTerminal2.MokoTerminal
+         update_font();
+         terminal.set_scrollback_lines( 1000 );
+         terminal.set_mouse_autohide( true );
+-        terminal.set_cursor_blinks( true );
+-        terminal.set_backspace_binding( TerminalEraseBinding.ASCII_DELETE);
++        terminal.set_cursor_blink_mode( CursorBlinkMode.ON );
++        terminal.set_backspace_binding( EraseBinding.ASCII_DELETE);
++
+         // work around bug in VTE. FIXME: Clear with upstream
+-        terminal.fork_command( (string) 0, (string[]) 0, new string[]{}, Environment.get_variable( "HOME" ), true, true, true );
++        try {
++            string[] shell = {(string) 0, (string) 0};
++            shell[0] = Vte.get_user_shell();
++            if (shell[0] == (string) 0)
++                shell[0] = "/bin/sh";
++
++            terminal.spawn_sync( PtyFlags.DEFAULT, Environment.get_variable( "HOME" ), shell, new string[]{}, 0, null, null);
++        } catch (Error e) {
++            stderr.printf("Error: %s\n", e.message);
++        }
+ 
+         if ( starting_width > 0 && starting_height > 0 )
+             terminal.set_size( starting_width, starting_height );
+@@ -152,8 +162,9 @@ public class ValaTerminal2.MokoTerminal
+ 
+     public void update_font()
+     {
+-        string font = "%s %u".printf( fontname, fontsize );
+-        terminal.set_font_from_string_full( font, TerminalAntiAlias.FORCE_ENABLE );
++        string fontstr = "%s %u".printf( fontname, fontsize );
++        Pango.FontDescription fontdescr = Pango.FontDescription.from_string( fontstr );
++        terminal.set_font( fontdescr );
+     }
+ 
+     public void zoom_in()

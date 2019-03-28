@@ -1,0 +1,32 @@
+Subject: Fix vala-terminal.desktop file
+Author: Sebastian Reichel <sre@debian.org>
+Last-Updated: 2015-11-06
+
+Index: vala-terminal/data/vala-terminal.desktop
+===================================================================
+--- vala-terminal.orig/data/vala-terminal.desktop
++++ vala-terminal/data/vala-terminal.desktop
+@@ -5,7 +5,6 @@ Exec=vala-terminal
+ Icon=vala-terminal
+ Terminal=false
+ Type=Application
+-Categories=GTK;Utility;
+-MimeType=text/x-vcard;
+-X-SingleInstance=true
++Categories=GTK;Utility;TerminalEmulator;System;
++Keywords=terminal;
+ StartupNotify=true
+Index: vala-terminal/data/vala-terminal.desktop.in
+===================================================================
+--- vala-terminal.orig/data/vala-terminal.desktop.in
++++ vala-terminal/data/vala-terminal.desktop.in
+@@ -5,7 +5,6 @@ Exec=vala-terminal
+ Icon=vala-terminal
+ Terminal=false
+ Type=Application
+-Categories=GTK;Utility;
+-MimeType=text/x-vcard;
+-X-SingleInstance=true
++Categories=GTK;Utility;TerminalEmulator;System;
++Keywords=terminal;
+ StartupNotify=true
