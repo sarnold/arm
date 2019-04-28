@@ -23,7 +23,7 @@ RDEPEND=">=x11-base/xorg-server-1.9
 	!x11-drivers/mali-drivers"
 
 DEPEND="${RDEPEND}
-	x11-proto/xextproto"
+	x11-base/xorg-proto"
 
 src_prepare() {
 #	epatch "${FILESDIR}"/0001-Import-patch-from-Marcin.patch

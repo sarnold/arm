@@ -39,10 +39,7 @@ RDEPEND="virtual/udev
 	>=x11-libs/libdrm-2.4.60[video_cards_exynos]"
 
 DEPEND="${RDEPEND}
-	x11-proto/xproto
-	x11-proto/xextproto
-	x11-proto/fontsproto
-	x11-proto/dri2proto"
+	x11-base/xorg-proto"
 
 # Best way to jam this into the config parameter?
 #IUSE="exynos pl111"

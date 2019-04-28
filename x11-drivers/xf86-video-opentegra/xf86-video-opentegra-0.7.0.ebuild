@@ -17,11 +17,7 @@ IUSE=""
 RDEPEND=">=x11-base/xorg-server-1.10"
 
 DEPEND="${RDEPEND}
-	x11-proto/fontsproto
-	x11-proto/randrproto
-	x11-proto/renderproto
-	x11-proto/videoproto
-	x11-proto/xproto"
+	x11-base/xorg-proto"
 
 src_prepare() {
 	eautoreconf
