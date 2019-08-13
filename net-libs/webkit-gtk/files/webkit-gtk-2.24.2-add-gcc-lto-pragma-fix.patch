@@ -1,0 +1,22 @@
+--- a/Source/JavaScriptCore/llint/LowLevelInterpreter.cpp	2019-07-30 20:27:07.650545999 -0700
++++ b/Source/JavaScriptCore/llint/LowLevelInterpreter.cpp	2019-07-30 20:28:01.723713789 -0700
+@@ -20,9 +20,18 @@
+  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
++// If we are using gcc >= 5.0, make sure that this compilation unit is
++// compiled with -fno-lto, because we may be using inline assembly
++// included from LLIntAssembly.h
++#ifdef __GNUC__
++#if __GNUC__ >= 5
++#pragma GCC optimize ("no-lto")
++#endif
++#endif
++
+ #include "config.h"
+ #include "LowLevelInterpreter.h"
+ 
