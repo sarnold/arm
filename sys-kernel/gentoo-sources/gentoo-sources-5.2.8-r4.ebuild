@@ -28,7 +28,7 @@ SRC_URI="
 	${GENPATCHES_URI}
 	${SPLASH_URI}"
 
-IUSE="custom experimental"
+IUSE="experimental"
 
 K_EXTRAELOG="This is mainline with ARM device/dts patches on the full
 gentoo-sources kernel (intended mainly for Allwinner boards like pine64
