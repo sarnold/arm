@@ -390,7 +390,6 @@ multilib_src_configure() {
 		fi
 
 		if use video_cards_freedreno ||
-		   use video_cards_mali ||
 		   use video_cards_nouveau ||
 		   use video_cards_vmware; then
 			emesonargs+=($(meson_use xa gallium-xa))
@@ -413,6 +412,7 @@ multilib_src_configure() {
 		fi
 
 		gallium_enable video_cards_vc4 vc4
+		use arm64 && gallium_enable video_cards_vc4 v3d
 		gallium_enable video_cards_vivante etnaviv
 		gallium_enable video_cards_vmware svga
 		gallium_enable video_cards_nouveau nouveau

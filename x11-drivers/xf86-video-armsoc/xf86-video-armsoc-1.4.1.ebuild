@@ -5,21 +5,20 @@ EAPI=5
 
 XORG_DRI="always"
 XORG_EAUTORECONF="yes"
-#XORG_CONFIGURE_OPTIONS="--with-drmmode=meson --disable-selective-werror"
+#XORG_CONFIGURE_OPTIONS="--with-drmmode=exynos --disable-selective-werror"
 
 inherit autotools xorg-2 flag-o-matic
 
 if [[ ${PV} = 9999 ]]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://github.com/paolosabatino/xf86-video-armsoc.git"
-	KEYWORDS=""
 else
 	SRC_URI="https://github.com/paolosabatino/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 	KEYWORDS="~arm ~arm64"
 fi
 
 DESCRIPTION="Open-source X.org graphics driver for ARM graphics"
-HOMEPAGE="https://github.com/paolosabatino/xf86-video-armsoc"
+HOMEPAGE="https://github.com/mdrjr/xf86-video-armsoc"
 LICENSE="MIT"
 
 RDEPEND="virtual/udev
@@ -29,11 +28,6 @@ RDEPEND="virtual/udev
 
 DEPEND="${RDEPEND}
 	x11-base/xorg-proto"
-
-# Best way to jam this into the config parameter?
-#IUSE="only one of"
-# pl111 exynos kirin meson rockchip sti sun4i
-# note libdrm needs video settings for these ^^
 
 AUTOTOOLS_IN_SOURCE_BUILD="yes"
 AUTOTOOLS_AUTORECONF="yes"
