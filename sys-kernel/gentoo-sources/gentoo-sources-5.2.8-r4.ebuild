@@ -58,6 +58,7 @@ src_prepare() {
 		epatch "${FILESDIR}"/0001-tools-bootsplash-Makefile-fix-include-paths.patch
 		cp "${FILESDIR}"/*.gif "${S}"/tools/bootsplash/
 		eapply "${FILESDIR}"/${PN}-increase-max-arg-pages-to-64.patch
+		eapply "${FILESDIR}"/0001-arch-arm64-kernel-vdso-Makefile-fix-gold-linker-fail.patch
 	eend $? || return
 
 	# cleanup...
