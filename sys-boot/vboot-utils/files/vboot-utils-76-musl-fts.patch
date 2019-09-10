@@ -1,0 +1,23 @@
+--- a/Makefile	2019-06-20 13:47:49.000000000 +0000
++++ b/Makefile	2019-06-20 16:10:28.811544213 +0000
+@@ -232,6 +232,11 @@
+   CFLAGS += -DHAVE_EXECINFO_H
+ endif
+ 
++# Musl doesn't have fts.h so enable linking to the standalone lib.
++ifdef HAVE_MUSL
++  MUSL_LIBS:= -lfts
++endif
++
+ # And a few more default utilities
+ LD = ${CC}
+ CXX ?= g++
+@@ -1114,7 +1119,7 @@
+ futil: ${FUTIL_BIN}
+ 
+ # FUTIL_LIBS is shared by FUTIL_BIN and TEST_FUTIL_BINS.
+-FUTIL_LIBS = ${CRYPTO_LIBS} ${LIBZIP_LIBS}
++FUTIL_LIBS = ${CRYPTO_LIBS} ${LIBZIP_LIBS} ${MUSL_LIBS}
+ 
+ ${FUTIL_BIN}: LDLIBS += ${FUTIL_LIBS}
+ ${FUTIL_BIN}: ${FUTIL_OBJS} ${UTILLIB} ${FWLIB20} ${UTILBDB}
