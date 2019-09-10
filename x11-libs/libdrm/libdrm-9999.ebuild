@@ -13,6 +13,7 @@ if [[ ${PV} = 9999* ]]; then
 	EGIT_REPO_URI="git://anongit.freedesktop.org/git/mesa/drm"
 	#EGIT_REPO_URI="https://github.com/Gnurou/drm.git"
 	#EGIT_BRANCH="fb_modifiers"
+	KEYWORDS=""
 else
 	SRC_URI="http://dri.freedesktop.org/${PN}/${P}.tar.bz2"
 fi
