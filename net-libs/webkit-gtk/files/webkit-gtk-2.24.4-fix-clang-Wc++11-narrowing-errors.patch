@@ -1,0 +1,37 @@
+--- a/Source/WebCore/contentextensions/NFAToDFA.cpp.orig	2019-09-17 10:00:06.709948373 -0700
++++ b/Source/WebCore/contentextensions/NFAToDFA.cpp	2019-09-17 10:01:08.079948358 -0700
+@@ -41,9 +41,9 @@
+ 
+ namespace ContentExtensions {
+ 
+-typedef MutableRange<char, NFANodeIndexSet> NFANodeRange;
+-typedef MutableRangeList<char, NFANodeIndexSet> NFANodeRangeList;
+-typedef MutableRangeList<char, NFANodeIndexSet, 128> PreallocatedNFANodeRangeList;
++typedef MutableRange<signed char, NFANodeIndexSet> NFANodeRange;
++typedef MutableRangeList<signed char, NFANodeIndexSet> NFANodeRangeList;
++typedef MutableRangeList<signed char, NFANodeIndexSet, 128> PreallocatedNFANodeRangeList;
+ typedef Vector<uint32_t, 0, ContentExtensionsOverflowHandler> UniqueNodeList;
+ typedef Vector<UniqueNodeList, 0, ContentExtensionsOverflowHandler> NFANodeClosures;
+ 
+--- a/Source/WebCore/contentextensions/DFACombiner.cpp.orig	2019-09-17 09:58:41.889948393 -0700
++++ b/Source/WebCore/contentextensions/DFACombiner.cpp	2019-09-17 09:59:48.649948377 -0700
+@@ -37,7 +37,7 @@
+ namespace ContentExtensions {
+ 
+ class DFAMerger {
+-    typedef MutableRangeList<char, uint64_t, 128> CombinedTransitionsMutableRangeList;
++    typedef MutableRangeList<signed char, uint64_t, 128> CombinedTransitionsMutableRangeList;
+ 
+     enum class WhichDFA {
+         A,
+--- a/Source/WebCore/platform/graphics/cpu/arm/filters/FELightingNEON.cpp.orig	2019-09-17 11:00:04.449947515 -0700
++++ b/Source/WebCore/platform/graphics/cpu/arm/filters/FELightingNEON.cpp	2019-09-17 11:09:16.859947383 -0700
+@@ -35,7 +35,7 @@
+ //   ALPHAX_Q ALPHAY_Q REMAPX_D REMAPY_D
+ 
+ 
+-static alignas(16) short s_FELightingConstantsForNeon[] = {
++alignas(16) static short s_FELightingConstantsForNeon[] = {
+     // Alpha coefficients.
+     -2, 1, 0, -1, 2, 1, 0, -1,
+     0, -1, -2, -1, 0, 1, 2, 1,
