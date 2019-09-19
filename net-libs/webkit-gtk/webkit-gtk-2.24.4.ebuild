@@ -162,7 +162,7 @@ pkg_setup() {
 src_prepare() {
 	# fix build with -flto enabled
 	eapply "${FILESDIR}"/"${PN}"-2.24.2-add-gcc-lto-pragma-fix.patch \
-		"${FILESDIR}"/"${PN}"-fix-clang-Wc++11-narrowing-errors.patch
+		"${FILESDIR}"/"${P}"-fix-clang-Wc++11-narrowing-errors.patch
 	cmake-utils_src_prepare
 	gnome2_src_prepare
 }
@@ -263,7 +263,7 @@ src_configure() {
 
 	# workaround silly broken arm64 assembler commit
 	# https://trac.webkit.org/changeset/236589/webkit
-	if use arm64; then
+	if use arm64 ; then
 		mycmakeargs+=( -DWTF_CPU_ARM64_CORTEXA53=OFF )
 	fi
 
