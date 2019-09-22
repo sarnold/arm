@@ -21,6 +21,8 @@ RDEPEND=">=x11-base/xorg-server-1.10"
 DEPEND="${RDEPEND}
 	x11-base/xorg-proto"
 
+S="${WORKDIR}/${PN}-v${PV}"
+
 src_prepare() {
 	eautoreconf
 }
