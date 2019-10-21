@@ -19,7 +19,7 @@ notifications:
     on_start: false     # default: false
 
 env:
-    - PORTAGE_VER="2.3.40"
+    - PORTAGE_VER="2.3.69"
 
 before_install:
     - sudo apt-get -qq update
