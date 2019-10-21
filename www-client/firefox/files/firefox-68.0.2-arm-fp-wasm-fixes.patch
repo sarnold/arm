@@ -1,0 +1,22 @@
+diff --git a/js/src/wasm/WasmSignalHandlers.cpp b/js/src/wasm/WasmSignalHandlers.cpp
+index 636537f847862ef693dd6582e2783de4e3d403c5..383c380f04ceb6a111dbfe9a046e3454a56e31b4 100644
+--- a/js/src/wasm/WasmSignalHandlers.cpp
++++ b/js/src/wasm/WasmSignalHandlers.cpp
+@@ -248,7 +248,16 @@ using mozilla::DebugOnly;
+ #endif
+ 
+ #ifdef WASM_EMULATE_ARM_UNALIGNED_FP_ACCESS
+-#  include <sys/user.h>
++struct user_vfp {
++  unsigned long long fpregs[32];
++  unsigned long fpscr;
++};
++
++struct user_vfp_exc {
++  unsigned long fpexc;
++  unsigned long fpinst;
++  unsigned long fpinst2;
++};
+ #endif
+ 
+ #if defined(ANDROID)
