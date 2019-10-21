@@ -1,0 +1,20 @@
+--- webkitgtk-2.24.4/Source/cmake/OptionsCommon.cmake.orig	2019-09-18 12:34:27.929925565 -0700
++++ webkitgtk-2.24.4/Source/cmake/OptionsCommon.cmake	2019-09-18 12:41:40.059925462 -0700
+@@ -57,11 +57,16 @@
+         # See https://bugs.webkit.org/show_bug.cgi?id=159880#c4 for details.
+         message(STATUS "Disabling GNU gold linker, because it doesn't support ARM instruction set properly.")
+     endif ()
++
++    if (COMPILER_IS_CLANG)
++        set(ARM_TRADITIONAL_DETECTED FALSE)
++        set(ARM_THUMB2_DETECTED TRUE)
++    endif ()
+ endif ()
+ 
+ # Use ld.gold if it is available and isn't disabled explicitly
+ CMAKE_DEPENDENT_OPTION(USE_LD_GOLD "Use GNU gold linker" ON
+-                       "NOT CXX_ACCEPTS_MFIX_CORTEX_A53_835769;NOT ARM_TRADITIONAL_DETECTED;NOT WIN32;NOT APPLE" OFF)
++                       "NOT CXX_ACCEPTS_MFIX_CORTEX_A53_835769;NOT ARM_TRADITIONAL_DETECTED;NOT WIN32;NOT APPLE;NOT COMPILER_IS_CLANG" OFF)
+ if (USE_LD_GOLD)
+     execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version ERROR_QUIET OUTPUT_VARIABLE LD_VERSION)
+     if ("${LD_VERSION}" MATCHES "GNU gold")
