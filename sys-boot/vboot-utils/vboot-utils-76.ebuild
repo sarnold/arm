@@ -12,7 +12,8 @@ DESCRIPTION="Chrome OS verified boot tools"
 HOMEPAGE="https://chromium.googlesource.com/chromiumos/platform/vboot_reference/ https://dev.chromium.org/chromium-os/chromiumos-design-docs/verified-boot"
 # Can't use gitiles directly until b/19710536 is fixed.
 #SRC_URI="https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+archive/refs/heads/${RELEASE}.tar.gz -> ${P}.tar.gz"
-SRC_URI="mirror://gentoo/${P}.tar.gz
+SRC_URI="https://chromium.googlesource.com/chromiumos/platform/vboot_reference/+archive/refs/heads/${RELEASE}.tar.gz -> ${P}.tar.gz
+	mirror://gentoo/${P}.tar.gz
 	https://dev.gentoo.org/~zmedico/dist/${P}.tar.gz"
 
 LICENSE="BSD"
