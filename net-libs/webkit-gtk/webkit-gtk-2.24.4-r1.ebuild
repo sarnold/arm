@@ -182,7 +182,8 @@ pkg_setup() {
 src_prepare() {
 	# fix build with -flto enabled
 	eapply "${FILESDIR}"/"${PN}"-2.24.2-add-gcc-lto-pragma-fix.patch \
-		"${FILESDIR}"/"${P}"-fix-clang-Wc++11-narrowing-errors.patch
+		"${FILESDIR}"/"${P}"-fix-clang-Wc++11-narrowing-errors.patch \
+		"${FILESDIR}"/"${P}"-fix-compile-error-missing-semicolon.patch
 	use arm && eapply "${FILESDIR}"/"${P}"-force-thumb-for-clang-on-armv7.patch
 	cmake-utils_src_prepare
 	gnome2_src_prepare
