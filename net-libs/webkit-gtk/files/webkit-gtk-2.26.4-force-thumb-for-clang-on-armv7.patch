@@ -1,0 +1,14 @@
+--- a/Source/cmake/OptionsCommon.cmake	2020-03-14 12:16:35.000000000 -0700
++++ b/Source/cmake/OptionsCommon.cmake	2020-03-14 12:20:27.000000000 -0700
+@@ -61,6 +61,11 @@
+         # See https://bugs.webkit.org/show_bug.cgi?id=159880#c4 for details.
+         message(STATUS "Disabling GNU gold linker, because it doesn't support ARM instruction set properly.")
+     endif ()
++
++    if (COMPILER_IS_CLANG)
++        set(ARM_TRADITIONAL_DETECTED FALSE)
++        set(ARM_THUMB2_DETECTED TRUE)
++    endif ()
+ endif ()
+ 
+ # Use ld.lld when building with LTO
