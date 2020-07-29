@@ -3,17 +3,6 @@ Add missing headers required during non-unified build.
 Unified build happens to get them included by the other sources unified
 into same source file, thus didn't fail.
 
-diff -urNp a/Source/JavaScriptCore/bytecompiler/NodesCodegen.cpp b/Source/JavaScriptCore/bytecompiler/NodesCodegen.cpp
---- a/Source/JavaScriptCore/bytecompiler/NodesCodegen.cpp
-+++ b/Source/JavaScriptCore/bytecompiler/NodesCodegen.cpp
-@@ -30,6 +30,7 @@
- 
- #include "BuiltinNames.h"
- #include "BytecodeGenerator.h"
-+#include "BytecodeStructs.h"
- #include "CallFrame.h"
- #include "JIT.h"
- #include "JSCInlines.h"
 diff -urNp a/Source/JavaScriptCore/heap/MachineStackMarker.cpp b/Source/JavaScriptCore/heap/MachineStackMarker.cpp
 --- a/Source/JavaScriptCore/heap/MachineStackMarker.cpp
 +++ b/Source/JavaScriptCore/heap/MachineStackMarker.cpp
@@ -25,3 +14,13 @@ diff -urNp a/Source/JavaScriptCore/heap/MachineStackMarker.cpp b/Source/JavaScri
  #include "MachineContext.h"
  #include <setjmp.h>
  #include <stdlib.h>
+--- a/Source/JavaScriptCore/bytecompiler/NodesCodegen.cpp	2020-07-28 19:03:17.482710500 -0700
++++ b/Source/JavaScriptCore/bytecompiler/NodesCodegen.cpp	2020-07-28 19:03:54.736043872 -0700
+@@ -31,6 +31,7 @@
+ #include "BuiltinNames.h"
+ #include "BytecodeGenerator.h"
+ #include "BytecodeGeneratorBaseInlines.h"
++#include "BytecodeStructs.h"
+ #include "CallFrame.h"
+ #include "JIT.h"
+ #include "JSArrayIterator.h"
