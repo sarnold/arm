@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI=7
 
-PYTHON_COMPAT=( python{2_7,3_3} )
+PYTHON_COMPAT=( python3_{6..9} )
 inherit distutils-r1
 
 MY_PN="${PN/-/.}"
@@ -17,6 +17,6 @@ SRC_URI="mirror://sourceforge/raspberry-gpio-python/${MY_P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~x86"
 IUSE=""
 
