@@ -7,7 +7,7 @@ inherit eutils toolchain-funcs multilib systemd
 
 DESCRIPTION="Userspace utilities for the Linux kernel cpufreq subsystem"
 HOMEPAGE="http://www.kernel.org/pub/linux/utils/kernel/cpufreq/"
-SRC_URI="mirror://kernel/linux/utils/kernel/cpufreq/${P}.tar.xz"
+SRC_URI="https://cdn.kernel.org/pub/linux/utils/kernel/cpufreq/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
