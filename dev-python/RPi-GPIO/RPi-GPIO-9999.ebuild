@@ -7,8 +7,8 @@ EAPI=7
 PYTHON_COMPAT=( python3_{6..9} )
 inherit distutils-r1
 
-MY_PN="${PN/-/.}"
-MY_PV="${PV/_alpha/a}"
+MY_PN="${PN/./-}"
+MY_PV="${PV//_alpha/a}"
 MY_P="${MY_PN}-${MY_PV}"
 
 DESCRIPTION="A Python module to control the GPIO on a Raspberry Pi"
@@ -20,8 +20,7 @@ if [[ ${PV} = 9999* ]]; then
 	inherit git-r3
 	KEYWORDS=""
 else
-	#SRC_URI="https://github.com/sarnold/${MY_PN}/archive/${MY_PV}.tar.gz -> ${P}.tar.gz"
-	SRC_URI="mirror://pypi/${MY_PN:0:1}/${MY_PN}/${MY_PN}-${MY_PV}.tar.gz"
+	SRC_URI="mirror://sourceforge/raspberry-gpio-python/${MY_P}.tar.gz"
 	KEYWORDS="~amd64 ~arm ~arm64 ~x86"
 fi
 
