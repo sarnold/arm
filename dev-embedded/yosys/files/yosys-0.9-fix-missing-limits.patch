@@ -1,0 +1,10 @@
+--- a/passes/sat/freduce.cc	2021-07-16 18:38:11.037008049 -0700
++++ b/passes/sat/freduce.cc	2021-07-16 18:38:51.078395256 -0700
+@@ -27,6 +27,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <algorithm>
++#include <limits>
+ 
+ USING_YOSYS_NAMESPACE
+ PRIVATE_NAMESPACE_BEGIN

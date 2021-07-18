@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>nerdboy@gentoo.org</email>
+		<name>Stephen L Arnold</name>
+	</maintainer>
+	<longdescription lang="en">
+		System for Sequential Logic Synthesis and Formal Verification.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">berkeley-abc/abc</remote-id>
+	</upstream>
+</pkgmetadata>

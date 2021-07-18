@@ -1,0 +1,123 @@
+diff --git a/Makefile b/Makefile
+index bdea392a..3d0bbb58 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,8 +1,10 @@
+ 
+-CC   := gcc
+-CXX  := g++
+-AR   := ar
++CC   ?= gcc
++CXX  ?= g++
++AR   ?= ar
+ LD   := $(CXX)
++LN   ?= ln
++MV   ?= mv
+ 
+ MSG_PREFIX ?=
+ ABCSRC = .
+@@ -15,6 +17,9 @@ $(info $(MSG_PREFIX)Using LD=$(LD))
+ PROG := abc
+ OS := $(shell uname -s)
+ 
++VERSION ?= 1.0.1
++SONAME := lib$(PROG).so.$(VERSION)
++
+ MODULES := \
+ 	$(wildcard src/ext*) \
+ 	src/base/abc src/base/abci src/base/cmd src/base/io src/base/main src/base/exor \
+@@ -63,8 +68,9 @@ endif
+ 
+ # compile ABC using the C++ comipler and put everything in the namespace $(ABC_NAMESPACE)
+ ifdef ABC_USE_NAMESPACE
+-  CFLAGS += -DABC_NAMESPACE=$(ABC_USE_NAMESPACE) -fpermissive
++  CFLAGS += -DABC_NAMESPACE=$(ABC_USE_NAMESPACE) -std=c++11 -fpermissive
+   CC := $(CXX)
++  DLIBS := -lstdc++
+   $(info $(MSG_PREFIX)Compiling in namespace $(ABC_NAMESPACE))
+ endif
+ 
+@@ -167,6 +173,7 @@ OBJ := \
+ 	$(patsubst %.y, %.o,  $(filter %.y, $(SRC)))
+ 
+ LIBOBJ := $(filter-out src/base/main/main.o,$(OBJ))
++MAINOBJ := src/base/main/main.o
+ 
+ DEP := $(OBJ:.o=.d)
+ 
+@@ -211,17 +218,31 @@ clean:
+ tags:
+ 	etags `find . -type f -regex '.*\.\(c\|h\)'`
+ 
+-$(PROG): $(OBJ)
+-	@echo "$(MSG_PREFIX)\`\` Building binary:" $(notdir $@)
+-	$(VERBOSE)$(LD) -o $@ $^ $(LDFLAGS) $(LIBS)
++lib: lib$(PROG).so.$(VERSION)
++
++test: demo
++	LD_LIBRARY_PATH=. ./abc -c "r i10.aig; b; ps; b; rw -l; rw -lz; b; rw -lz; b; ps; cec"
++	LD_LIBRARY_PATH=. ./demo i10.aig
++
++demo: lib$(PROG).so
++	$(VERBOSE)$(LD) src/demo.c -o $@ -L. -l$(PROG) $(LDFLAGS) $(DLIBS)
++
++$(PROG): $(MAINOBJ) lib$(PROG).so
++	@echo "$(MSG_PREFIX)\`\` Linking binary:" $(notdir $@)
++	+$(VERBOSE)$(LD) -o $@ $(MAINOBJ) -L. -l$(PROG) $(LDFLAGS) $(LIBS)
+ 
+ lib$(PROG).a: $(LIBOBJ)
+ 	@echo "$(MSG_PREFIX)\`\` Linking:" $(notdir $@)
+ 	$(VERBOSE)$(AR) rsv $@ $?
+ 
+-lib$(PROG).so: $(LIBOBJ)
++lib$(PROG).so.$(VERSION): $(LIBOBJ)
+ 	@echo "$(MSG_PREFIX)\`\` Linking:" $(notdir $@)
+-	$(VERBOSE)$(CXX) -shared -o $@ $^ $(LIBS)
++	+$(VERBOSE)$(CC) -shared -Wl,-soname=$(SONAME) -o $@ $^ $(LIBS)
++
++lib$(PROG).so: lib$(PROG).so.$(VERSION)
++	ldconfig -v -n .
++	@$(LN) -s ${SONAME} lib$(PROG).so
++	@$(LN) -s ${SONAME} lib$(PROG).so.1
+ 
+ docs:
+ 	@echo "$(MSG_PREFIX)\`\` Building documentation." $(notdir $@)
+diff --git a/src/base/abci/abc.c b/src/base/abci/abc.c
+index 02264b16..f031adce 100644
+--- a/src/base/abci/abc.c
++++ b/src/base/abci/abc.c
+@@ -33658,7 +33658,7 @@ usage:
+ ***********************************************************************/
+ int Abc_CommandAbc9SimRsb( Abc_Frame_t * pAbc, int argc, char ** argv )
+ {
+-    extern void Gia_ManSimRsb( Gia_Man_t * p, int nCands, int fVerbose );
++    extern int Gia_ManSimRsb( Gia_Man_t * p, int nCands, int fVerbose );
+     int c, nCands = 32, fVerbose = 0;
+     Extra_UtilGetoptReset();
+     while ( ( c = Extra_UtilGetopt( argc, argv, "Nvh" ) ) != EOF )
+diff --git a/src/map/mapper/mapperLib.c b/src/map/mapper/mapperLib.c
+index 6356e2f3..a9c2119b 100644
+--- a/src/map/mapper/mapperLib.c
++++ b/src/map/mapper/mapperLib.c
+@@ -15,7 +15,7 @@
+   Revision    [$Id: mapperLib.c,v 1.6 2005/01/23 06:59:44 alanmi Exp $]
+ 
+ ***********************************************************************/
+-#define _BSD_SOURCE
++#define _DEFAULT_SOURCE
+ 
+ #ifndef WIN32
+ #include <unistd.h>
+diff --git a/src/map/mio/mio.c b/src/map/mio/mio.c
+index 3010bbd3..583c9291 100644
+--- a/src/map/mio/mio.c
++++ b/src/map/mio/mio.c
+@@ -16,7 +16,7 @@
+ 
+ ***********************************************************************/
+ 
+-#define _BSD_SOURCE
++#define _DEFAULT_SOURCE
+ 
+ #ifndef WIN32
+ #include <unistd.h>
