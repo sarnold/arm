@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>nerdboy@gentoo.org</email>
+		<name>Stephen L Arnold</name>
+	</maintainer>
+	<longdescription lang="en">
+		Client library for using redis as IPC msg/event bus.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">VCTLabs/redis-ipc</remote-id>
+	</upstream>
+</pkgmetadata>
